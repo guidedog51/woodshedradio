@@ -1,8 +1,19 @@
+html {
+    font-family: "ff-enzo-web", Helvetica, Arial, sans-serif;
+}
+
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.logo {
+  text-align: center;  
+}
+
+.centered {
+  text-align: center;
 }
