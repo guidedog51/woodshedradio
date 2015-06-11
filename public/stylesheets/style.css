@@ -17,3 +17,9 @@ a {
 .centered {
   text-align: center;
 }
+
+
+
+#playBar li {
+    list-style: none;
+}
