@@ -22,4 +22,5 @@ a {
 
 #playBar li {
     list-style: none;
+    line-height: 26px;
 }
