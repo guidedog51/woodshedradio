@@ -50,8 +50,7 @@ var EchoNestAPI = (function () {
             var reqData =                 { 
                     'apikey' : SOUNDKICK_API_KEY,
                     'min_date': start,  
-                    'max_date': end,
-                    'jsoncallback': '?'
+                    'max_date': end
                 };
 
             
@@ -77,8 +76,7 @@ var EchoNestAPI = (function () {
                 { 
                     'apikey' : SOUNDKICK_API_KEY,
                     'min_date': start,  
-                    'max_date': end,
-                    'jsoncallback': '?'
+                    'max_date': end
                 },
                 function(data) {
                     if (data.resultsPage.status == 'ok') {
