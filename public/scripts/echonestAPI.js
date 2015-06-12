@@ -25,7 +25,8 @@ var EchoNestAPI = (function () {
         }
     };
        
-     //private functions   
+     //private functions 
+    //this one hits echo nest
      var _fetchArtistsByLocation =  function (locale) {
             var url = ECHO_ENDPOINT + 'artist/search';
             $("#playBar").empty();
@@ -93,10 +94,10 @@ var EchoNestAPI = (function () {
             // Do what you want to do with the return data within this callback
                 console.log(data);
                 _renderList(data);
-            });
+            })
 //            .error( 
-//                function(data, err, response) {
-//                    eval(data.responseText);
+//                function(data, err, responseText) {
+//                    console.log(responseText);
 //                }
 //            );
         }
