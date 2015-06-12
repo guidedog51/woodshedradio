@@ -45,35 +45,61 @@ var EchoNestAPI = (function () {
         var _fetchArtistsByAppearanceDate = function (start, end) {
             var url = SOUNDKICK_ENDPOINT;
             //$("#playBar").empty();
-            $.getJSON(url, 
-                { 
+            
+            var reqData =                 { 
                     'apikey' : SOUNDKICK_API_KEY,
                     'min_date': start,  
                     'max_date': end
+                };
+
+            
+            $.ajax({
+                
+                crossOrigin: true,
+                url: url,
+                data: reqData,
+                success: function(data) {
+                    
                 },
-                function(data) {
-                    if (data.resultsPage.status == 'ok') {
-                        var events = data.resultsPage.results.event;
-                        if (events.length > 0) {
-                            for (i = 0; i < events.length; i++) {
-                                var event = events[i].displayName;
-                                var li = $("<li>");
-                                li.text(event);
-                                $("#playBar").append(li);
-                            }
-                            
-                        } else {
-                            $('#playBar').text("No events");     
-                      }
-                    } else {
-                        alert("Trouble getting artists: " + data.response.status.message);
-                    }
-                })
-                .error( 
-                    function(data) {
-                        alert("query syntax");
-                    }
-                );
+                error: function(xHR) {
+                    
+                }
+                
+                
+                
+            })
+            
+        
+            
+//            $.getJSON(url, 
+//                { 
+//                    'apikey' : SOUNDKICK_API_KEY,
+//                    'min_date': start,  
+//                    'max_date': end
+//                },
+//                function(data) {
+//                    if (data.resultsPage.status == 'ok') {
+//                        var events = data.resultsPage.results.event;
+//                        if (events.length > 0) {
+//                            for (i = 0; i < events.length; i++) {
+//                                var event = events[i].displayName;
+//                                var li = $("<li>");
+//                                li.text(event);
+//                                $("#playBar").append(li);
+//                            }
+//                            
+//                        } else {
+//                            $('#playBar').text("No events");     
+//                      }
+//                    } else {
+//                        alert("Trouble getting artists: " + data.response.status.message);
+//                    }
+//                })
+//                .error( 
+//                    function(data) {
+//                        alert("query syntax");
+//                    }
+//                );
 
         }
         
