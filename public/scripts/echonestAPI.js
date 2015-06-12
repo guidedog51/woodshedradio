@@ -97,8 +97,8 @@ var EchoNestAPI = (function () {
                 { 
                     'apikey' : SOUNDKICK_API_KEY,
                     'min_date': start,  
-                    'max_date': end,
-                    'jsoncallback': 'jsonCallback'
+                    'max_date': end//,
+                    //jsoncallback': 'jsonCallback'
                 },
                 function(data) {
                     if (data.resultsPage.status == 'ok') {
