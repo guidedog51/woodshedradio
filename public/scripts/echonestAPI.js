@@ -1,5 +1,6 @@
 var EchoNestAPI = (function () {
-        
+    jQuery.ajaxSettings.traditional = true;
+       
         
      //private functions   
      var _fetchArtistsByLocation =  function (locale) {
@@ -53,53 +54,53 @@ var EchoNestAPI = (function () {
                 };
 
             
-            $.ajax({
-                
-                crossOrigin: true,
-                url: url,
-                data: reqData,
-                success: function(data) {
-                    
-                },
-                error: function(xHR) {
-                    
-                }
-                
-                
-                
-            })
+//            $.ajax({
+//                
+////                dataType: 'jsonp',
+//                url: url,
+//                data: reqData,
+//                success: function(data) {
+//                    
+//                },
+//                error: function(xHR) {
+//                    
+//                }
+//                
+//                
+//                
+//            })
             
         
             
-//            $.getJSON(url, 
-//                { 
-//                    'apikey' : SOUNDKICK_API_KEY,
-//                    'min_date': start,  
-//                    'max_date': end
-//                },
-//                function(data) {
-//                    if (data.resultsPage.status == 'ok') {
-//                        var events = data.resultsPage.results.event;
-//                        if (events.length > 0) {
-//                            for (i = 0; i < events.length; i++) {
-//                                var event = events[i].displayName;
-//                                var li = $("<li>");
-//                                li.text(event);
-//                                $("#playBar").append(li);
-//                            }
-//                            
-//                        } else {
-//                            $('#playBar').text("No events");     
-//                      }
-//                    } else {
-//                        alert("Trouble getting artists: " + data.response.status.message);
-//                    }
-//                })
-//                .error( 
-//                    function(data) {
-//                        alert("query syntax");
-//                    }
-//                );
+            $.getJSON(url, 
+                { 
+                    'apikey' : SOUNDKICK_API_KEY,
+                    'min_date': start,  
+                    'max_date': end
+                },
+                function(data) {
+                    if (data.resultsPage.status == 'ok') {
+                        var events = data.resultsPage.results.event;
+                        if (events.length > 0) {
+                            for (i = 0; i < events.length; i++) {
+                                var event = events[i].displayName;
+                                var li = $("<li>");
+                                li.text(event);
+                                $("#playBar").append(li);
+                            }
+                            
+                        } else {
+                            $('#playBar').text("No events");     
+                      }
+                    } else {
+                        alert("Trouble getting artists: " + data.response.status.message);
+                    }
+                })
+                .error( 
+                    function(data) {
+                        alert("query syntax");
+                    }
+                );
 
         }
         
