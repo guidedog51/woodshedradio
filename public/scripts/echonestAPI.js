@@ -56,7 +56,10 @@ var EchoNestAPI = (function () {
             
 //            $.ajax({
 //                
-////                dataType: 'jsonp',
+//                dataType: 'jsonp',
+//                jsonp: false,
+//                jsonpCallback: 'jsonCallback',
+//                cache: 'true',
 //                url: url,
 //                data: reqData,
 //                success: function(data) {
@@ -69,14 +72,33 @@ var EchoNestAPI = (function () {
 //                
 //                
 //            })
-            
-        
+//            
+            function jsonCallback(data) {
+                //alert(data.resultsPage.status);
+                     if (data.resultsPage.status == 'ok') {
+                        var events = data.resultsPage.results.event;
+                        if (events.length > 0) {
+                            for (i = 0; i < events.length; i++) {
+                                var event = events[i].displayName;
+                                var li = $("<li>");
+                                li.text(event);
+                                $("#playBar").append(li);
+                            }
+                            
+                        } else {
+                            $('#playBar').text("No events");     
+                      }
+                    } else {
+                        alert("Trouble getting artists: " + data.response.status.message);
+                    }
+           }
             
             $.getJSON(url, 
                 { 
                     'apikey' : SOUNDKICK_API_KEY,
                     'min_date': start,  
-                    'max_date': end
+                    'max_date': end,
+                    'jsoncallback': 'jsonCallback'
                 },
                 function(data) {
                     if (data.resultsPage.status == 'ok') {
@@ -97,8 +119,8 @@ var EchoNestAPI = (function () {
                     }
                 })
                 .error( 
-                    function(data) {
-                        alert("query syntax");
+                    function(data, err, response) {
+                        eval(data.responseText);
                     }
                 );
 
