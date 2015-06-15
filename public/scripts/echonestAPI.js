@@ -66,13 +66,9 @@ var EchoNestAPI = (function () {
                     }
                 );
         };
-        
-        var _fetchArtistsByAppearanceDate = function (start, end) {
-            //$("#playBar").empty();
-
-            var _renderList = function(data) {
-                 if (data.resultsPage.status == 'ok') {
-                    var events = data.resultsPage.results.event;
+        var _renderList = function(events) {
+//                 if (data.resultsPage.status == 'ok') {
+//                    events = data.resultsPage.results.event;
                     if (events.length > 0) {
                         for (i = 0; i < events.length; i++) {
                             var event = events[i].displayName;
@@ -84,24 +80,42 @@ var EchoNestAPI = (function () {
                     } else {
                         $('#playBar').text("No events");     
                   }
-                } else {
-                    alert("Trouble getting artists: " + data.response.status.message);
-                }
-           };
-            
-            var url = SOUNDKICK_ENDPOINT + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&jsoncallback=?';
-            $.getJSON(url, function(data){
-            // Do what you want to do with the return data within this callback
-                console.log(data);
-                _renderList(data);
-            })
-//            .error( 
-//                function(data, err, responseText) {
-//                    console.log(responseText);
+//                } else {
+//                    alert("Trouble getting artists: " + data.response.status.message);
 //                }
-//            );
+       };
+
+        var page = 0;
+        var _fetchArtistsByAppearanceDate = function (start, end) {
+            _getListings();
         }
         
+        
+        var _getListings = function() {
+            page ++;
+             var url = SOUNDKICK_ENDPOINT + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=?';
+            console.log(url);
+            $.getJSON(url, function(data){
+                
+                if (data.resultsPage.status == 'ok') {
+                    var events = data.resultsPage.results.event;
+                    if (events != undefined) {
+                        _renderList(events);
+                        _getListings();
+                    }
+                    
+                }   else {
+                    console.log("Trouble getting artists: " + data.response.status.message);
+                }
+                
+                
+            })
+            .error(
+                function(data) {
+                    
+                }
+            );
+        }
         
         
         //expose public methods
