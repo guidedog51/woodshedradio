@@ -5,15 +5,24 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
+var request = require('request');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var comingsoon = require('./routes/comingsoon');
 
 var app = express();
+
+var SOUNDKICK_API_KEY = 'xdy5yMc0BaLlDZ0V';
+var SOUNDKICK_ENDPOINT = 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY;
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 3000);
+app.set('request', request);
+app.set('SOUNDKICK_ENDPOINT', SOUNDKICK_ENDPOINT);
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
@@ -24,6 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/comingsoon', comingsoon);
+
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
@@ -55,7 +66,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;
 

@@ -67,22 +67,17 @@ var EchoNestAPI = (function () {
                 );
         };
         var _renderList = function(events) {
-//                 if (data.resultsPage.status == 'ok') {
-//                    events = data.resultsPage.results.event;
-                    if (events.length > 0) {
-                        for (i = 0; i < events.length; i++) {
-                            var event = events[i].displayName;
-                            var li = $("<li>");
-                            li.text(event);
-                            $("#playBar").append(li);
-                        }
+            if (events.length > 0) {
+                for (i = 0; i < events.length; i++) {
+                    var event = events[i].displayName;
+                    var li = $("<li>");
+                    li.text(event);
+                    $("#playBar").append(li);
+                }
 
-                    } else {
-                        $('#playBar').text("No events");     
-                  }
-//                } else {
-//                    alert("Trouble getting artists: " + data.response.status.message);
-//                }
+            } else {
+                $('#playBar').text("No events");     
+            }
        };
 
         var page = 0;
@@ -93,12 +88,13 @@ var EchoNestAPI = (function () {
         
         var _getListings = function() {
             page ++;
-             var url = SOUNDKICK_ENDPOINT + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=?';
+            var url = SOUNDKICK_ENDPOINT + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=?';
             console.log(url);
             $.getJSON(url, function(data){
                 
                 if (data.resultsPage.status == 'ok') {
                     var events = data.resultsPage.results.event;
+                    //page through results
                     if (events != undefined) {
                         _renderList(events);
                         _getListings();
@@ -107,12 +103,10 @@ var EchoNestAPI = (function () {
                 }   else {
                     console.log("Trouble getting artists: " + data.response.status.message);
                 }
-                
-                
             })
             .error(
                 function(data) {
-                    
+                    console.log(data);
                 }
             );
         }
