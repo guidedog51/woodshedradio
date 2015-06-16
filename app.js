@@ -15,7 +15,8 @@ var app = express();
 
 var SOUNDKICK_API_KEY = 'xdy5yMc0BaLlDZ0V';
 var SOUNDKICK_ENDPOINT = 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY;
-
+var ECHONEST_API_KEY= 'M8TCQASXDTEGU9VRO';
+var ECHONEST_ENDPOINT = 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +24,7 @@ app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 3000);
 app.set('request', request);
 app.set('SOUNDKICK_ENDPOINT', SOUNDKICK_ENDPOINT);
+app.set('ECHONEST_ENDPOINT', ECHONEST_ENDPOINT);
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));

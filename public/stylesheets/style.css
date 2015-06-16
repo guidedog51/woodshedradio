@@ -18,9 +18,15 @@ a {
   text-align: center;
 }
 
-
-
 #playBar li {
     list-style: none;
     line-height: 26px;
+}
+
+.tracklist {
+    font-size: 14px;
+    font-style: italic;
+    text-align: left;
+    margin-left: 45%;
+    line-height: 20px !important;
 }
