@@ -13,5 +13,5 @@ $(document).ready(function() {
     var locale = 'city: oakland';
     //EchoNestAPI.fetchArtistsByLocation (locale);
     
-    EchoNestAPI.fetchArtistsByAppearanceDate('2015-06-11', '2015-06-19');
+    //EchoNestAPI.fetchArtistsByAppearanceDate('2015-06-11', '2015-06-19');
 });
