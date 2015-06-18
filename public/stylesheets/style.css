@@ -18,6 +18,10 @@ a {
   text-align: center;
 }
 
+.left {
+  text-align: left;
+}
+
 #playBar li {
     list-style: none;
     line-height: 26px;
@@ -27,6 +31,19 @@ a {
     font-size: 14px;
     font-style: italic;
     text-align: left;
-    margin-left: 45%;
+    margin-left: 10px;
     line-height: 20px !important;
+}
+
+.song-container {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 800px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.song-title {
+    font-weight: 600;
 }

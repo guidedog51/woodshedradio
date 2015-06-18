@@ -3,14 +3,27 @@ extends layout
 block content
     h2(class='centered') Welcome to #{title} -- your source for the very best music from artists appearing here soon!
     h3(class='centered') Some of our friends playing in town this week:
-  
-    ul(id='playBar', class='centered')
+    #playBar
+        span(id='play-buttons', class='btn-group')
+            button(id='play-previous')
+            button(id='play-next')
+            button(id='play-rewind')
+            button(id='play-pause')
+     ul(class='song-container')
         for val in artistTracks
-            li!= val.displayName
+            li(class='song-title')!= val.displayName
             ul(class='trackList')
                 for item in val.trackList
-                    li(class='tracklist')= item
+                    li(class='tracklist')= item.title
                 else
                     li(class='tracklist') no tracks!
         else
             li no artist!
+    
+    #footer(class='container span10 offset1')
+        small Powered by 
+            a(href='http://echonest.com') The Echo Nest 
+            |  and
+            |  <a href='http://rdio.com'>Rdio</a>
+            
+            

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var callbackCount = 0;
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -15,7 +16,7 @@ router.get('/', function(req, res) {
         url: soundkickEndpoint + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=jpCallback'
     };
     
-    var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=3'//&bucket=audio_summary';
+    var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:rdio-US';//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
     var echonestOptions = {
         url: echonestUrl
     };
@@ -43,15 +44,15 @@ router.get('/', function(req, res) {
                 
                 //get tracklist data from echonest
                 events.forEach(function(obj, num) {
-                artistTracks.push({'displayName': obj.displayName,
-                                    'artist_id': obj.performance[0].artist.id,
-                                    'trackList': []})
+                    artistTracks.push({'displayName': obj.displayName,
+                                        'artist_id': obj.performance[0].artist.id,
+                                        'trackList': []})
                 });
                 
                 artistTracks.forEach(function(obj, num) {
                     //hash holds pointer for event index
                     echonestOptions.url = echonestUrl.replace('SKAID', obj.artist_id) + '#' + num;
-                    //console.log(echonestOptions.url);
+                    //get the tracks
                     request (echonestOptions, echonestCallback);
                 });
                 
@@ -59,43 +60,52 @@ router.get('/', function(req, res) {
 	    }
 	}
     
-    var callbackCount = 0;
     var rendered = false;
+    var throttled = false;
     function echonestCallback(error, response, body) {
-        callbackCount ++;
-        //var tracklist = [];
-        console.log(response.statusCode);
-        
-
-	    if (!error && response.statusCode == 200) {
+        callbackCount++;        // = callbackCount + 1;
+        //console.log(response.statusCode);
+ 
+	    if (!error && (response.statusCode == 200 || response.statusCode == 429)) {
+            
+            if (response.statusCode == 429 && ! throttled) {
+                console.log('throttled at: ' + callbackCount + ', ' + artistTracks.length);
+                throttled = true;
+            }
+            
             var tracks = JSON.parse(body);
             var ndx = response.request.href.split('#')[1];
-            //console.log(tracks);
             if (tracks.response.songs != undefined) {
-                //console.log(tracks.response.songs[0].title);
+                //console.log(tracks.response.songs);
+                
+                tracks.response.songs.forEach(function (obj, num) {
+//                    console.log(obj.tracks);
+                    var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id : '';
+                    artistTracks[ndx].trackList.push( { 
+                        'title': obj.title,
+                        'artist_name': obj.artist_name,
+                        'id': obj.id,
+                        'tracks': obj.tracks,
+                        'foreign_id': fId
+                    })
+                    console.log(artistTracks[ndx].trackList);
+                });
 
-                for (i = 0; i < tracks.response.songs.length; i++) {
-                    artistTracks[ndx].trackList.push(tracks.response.songs[i].title);
-                }
             }
                 
             //artistTracks[ndx].trackList = tracklist;
-            if (callbackCount = artistTracks.length && ! rendered) {
-                //console.log(artistTracks.length);
+            if (callbackCount == artistTracks.length && ! rendered) {
+                console.log(artistTracks.length + '  ' + callbackCount);
                 rendered = true;
-                //apparently we have to wait a bit to ensure there's not a wait condition with the rendering
-                //also this api is throttled at 150 requests per minute
-                setInterval( function () {
-                    res.render('comingsoon', { title: 'Woodshed Radio', artistTracks: artistTracks });
-                    //console.log(artistTracks);
-                }, 15000);
+                throttled = false;
+                callbackCount = 0;
+               
+                console.log('render at callbackCount: ' +  callbackCount);
+                res.render('comingsoon', { title: 'Woodshed Radio', artistTracks: artistTracks });
             }
 	    }
     }
-    
 });
-
-
 
 
 module.exports = router;
@@ -106,7 +116,7 @@ var _getSoundKickDateRange = function() {
     var dates = [];
     var sep = '-';
     var today = getDayWhen(0);
-    var future = getDayWhen(2);          
+    var future = getDayWhen(0);          
 
     dates.push(today.getFullYear() + sep + padDateItem(today.getMonth() + 1) + sep + padDateItem(today.getDate()));
     dates.push(future.getFullYear() + sep + padDateItem(future.getMonth() + 1) + sep + padDateItem(future.getDate()));
