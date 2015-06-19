@@ -46,6 +46,7 @@ router.get('/', function(req, res) {
                 events.forEach(function(obj, num) {
                     artistTracks.push({'displayName': obj.displayName,
                                         'artist_id': obj.performance[0].artist.id,
+                                        'event_uri': obj.uri,
                                         'trackList': []})
                 });
                 
@@ -80,15 +81,16 @@ router.get('/', function(req, res) {
                 
                 tracks.response.songs.forEach(function (obj, num) {
 //                    console.log(obj.tracks);
-                    var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id : '';
+                    var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id.replace('rdio-US:track:', '') : 'none';
                     artistTracks[ndx].trackList.push( { 
                         'title': obj.title,
                         'artist_name': obj.artist_name,
                         'id': obj.id,
                         'tracks': obj.tracks,
-                        'foreign_id': fId
+                        'foreign_id': fId,
+                        'catalog': 'rdio-US'
                     })
-                    console.log(artistTracks[ndx].trackList);
+                    console.log(fId);
                 });
 
             }
@@ -116,7 +118,7 @@ var _getSoundKickDateRange = function() {
     var dates = [];
     var sep = '-';
     var today = getDayWhen(0);
-    var future = getDayWhen(7);          
+    var future = getDayWhen(1);          
 
     dates.push(today.getFullYear() + sep + padDateItem(today.getMonth() + 1) + sep + padDateItem(today.getDate()));
     dates.push(future.getFullYear() + sep + padDateItem(future.getMonth() + 1) + sep + padDateItem(future.getDate()));

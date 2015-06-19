@@ -11,10 +11,11 @@ block content
             button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
      ul(class='song-container')
         for val in artistTracks
-            li(class='song-title')!= val.displayName
+            li(class='song-title')
+                a(href=val.event_uri, target='_blank')!=val.displayName
             ul(class='trackList')
                 for item in val.trackList
-                    li(class='tracklist')= item.title
+                    li(class='tracklist', data-track_id=item.foreign_id)= item.title
                 else
                     li(class='tracklist') no tracks!
         else
