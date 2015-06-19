@@ -4,11 +4,11 @@ block content
     h2(class='centered') Welcome to #{title} -- your source for the very best music from artists appearing here soon!
     h3(class='centered') Some of our friends playing in town this week:
     #playBar
-        span(id='play-buttons', class='btn-group')
-            button(id='play-previous')
-            button(id='play-next')
-            button(id='play-rewind')
-            button(id='play-pause')
+        div(id='play-buttons', class='btn-group')
+            button(id='playPrev', class="btn btn-default pb")<i class="icon-backward"></i>
+            button(id='playPlay', class="btn btn-default pb")<i class="icon-play"></i>
+            button(id='playPause', class="btn btn-default pb")<i class="icon-pause"></i>
+            button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
      ul(class='song-container')
         for val in artistTracks
             li(class='song-title')!= val.displayName
@@ -22,8 +22,10 @@ block content
     
     #footer(class='container span10 offset1')
         small Powered by 
-            a(href='http://echonest.com') The Echo Nest 
-            |  and
+            a(href='http://soundkick.com') Soundkick
+            |  ,&nbsp;
+            |  <a href='http://echonest.com'>The Echo Nest</a>
+            |  &nbsp;and&nbsp;
             |  <a href='http://rdio.com'>Rdio</a>
             
             
