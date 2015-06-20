@@ -80,7 +80,7 @@ router.get('/', function(req, res) {
                 //console.log(tracks.response.songs);
                 
                 tracks.response.songs.forEach(function (obj, num) {
-//                    console.log(obj.tracks);
+                    //console.log(obj.tracks);
                     var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id.replace('rdio-US:track:', '') : 'none';
                     artistTracks[ndx].trackList.push( { 
                         'title': obj.title,
@@ -90,7 +90,7 @@ router.get('/', function(req, res) {
                         'foreign_id': fId,
                         'catalog': 'rdio-US'
                     })
-                    console.log(fId);
+                    //console.log(fId);
                 });
 
             }
