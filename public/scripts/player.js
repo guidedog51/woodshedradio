@@ -1,11 +1,11 @@
 var R = window.R || {};
-//var currentSongs = ['t56298423', 't49154915' ];
 var currentSongs = [];
 var curSong = null;
-
+var artistData;     //all the track metadata from the server
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
+    alert(artistData[0].displayName);
     initUI();
     createSongTable();
     R.ready(
@@ -113,14 +113,35 @@ function songChanged(song) {
     }
 }    
 
+function getSong(songId) {
+    var newSong={};
+    currentSongs.forEach(function(obj, num) {
+        if (obj.id == songId) {
+            newSong = obj;
+            return;
+            
+        }
+    });
+    return newSong;
+}
+
 function createSongTable() {
     currentSongs = [{}];
+    var rowNum = 1;
     
     //get the trackids from jquery
     var trackList = $('li').map(function() {
         var id = $(this).data("track_id");
-        if (id != 'none')
-          return id;
+        if (id != 'none' && $(this).attr('class')==='tracklist track-playable') {
+            $(this).on('click', function() {
+                var songToPlay = getSong(id);
+                playSong(songToPlay);
+                //alert(id);
+            });
+            $(this).attr('id', rowNum);
+            rowNum++;
+            return id;
+        }
     }).get();    
     
     trackList.forEach(function(obj, num) {
@@ -136,6 +157,8 @@ function createSongTable() {
         }
         currentSongs.push(song);
     });
+    
+    
     
 //    _.each(currentMessage, function(c, i) {
 //        var row = $("<tr>");

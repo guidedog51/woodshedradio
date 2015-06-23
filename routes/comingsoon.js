@@ -44,9 +44,12 @@ router.get('/', function(req, res) {
                 
                 //get tracklist data from echonest
                 events.forEach(function(obj, num) {
+                    //console.log(obj);
                     artistTracks.push({'displayName': obj.displayName,
                                         'artist_id': obj.performance[0].artist.id,
+                                        'event_id': obj.id,
                                         'event_uri': obj.uri,
+                                        'thumbnail_uri': '',
                                         'trackList': []})
                 });
                 
@@ -82,9 +85,10 @@ router.get('/', function(req, res) {
                 tracks.response.songs.forEach(function (obj, num) {
                     //console.log(obj.tracks);
                     var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id.replace('rdio-US:track:', '') : 'none';
-                    artistTracks[ndx].trackList.push( { 
+                    artistTracks[ndx].trackList.push( {
                         'title': obj.title,
                         'artist_name': obj.artist_name,
+                        'event_id': artistTracks[ndx].event_id,
                         'id': obj.id,
                         'tracks': obj.tracks,
                         'foreign_id': fId,

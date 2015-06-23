@@ -15,7 +15,7 @@ block content
                 a(href=val.event_uri, target='_blank')!=val.displayName
             ul(class='trackList')
                 for item in val.trackList
-                    li(class='tracklist', data-track_id=item.foreign_id)= item.title
+                    li(id=item.row, class=(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable', data-track_id=item.foreign_id, data-event_id=item.event_id)= item.title
                 else
                     li(class='tracklist') no tracks!
         else
@@ -28,6 +28,9 @@ block content
             |  <a href='http://echonest.com'>The Echo Nest</a>
             |  &nbsp;and&nbsp;
             |  <a href='http://rdio.com'>Rdio</a>
+
+    script(type='text/javascript').
+        artistData =!{JSON.stringify(artistTracks)}
     script(src='https://rdio.com/api/api.js?client_id=uidoeau3k5frvc3yat3hxb3h2q')
     //script(src='https://rdio.com/api/api.js?client_id=ndS-G2UAc7dQj90nkoYW2w')
     script(src='/scripts/get_key_with_callback.js')

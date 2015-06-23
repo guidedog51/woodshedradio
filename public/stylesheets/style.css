@@ -41,6 +41,11 @@ a {
     line-height: 20px !important;
 }
 
+.track-playable {
+    cursor: pointer;
+    background-color: beige;
+}
+
 .song-container {
     width: 600px;
     margin-left: auto;
