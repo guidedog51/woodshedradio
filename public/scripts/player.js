@@ -5,7 +5,6 @@ var artistData;     //all the track metadata from the server
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
-    alert(artistData[0].displayName);
     initUI();
     createSongTable();
     R.ready(
