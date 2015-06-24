@@ -98,6 +98,7 @@ function playSong(song) {
             playNextSong();
         } else {
             R.player.play({source: id});
+            updateNowPlaying(song);
         }
     }
 }
@@ -124,6 +125,29 @@ function getSong(songId) {
     return newSong;
 }
 
+function getPerformance(performanceId) {
+    var perf = {};
+    artistData.forEach(function(obj, num) {
+        if (obj.event_id == performanceId) {
+            perf = obj;
+            return;
+        }
+    });
+    return perf;
+}
+
+function getTrackDataForPerformance(eventId, trackId) {
+    var perf = getPerformance(eventId);
+    var trackData = {};
+    perf.trackList.forEach(function(obj, num) {
+        if (obj.foreign_id == trackId) {
+            trackData = obj;
+            return;
+        }
+    });
+    return trackData;
+}
+
 function createSongTable() {
     currentSongs = [{}];
     var rowNum = 1;
@@ -131,15 +155,22 @@ function createSongTable() {
     //get the trackids from jquery
     var trackList = $('li').map(function() {
         var id = $(this).data("track_id");
+        var eventId = $(this).data('event_id');
+        var performance = {};
+        var songToPlay = {};
         if (id != 'none' && $(this).attr('class')==='tracklist track-playable') {
             $(this).on('click', function() {
-                var songToPlay = getSong(id);
+                songToPlay = getSong(id);
+                //performance = getPerformance(eventId);
                 playSong(songToPlay);
+                //updateNowPlaying(event);
                 //alert(id);
             });
             $(this).attr('id', rowNum);
             rowNum++;
-            return id;
+            return {'track_id': id,
+                    'event': getPerformance(eventId),
+                    'song': getTrackDataForPerformance(eventId, id)};
         }
     }).get();    
     
@@ -149,14 +180,18 @@ function createSongTable() {
             var last = currentSongs[currentSongs.length - 1];
             last.next = song;
             song.prev = last;
-            song.id = obj;
+            song.id = obj.track_id;
+            song.event = obj.event;
+            song.track = obj.song;
+            
         } else {
             song.last = null;
-            song.id = obj;
+            song.id = obj.track_id;
+            song.event = obj.event;
+            song.track = obj.song;
         }
         currentSongs.push(song);
     });
-    
     
     
 //    _.each(currentMessage, function(c, i) {
@@ -189,5 +224,14 @@ function createSongTable() {
 //        rows.append(row);
 //    });
 }
+  function updateNowPlaying(song) {
+      var event = song.event;
+      $('#artist-thumbnail').attr('src', event.thumbnail_uri);
+      $('#artist-name').text(song.track.artist_name);
+      $('#track-name').text(song.track.title);
+      $('#performance-link').attr('href', event.event_uri);
+      $('#performance-link').text(event.displayName);
+      console.log(event);
+  }
 
 

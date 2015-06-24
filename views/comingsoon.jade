@@ -3,6 +3,15 @@ extends layout
 block content
     h2(class='centered') Welcome to #{title} -- your source for the very best music from artists appearing here soon!
     h3(class='centered') Some of our friends playing in town this week:
+    #nowPlaying(class='centered')
+        table
+            tr
+                td(class='thumb-cell')
+                    img(id='artist-thumbnail', src='', class='img-circle artist')
+                td(class='description-cell')
+                    p(id='artist-name')='artist currently playing'
+                    p(id='track-name')='track currently playing'
+                    a(id='performance-link', href='#', style='margin-left: 10px;')='link to performance page'
     #playBar
         div(id='play-buttons', class='btn-group')
             button(id='playPrev', class="btn btn-default pb")<i class="icon-backward"></i>

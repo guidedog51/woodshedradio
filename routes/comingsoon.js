@@ -7,13 +7,15 @@ router.get('/', function(req, res) {
     var request = req.app.settings.request;
     var soundkickEndpoint = req.app.settings.SOUNDKICK_ENDPOINT;
     var echonestEndpoint = req.app.settings.ECHONEST_ENDPOINT;
+    var soundkickStaticEndpoint = req.app.settings.SOUNDKICK_STATIC_ENDPOINT;
     var page = 1;
     var events = [];
     var artistTracks = [];
 
     var eventIndex = 0;
     var options = {
-        url: soundkickEndpoint + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=jpCallback'
+        url: soundkickEndpoint + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=jpCallback',
+        artist_icon_url: soundkickStaticEndpoint + 'profile_images/artists/AID/huge_avatar'
     };
     
     var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:rdio-US';//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
@@ -49,7 +51,7 @@ router.get('/', function(req, res) {
                                         'artist_id': obj.performance[0].artist.id,
                                         'event_id': obj.id,
                                         'event_uri': obj.uri,
-                                        'thumbnail_uri': '',
+                                        'thumbnail_uri': options.artist_icon_url.replace('AID', obj.performance[0].artist.id),
                                         'trackList': []})
                 });
                 
@@ -59,7 +61,6 @@ router.get('/', function(req, res) {
                     //get the tracks
                     request (echonestOptions, echonestCallback);
                 });
-                
             }
 	    }
 	}
@@ -83,7 +84,7 @@ router.get('/', function(req, res) {
                 //console.log(tracks.response.songs);
                 
                 tracks.response.songs.forEach(function (obj, num) {
-                    //console.log(obj.tracks);
+                    //console.log(artistTracks[ndx]);
                     var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id.replace('rdio-US:track:', '') : 'none';
                     artistTracks[ndx].trackList.push( {
                         'title': obj.title,
@@ -101,7 +102,7 @@ router.get('/', function(req, res) {
                 
             //artistTracks[ndx].trackList = tracklist;
             if (callbackCount == artistTracks.length && ! rendered) {
-                console.log(artistTracks.length + '  ' + callbackCount);
+                //console.log(artistTracks.length + '  ' + callbackCount);
                 rendered = true;
                 throttled = false;
                 callbackCount = 0;

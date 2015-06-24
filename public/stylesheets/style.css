@@ -32,6 +32,33 @@ a {
     list-style: none;
     line-height: 26px;
 }
+.btn-group {
+    width: 120px!important;
+}
+#nowPlaying {
+    width: 610px;
+    padding-bottom: 30px;
+    margin: 0 auto;
+}
+
+#nowPlaying img {
+    width: 150px;
+    height: 150px;
+}
+
+.thumb-cell {
+    width: 200px;
+}
+
+.description-cell {
+    width: 400px;
+}
+
+#nowPlaying .artist {
+    background-image: url('http://assets.sk-static.com/assets/default_images/huge_avatar/default-artist-798b09a.png');
+    background-repeat: no-repeat;
+    background-size: 150px auto;
+}
 
 .tracklist {
     font-size: 14px;
@@ -42,6 +69,10 @@ a {
 }
 
 .track-playable {
+    cursor: pointer;
+    background-color: beige;
+}
+.track-playing {
     cursor: pointer;
     background-color: beige;
 }
