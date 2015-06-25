@@ -91,7 +91,7 @@ router.get('/', function(req, res) {
                         'artist_name': obj.artist_name,
                         'event_id': artistTracks[ndx].event_id,
                         'id': obj.id,
-                        'tracks': obj.tracks,
+                        //'tracks': obj.tracks,
                         'foreign_id': fId,
                         'catalog': 'rdio-US'
                     })
