@@ -7,11 +7,7 @@ $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
     createSongTable();
-    
-    postCurrentSongs();
-    
-    
-    
+    //postCurrentSongs();
     R.ready(
         function() {
             R.player.on("change:playingTrack", function(track) {
@@ -240,14 +236,16 @@ function createSongTable() {
   }
 
 function postCurrentSongs() {
-    var songData = JSON.stringify(artistData);    
+    //var songData = JSON.stringify(artistData);  
+    var songData = JSON.stringify({'artistData' : artistData});
     $.ajax({
           type: "POST",
-          url: '/api/playlist/test_name',
+          url: '/api/playlist/playlist',
           data: songData,
           success: success,
           error: error,
-          dataType: 'json'
+          dataType: 'json',
+            contentType: "application/json; charset=utf-8"
     });
     
     function success(data) {
