@@ -46,13 +46,15 @@ router.get('/', function(req, res) {
                 
                 //get tracklist data from echonest
                 events.forEach(function(obj, num) {
-                    //console.log(obj);
-                    artistTracks.push({'displayName': obj.displayName,
-                                        'artist_id': obj.performance[0].artist.id,
-                                        'event_id': obj.id,
-                                        'event_uri': obj.uri,
-                                        'thumbnail_uri': options.artist_icon_url.replace('AID', obj.performance[0].artist.id),
-                                        'trackList': []})
+                    //console.log(obj.performance);
+                    if (obj.performance[0]) {
+                        artistTracks.push({'displayName': obj.displayName,
+                                            'artist_id': obj.performance[0].artist.id,
+                                            'event_id': obj.id,
+                                            'event_uri': obj.uri,
+                                            'thumbnail_uri': options.artist_icon_url.replace('AID', obj.performance[0].artist.id),
+                                            'trackList': []})
+                        }
                 });
                 
                 artistTracks.forEach(function(obj, num) {
