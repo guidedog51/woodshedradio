@@ -1,5 +1,6 @@
 var R = window.R || {};
 var currentSongs = [];
+var unlinkedCurrentSongs = [];
 var curSong = null;
 var artistData;     //all the track metadata from the server
 
@@ -7,7 +8,7 @@ $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
     createSongTable();
-    //postCurrentSongs();
+    postCurrentSongs();
     R.ready(
         function() {
             R.player.on("change:playingTrack", function(track) {
@@ -177,21 +178,30 @@ function createSongTable() {
     
     trackList.forEach(function(obj, num) {
         var song = {};
+        var unlinkedSong = {};
         if (currentSongs.length > 0) {
+//            song.id = obj.track_id;
+//            song.event = obj.event;
+//            song.track = obj.song;
             var last = currentSongs[currentSongs.length - 1];
             last.next = song;
             song.prev = last;
             song.id = obj.track_id;
             song.event = obj.event;
             song.track = obj.song;
-            
+            unlinkedSong = song;
+            unlinkedSong.next = undefined;
+            unlinkedSong.prev.next = undefined;
+            unlinkedSong.prev = undefined;
         } else {
             song.last = null;
             song.id = obj.track_id;
             song.event = obj.event;
             song.track = obj.song;
+            unlinkedSong = song;
         }
         currentSongs.push(song);
+        unlinkedCurrentSongs.push(unlinkedSong);
     });
     
     
@@ -237,7 +247,8 @@ function createSongTable() {
 
 function postCurrentSongs() {
     //var songData = JSON.stringify(artistData);  
-    var songData = JSON.stringify({'artistData' : artistData});
+    var songData = JSON.stringify({'unlinkedSongs' : unlinkedCurrentSongs});
+    console.log(songData);
     $.ajax({
           type: "POST",
           url: '/api/playlist/playlist',

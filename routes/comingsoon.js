@@ -91,9 +91,9 @@ router.get('/', function(req, res) {
                     artistTracks[ndx].trackList.push( {
                         'title': obj.title,
                         'artist_name': obj.artist_name,
+                        'artist_id': artistTracks[ndx].artist_id,
                         'event_id': artistTracks[ndx].event_id,
                         'id': obj.id,
-                        //'tracks': obj.tracks,
                         'foreign_id': fId,
                         'catalog': 'rdio-US'
                     })
