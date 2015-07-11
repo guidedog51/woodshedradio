@@ -8,7 +8,7 @@ $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
     createSongTable();
-    postCurrentSongs();
+    //postCurrentSongs();
     R.ready(
         function() {
             R.player.on("change:playingTrack", function(track) {
@@ -120,7 +120,7 @@ function getSong(songId) {
     currentSongs.forEach(function(obj, num) {
         if (obj.id == songId) {
             newSong = obj;
-            return;
+
             
         }
     });
@@ -132,7 +132,7 @@ function getPerformance(performanceId) {
     artistData.forEach(function(obj, num) {
         if (obj.event_id == performanceId) {
             perf = obj;
-            return;
+
         }
     });
     return perf;
@@ -144,7 +144,7 @@ function getTrackDataForPerformance(eventId, trackId) {
     perf.trackList.forEach(function(obj, num) {
         if (obj.foreign_id == trackId) {
             trackData = obj;
-            return;
+
         }
     });
     return trackData;
@@ -190,9 +190,9 @@ function createSongTable() {
             song.event = obj.event;
             song.track = obj.song;
             unlinkedSong = song;
-            unlinkedSong.next = undefined;
-            unlinkedSong.prev.next = undefined;
-            unlinkedSong.prev = undefined;
+            //unlinkedSong.next = undefined;
+            //unlinkedSong.prev.next = undefined;
+            //unlinkedSong.prev = undefined;
         } else {
             song.last = null;
             song.id = obj.track_id;
