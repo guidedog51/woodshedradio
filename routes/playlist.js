@@ -25,7 +25,7 @@ router.get('/:collectionName/:id', function(req, res) {
     console.log('one playlist: ' + req.params.id);
         var col = db.collection(req.params.collectionName);    
         col.findById(req.params.id, function(e, result){
-            if (e) return next(e)
+            if (e) return next(e);
             res.send(result)
         })
 });
@@ -44,7 +44,8 @@ router.post('/:collectionName', function(req, res, next) {
             console.log(error);
             return next(error);
         }
-        res.send(results);
+        var success = JSON.stringify({'success': true});
+        res.send(results ? success : results);
     })
     
     

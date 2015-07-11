@@ -202,6 +202,7 @@ function createSongTable() {
         }
         currentSongs.push(song);
         unlinkedCurrentSongs.push(unlinkedSong);
+        //debugger;
     });
     
     
@@ -248,7 +249,7 @@ function createSongTable() {
 function postCurrentSongs() {
     //var songData = JSON.stringify(artistData);  
     var songData = JSON.stringify({'unlinkedSongs' : unlinkedCurrentSongs});
-    console.log(songData);
+    //console.log(songData);
     $.ajax({
           type: "POST",
           url: '/api/playlist/playlist',
@@ -260,7 +261,7 @@ function postCurrentSongs() {
     });
     
     function success(data) {
-        console.log(data);
+        console.log(data.success);
     }
     
     function error(xhr, result, error) {
