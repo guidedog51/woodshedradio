@@ -96,7 +96,7 @@ router.get('/', function(req, res) {
                         'id': obj.id,
                         'foreign_id': fId,
                         'catalog': 'rdio-US'
-                    })
+                    });
                     //console.log(fId);
                 });
 
