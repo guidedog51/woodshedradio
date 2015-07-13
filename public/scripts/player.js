@@ -8,7 +8,7 @@ $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
     createSongTable();
-    //postCurrentSongs();
+    postCurrentSongs();
     R.ready(
         function() {
             R.player.on("change:playingTrack", function(track) {
@@ -180,61 +180,27 @@ function createSongTable() {
         var song = {};
         var unlinkedSong = {};
         if (currentSongs.length > 0) {
-//            song.id = obj.track_id;
-//            song.event = obj.event;
-//            song.track = obj.song;
             var last = currentSongs[currentSongs.length - 1];
             last.next = song;
             song.prev = last;
             song.id = obj.track_id;
             song.event = obj.event;
             song.track = obj.song;
-            unlinkedSong = song;
-            //unlinkedSong.next = undefined;
-            //unlinkedSong.prev.next = undefined;
-            //unlinkedSong.prev = undefined;
+            //persist unlinked version
+            unlinkedSong = jQuery.extend({}, song);
+            delete unlinkedSong.next;
+            delete unlinkedSong.prev;
         } else {
             song.last = null;
             song.id = obj.track_id;
             song.event = obj.event;
             song.track = obj.song;
-            unlinkedSong = song;
+            unlinkedSong = jQuery.extend({}, song);
         }
         currentSongs.push(song);
         unlinkedCurrentSongs.push(unlinkedSong);
         //debugger;
     });
-    
-    
-//    _.each(currentMessage, function(c, i) {
-//        var row = $("<tr>");
-//        var char = $("<td class='char'>");
-//        char.html('<b>' + c.toUpperCase() + '</b>');
-//        var title = $("<td>");
-//        if (c == ' ') {
-//            title.html('&nbsp;');
-//        } else {
-//           var song = getMatchingSong(c, currentGenre);
-//            if (song) {
-//                song.prev = null;
-//                song.next = null;
-//                if (currentSongs.length > 0) {
-//                    var last = currentSongs[currentSongs.length - 1];
-//                    last.next = song;
-//                    song.prev = last;
-//                } 
-//                currentSongs.push(song);
-//                title.text(song.title + ' by ' + song.artist_name);
-//                song.row = row;
-//                row.on("click", function() {
-//                    playSong(song);
-//                });
-//            }
-//        }
-//        row.append(char);
-//        row.append(title);
-//        rows.append(row);
-//    });
 }
   function updateNowPlaying(song) {
       var event = song.event;
@@ -247,9 +213,14 @@ function createSongTable() {
   }
 
 function postCurrentSongs() {
-    //var songData = JSON.stringify(artistData);  
     var songData = JSON.stringify({'unlinkedSongs' : unlinkedCurrentSongs});
-    //console.log(songData);
+
+    //timestamp will be the id
+    //tag is for the curator from UI
+    songData._id = Math.floor(Date.now() / 1000);
+    songData.tag = 'new show for August'
+
+    console.log(songData);
     $.ajax({
           type: "POST",
           url: '/api/playlist/playlist',

@@ -18,18 +18,22 @@ block content
             button(id='playPlay', class="btn btn-default pb")<i class="icon-play"></i>
             button(id='playPause', class="btn btn-default pb")<i class="icon-pause"></i>
             button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
-     ul(class='song-container')
-        for val in artistTracks
-            li(class='song-title')
-                a(href=val.event_uri, target='_blank')!=val.displayName
-            ul(class='trackList')
-                for item in val.trackList
-                    li(id=item.row, class=(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable', data-track_id=item.foreign_id, data-event_id=item.event_id)= item.title
-                else
-                    li(class='tracklist') no tracks!
-        else
-            li no artist!
-    
+    #songContainer(class='show-container')
+        ul
+            for val in artistTracks
+                li(class='song-title')
+                    a(href=val.event_uri, target='_blank')!=val.displayName
+                ul(class='trackList')
+                    for item in val.trackList
+                        li(id=item.row, class=(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable', data-track_id=item.foreign_id, data-event_id=item.event_id)= item.title
+                    else
+                        li(class='tracklist') no tracks!
+            else
+                li no artist!
+    #showContainer(class='show-container')
+        ul
+            li Drag songs for the show into this container -- drag to trash container to remove
+
     #footer(class='container span10 offset1')
         small Powered by 
             a(href='http://soundkick.com') Soundkick
@@ -43,4 +47,5 @@ block content
     script(src='https://rdio.com/api/api.js?client_id=uidoeau3k5frvc3yat3hxb3h2q')
     script(src='/scripts/get_key_with_callback.js')
     script(src='/scripts/player.js')
+    script(src='/scripts/touchpunch.js')
        

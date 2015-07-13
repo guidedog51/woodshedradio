@@ -85,6 +85,15 @@ a {
     overflow: hidden;
     overflow-y: scroll;
 }
+.show-container {
+    width: 45%;
+    height: 800px;
+    overflow: hidden;
+    overflow-y: scroll;
+    display: inline-block;
+    border: thin solid #46a546;
+    margin-left: 20px;
+}
 
 .song-title {
     font-weight: 600;

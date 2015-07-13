@@ -12,6 +12,7 @@ var request = require('request');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var comingsoon = require('./routes/comingsoon');
+var showeditor = require('./routes/showeditor');
 var api = require('./routes/playlist');
 
 //mongoskin
@@ -65,6 +66,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/comingsoon', comingsoon);
+app.use('/showeditor', showeditor);
 app.use('/api/playlist', api);
 //app.use('/api/playlist/:id', api);
 
