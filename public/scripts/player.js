@@ -1,14 +1,17 @@
 var R = window.R || {};
 var currentSongs = [];
+var currentShow = [];
 var unlinkedCurrentSongs = [];
 var curSong = null;
+//var curShowSong = null;
 var artistData;     //all the track metadata from the server
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
     createSongTable();
-    postCurrentSongs();
+    //postCurrentSongs();
+    initSortable();
     R.ready(
         function() {
             R.player.on("change:playingTrack", function(track) {
@@ -38,6 +41,23 @@ $(document).ready(function() {
     );
 });
 
+function initSortable() {
+    $('.trackList').sortable({
+        connectWith: '.showList',
+        cursor: 'crosshair',
+        items: '.track-playable'
+
+    }).disableSelection();
+    $('.showList').sortable({
+        cursor: 'crosshair',
+        //connectWith: 'trackList',
+        receive: function(e, ui) {
+            //reset the playlist linked list
+            createShowTable();
+            console.log(currentShow);
+        }
+    }).disableSelection();
+}
 
 function initUI() {
     $("#save").click(function() {
@@ -160,7 +180,7 @@ function createSongTable() {
         var eventId = $(this).data('event_id');
         var performance = {};
         var songToPlay = {};
-        if (id != 'none' && $(this).attr('class')==='tracklist track-playable') {
+        if (id != 'none' && $(this).hasClass('track-playable')) {
             $(this).on('click', function() {
                 songToPlay = getSong(id);
                 //performance = getPerformance(eventId);
@@ -187,6 +207,59 @@ function createSongTable() {
             song.event = obj.event;
             song.track = obj.song;
             //persist unlinked version
+            //unlinkedSong = jQuery.extend({}, song);
+            //delete unlinkedSong.next;
+            //delete unlinkedSong.prev;
+        } else {
+            song.last = null;
+            song.id = obj.track_id;
+            song.event = obj.event;
+            song.track = obj.song;
+            unlinkedSong = jQuery.extend({}, song);
+        }
+        currentSongs.push(song);
+        //unlinkedCurrentSongs.push(unlinkedSong);
+        //debugger;
+    });
+}
+
+function createShowTable() {
+
+    currentShow = [{}];
+    var rowNum = 1;
+
+    //get the trackids from jquery
+    var showTrackList = $('.showList li').map(function() {
+        var id = $(this).data("track_id");
+        var eventId = $(this).data('event_id');
+        var performance = {};
+        var songToPlay = {};
+        if (id != 'none' && $(this).hasClass('track-playable')) {
+            //$(this).on('click', function() {
+            //    songToPlay = getSong(id);
+            //    //performance = getPerformance(eventId);
+            //    playSong(songToPlay);
+            //    //updateNowPlaying(event);
+            //    //alert(id);
+            //});
+            $(this).attr('id', 's' + rowNum);
+            rowNum++;
+            return {'track_id': id,
+                'event': getPerformance(eventId),
+                'song': getTrackDataForPerformance(eventId, id)};
+        }
+    }).get();
+
+    showTrackList.forEach(function(obj, num) {
+        var song = {};
+        if (currentShow.length > 0) {
+            var last = currentShow[currentShow.length - 1];
+            last.next = song;
+            song.prev = last;
+            song.id = obj.track_id;
+            song.event = obj.event;
+            song.track = obj.song;
+            //persist unlinked version
             unlinkedSong = jQuery.extend({}, song);
             delete unlinkedSong.next;
             delete unlinkedSong.prev;
@@ -197,11 +270,14 @@ function createSongTable() {
             song.track = obj.song;
             unlinkedSong = jQuery.extend({}, song);
         }
-        currentSongs.push(song);
+        currentShow.push(song);
         unlinkedCurrentSongs.push(unlinkedSong);
         //debugger;
     });
+
 }
+
+
   function updateNowPlaying(song) {
       var event = song.event;
       $('#artist-thumbnail').attr('src', event.thumbnail_uri);
