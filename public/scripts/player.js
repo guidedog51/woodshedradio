@@ -1,6 +1,7 @@
 var R = window.R || {};
 var currentSongs = [];
 var currentShow = [];
+var songsToPlay = [];
 var unlinkedCurrentSongs = [];
 var curSong = null;
 //var curShowSong = null;
@@ -52,7 +53,8 @@ function initSortable() {
         cursor: 'crosshair',
         //connectWith: 'trackList',
         receive: function(e, ui) {
-            //reset the playlist linked list
+            //reset the playlist linked lists
+            createSongTable();
             createShowTable();
             console.log(currentShow);
         }
@@ -71,8 +73,8 @@ function initUI() {
     });
     $("#playPlay").click(function() {
         if (curSong == null) {
-            if (currentSongs && currentSongs.length > 0) {
-                playSong(currentSongs[0]);
+            if (songsToPlay && songsToPlay.length > 0) {
+                playSong(songsToPlay[0]);
             }
         } else {
             R.player.togglePause();
@@ -81,6 +83,12 @@ function initUI() {
     $("#playPause").click(function() {
         R.player.togglePause();
     }).hide();
+
+    $("#performance-date").datepicker();
+
+    $("#performance-date").on("change", function () {
+        alert('date changed')
+    });
 }
 
 
@@ -90,8 +98,8 @@ function playNextSong() {
             playSong(curSong.next);
         } 
     }  else {
-        if (currentSongs && currentSongs.length > 0) {
-            playSong(currentSongs[0]);
+        if (songsToPlay && songsToPlay.length > 0) {
+            playSong(songsToPlay[0]);
         }
     }
 }
@@ -102,8 +110,8 @@ function playPrevSong() {
             playSong(curSong.prev);
         } 
     }  else {
-        if (currentSongs && currentSongs.length > 0) {
-            playSong(currentSongs[0]);
+        if (songsToPlay && songsToPlay.length > 0) {
+            playSong(songsToPlay[0]);
         }
     }
 }
@@ -137,7 +145,7 @@ function songChanged(song) {
 
 function getSong(songId) {
     var newSong={};
-    currentSongs.forEach(function(obj, num) {
+    songsToPlay.forEach(function(obj, num) {
         if (obj.id == songId) {
             newSong = obj;
 
@@ -182,11 +190,11 @@ function createSongTable() {
         var songToPlay = {};
         if (id != 'none' && $(this).hasClass('track-playable')) {
             $(this).on('click', function() {
+                songsToPlay = currentSongs;
                 songToPlay = getSong(id);
-                //performance = getPerformance(eventId);
                 playSong(songToPlay);
-                //updateNowPlaying(event);
-                //alert(id);
+                $('#showContainer').removeClass('playlist-active');
+                $('#songContainer').addClass('playlist-active');
             });
             $(this).attr('id', rowNum);
             rowNum++;
@@ -235,13 +243,15 @@ function createShowTable() {
         var performance = {};
         var songToPlay = {};
         if (id != 'none' && $(this).hasClass('track-playable')) {
-            //$(this).on('click', function() {
-            //    songToPlay = getSong(id);
-            //    //performance = getPerformance(eventId);
-            //    playSong(songToPlay);
-            //    //updateNowPlaying(event);
-            //    //alert(id);
-            //});
+            songsToPlay = currentShow;
+            $(this).off('click');
+            $(this).on('click', function() {
+                $('#songContainer').removeClass('playlist-active');
+                $('#showContainer').addClass('playlist-active');
+                songToPlay = getSong(id);
+                playSong(songToPlay);
+            })
+
             $(this).attr('id', 's' + rowNum);
             rowNum++;
             return {'track_id': id,

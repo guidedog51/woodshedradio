@@ -16,6 +16,10 @@ a {
   color: #00B7FF;
 }
 
+input[type='text'] {
+    margin-bottom: 0px !important;
+}
+
 .logo {
   text-align: center;  
 }
@@ -32,8 +36,16 @@ a {
     list-style: none;
     line-height: 26px;
 }
+
+#playBar {
+    padding-bottom: 30px;
+    text-align: center;
+}
+
 .btn-group {
     width: 120px!important;
+    display: inline-block !important;
+    padding-bottom: 0px !important;
 }
 #nowPlaying {
     width: 610px;
@@ -95,6 +107,16 @@ a {
     margin-left: 20px;
 }
 
+.showlist-container {
+
+    display: inline-block;
+    margin-left: 40px;
+}
+
 .song-title {
     font-weight: 600;
+}
+
+.playlist-active {
+    border: thick solid greenyellow;
 }

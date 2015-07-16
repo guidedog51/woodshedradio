@@ -13,11 +13,35 @@ block content
                     p(id='track-name')='track currently playing'
                     a(id='performance-link', href='#', style='margin-left: 10px;')='link to performance page'
     #playBar
-        div(id='play-buttons', class='btn-group')
+
+        div(id='date-range', class='showlist-container control-group')
+            div(class='controls')
+                div(class='input-group')
+                    label(for="performance-date" class="input-group-addon btn")
+                        span(class="icon-calendar")
+                    input(id='performance-date', type='text', class='date-picker form-control', placeholder='enter a date!')
+
+        div(id='play-buttons', class='btn-group showlist-container')
             button(id='playPrev', class="btn btn-default pb")<i class="icon-backward"></i>
             button(id='playPlay', class="btn btn-default pb")<i class="icon-play"></i>
             button(id='playPause', class="btn btn-default pb")<i class="icon-pause"></i>
             button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
+
+        div(class='showlist-container')
+            div(class='dropdown')
+                a(href='javascript:void(0)', class='dropdown-toggle', data-toggle='dropdown') Load playlist here
+                    b(class='caret')
+
+                ul(class='dropdown-menu')
+                    li Playlist A
+                    li Playlist B
+
+        div(class='showlist-container')
+            button(id='save-show', class='btn btn-default') Save Playlist
+
+        div(class='showlist-container')
+            input(id='show-name', type='text', class='input-large', placeholder='enter a name for the playlist')
+
     #songContainer(class='show-container')
         ul
             for val in artistTracks
