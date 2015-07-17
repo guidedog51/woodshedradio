@@ -7,6 +7,7 @@ var curSong = null;
 //var curShowSong = null;
 var artistData;     //all the track metadata from the server
 //var jade = require("jade");
+var laddaSpinner={};
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
@@ -89,12 +90,15 @@ function initUI() {
         R.player.togglePause();
     }).hide();
 
+
     $("#performance-date").datepicker({
-        format: "mm-dd-yyyy"
+        format: "yyyy-mm-dd",
+        todayHighlight: true
     });
 
-    $("#performance-date").on("change", function (e) {
-       getArtistsPerformances($("#performance-date").val());
+    $("#performance-date").on("changeDate", function (e) {
+        $(this).datepicker('hide');
+        getArtistsPerformances($(this).val());
     });
 }
 
@@ -334,12 +338,11 @@ function postCurrentSongs() {
 }
 
 function getArtistsPerformances(sd) {
-
-    //var startDate =‌‌ sd.replace(/\//g, '-');
-    var startDate = '07-15-2012';
+    var l = Ladda.create($('#date-button').get()[0]);
+    l.start();
     $.ajax({
         type: "GET",
-        url: '/api/showlist/' + startDate,
+        url: '/api/showlist/' + moment(sd).unix(),
         data: {},
         success: success,
         error: error,
@@ -354,9 +357,11 @@ function getArtistsPerformances(sd) {
         $('#songContainer').html(markup);
         createSongTable();
         initSortable();
+        l.stop();
     }
 
     function error(xhr, result, error) {
         console.log(error);
+        l.stop();
     }
 }

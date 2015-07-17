@@ -17,7 +17,8 @@ block content
         div(id='date-range', class='showlist-container control-group')
             div(class='controls')
                 div(class='input-group')
-                    label(for="performance-date" class="input-group-addon btn")
+                    label(id='date-button', for="performance-date" class="input-group-addon btn ladda-button", data-style='expand-left', data-spinner-color="#46a546")
+                        span(class="ladda-label")
                         span(class="icon-calendar")
                     input(id='performance-date', type='text', class='date-picker form-control', placeholder='enter a date!')
 

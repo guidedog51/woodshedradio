@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var callbackCount = 0;
+var moment = require('moment');
 
 /* GET home page. */
 router.get('/:startdate', function(req, res) {
@@ -11,11 +12,11 @@ router.get('/:startdate', function(req, res) {
     var page = 1;
     var events = [];
     var artistTracks = [];
-    var startDate = req.params.startdate;
+    var dateRange = _getSoundKickDateRange(req.params.startdate);
 
     var eventIndex = 0;
     var options = {
-        url: soundkickEndpoint + '&min_date=' + _getSoundKickDateRange()[0] + '&max_date=' + _getSoundKickDateRange()[1] + '&page=' + page + '&per_page=50&jsoncallback=jpCallback',
+        url: soundkickEndpoint + '&min_date=' + dateRange[0] + '&max_date=' + dateRange[1] + '&page=' + page + '&per_page=50&jsoncallback=jpCallback',
         artist_icon_url: soundkickStaticEndpoint + 'profile_images/artists/AID/huge_avatar'
     };
     
@@ -125,11 +126,11 @@ var _getSoundKickDateRange = function(startdate, enddate) {
 
     var dates = [];
     var sep = '-';
-    var today = getDayWhen(0);
-    var future = getDayWhen(1);          
+    var today = getMomentWhen(startdate, 0);
+    var future = getMomentWhen(startdate, 1);
 
-    dates.push(today.getFullYear() + sep + padDateItem(today.getMonth() + 1) + sep + padDateItem(today.getDate()));
-    dates.push(future.getFullYear() + sep + padDateItem(future.getMonth() + 1) + sep + padDateItem(future.getDate()));
+    dates.push(today.year() + sep + padDateItem(today.month() + 1) + sep + padDateItem(today.date()));
+    dates.push(future.year() + sep + padDateItem(future.month() + 1) + sep + padDateItem(future.date()));
 
     return dates;
 
@@ -138,6 +139,15 @@ var _getSoundKickDateRange = function(startdate, enddate) {
         dt.setDate(dt.getDate() + days);
         return dt;
     }
+
+
+    function getMomentWhen(startDate, days) {
+        var mDay = moment.unix(startDate);
+        return mDay.add(days, 'd');
+    }
+
+
+
 
     function padDateItem(item) {
         return ('0' + item).slice(-2);
