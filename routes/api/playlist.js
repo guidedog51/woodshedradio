@@ -14,9 +14,12 @@ var mongoskin = require('mongoskin'),
 
 
 /* GET playlists. */
-router.get('/all', function(req, res) {
+router.get('/all/:collectionName', function(req, res) {
     var request = req.app.settings.request;
-    console.log('all playlists!');
+    result = {'result':'all playlists!'};
+    res.send(result);
+    console.log('result!');
+
 });
 
 
@@ -65,6 +68,6 @@ router.put('/:id', function(req, res) {
 router.delete('/:id', function(req, res) {
     console.log('delete playlist: ' + req.params.id);
 });
-           
+
 module.exports = router;
 

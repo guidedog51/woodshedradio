@@ -6,13 +6,18 @@ var unlinkedCurrentSongs = [];
 var curSong = null;
 //var curShowSong = null;
 var artistData;     //all the track metadata from the server
+//var jade = require("jade");
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
-    createSongTable();
+    //createSongTable();
     //postCurrentSongs();
-    initSortable();
+    //initSortable();
+    //var jt = jade.render("/views/error.jade")
+
+    //var markup = window.songList({artistTracks: artistData});
+
     R.ready(
         function() {
             R.player.on("change:playingTrack", function(track) {
@@ -84,10 +89,12 @@ function initUI() {
         R.player.togglePause();
     }).hide();
 
-    $("#performance-date").datepicker();
+    $("#performance-date").datepicker({
+        format: "mm-dd-yyyy"
+    });
 
-    $("#performance-date").on("change", function () {
-        alert('date changed')
+    $("#performance-date").on("change", function (e) {
+       getArtistsPerformances($("#performance-date").val());
     });
 }
 
@@ -95,7 +102,7 @@ function initUI() {
 function playNextSong() {
     if (curSong) {
         if (curSong.next) {
-            playSong(curSong.next);
+            playSong(curSong.next);l
         } 
     }  else {
         if (songsToPlay && songsToPlay.length > 0) {
@@ -304,7 +311,7 @@ function postCurrentSongs() {
     //timestamp will be the id
     //tag is for the curator from UI
     songData._id = Math.floor(Date.now() / 1000);
-    songData.tag = 'new show for August'
+    songData.tag = 'new show for August';
 
     console.log(songData);
     $.ajax({
@@ -326,3 +333,30 @@ function postCurrentSongs() {
     }
 }
 
+function getArtistsPerformances(sd) {
+
+    //var startDate =‌‌ sd.replace(/\//g, '-');
+    var startDate = '07-15-2012';
+    $.ajax({
+        type: "GET",
+        url: '/api/showlist/' + startDate,
+        data: {},
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        console.log('performance data fetched');
+        artistData = data.artistTracks;
+        var markup = window.songList({artistTracks: data.artistTracks});
+        $('#songContainer').html(markup);
+        createSongTable();
+        initSortable();
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+    }
+}

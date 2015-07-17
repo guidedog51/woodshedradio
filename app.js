@@ -13,7 +13,11 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var comingsoon = require('./routes/comingsoon');
 var showeditor = require('./routes/showeditor');
-var api = require('./routes/playlist');
+var playlistapi = require('./routes/api/playlist');
+var showlistapi = require('./routes/api/showlist');
+//var jade_browser = require('jade-browser');
+var jade = require('jade');
+var fs = require('fs');
 
 //mongoskin
 //var mongoskin = require('mongoskin'),
@@ -67,7 +71,8 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/comingsoon', comingsoon);
 app.use('/showeditor', showeditor);
-app.use('/api/playlist', api);
+app.use('/api/playlist', playlistapi);
+app.use('/api/showlist', showlistapi);
 //app.use('/api/playlist/:id', api);
 
 //app.use(function(req, res, next) {
@@ -76,8 +81,11 @@ app.use('/api/playlist', api);
 //  next();
 //});
 
-app.use('/api/playlist', api);
+//app.use('/api/playlist', api);
 //app.use('/api/playlist/:id', api);
+
+//middleware to compile templates for local use
+//app.use(jade_browser('./public/scripts/templatesold.js', '**', {}));
 
 
 /// catch 404 and forwarding to error handler
@@ -112,6 +120,9 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+//var jsFunctionString = jade.compileFileClient('./views/songlist.jade', {name: "songList"});
+//fs.writeFileSync("./public/scripts/templates.js", jsFunctionString);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
