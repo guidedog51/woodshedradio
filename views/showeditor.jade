@@ -30,7 +30,8 @@ block content
 
         div(class='showlist-container')
             div(class='dropdown')
-                a(href='javascript:void(0)', class='dropdown-toggle', data-toggle='dropdown') Load playlist here
+                button(id='get-playlists', class='dropdown-toggle btn ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Load playlist here
+                    span(class="ladda-label")
                     b(class='caret')
 
                 ul(class='dropdown-menu')
@@ -38,10 +39,11 @@ block content
                     li Playlist B
 
         div(class='showlist-container')
-            button(id='save-show', class='btn btn-default') Save Playlist
+            button(id='save-playlist', class='btn btn-default ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Save Playlist
+                span(class="ladda-label")
 
         div(class='showlist-container')
-            input(id='show-name', type='text', class='input-large', placeholder='enter a name for the playlist')
+                input(id='playlist-name', type='text', class='input-large', placeholder='enter a name for the playlist')
 
     #songContainer(class='show-container')
         ul

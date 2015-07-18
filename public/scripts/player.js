@@ -93,13 +93,22 @@ function initUI() {
 
     $("#performance-date").datepicker({
         format: "yyyy-mm-dd",
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: 'd'
     });
 
     $("#performance-date").on("changeDate", function (e) {
         $(this).datepicker('hide');
         getArtistsPerformances($(this).val());
     });
+
+    $("#get-playlists").on("click", function(e) {
+        getPlaylists();
+    })
+
+    $("#save-playlist").on("click", function(e) {
+        savePlaylist();
+    })
 }
 
 
@@ -309,19 +318,22 @@ function createShowTable() {
       console.log(event);
   }
 
-function postCurrentSongs() {
-    var songData = JSON.stringify({'unlinkedSongs' : unlinkedCurrentSongs});
+function savePlaylist() {
+    var l = Ladda.create($('#save-playlist').get()[0]);
+    l.start();
+    var songData = {'unlinkedSongs' : unlinkedCurrentSongs};
 
     //timestamp will be the id
     //tag is for the curator from UI
-    songData._id = Math.floor(Date.now() / 1000);
-    songData.tag = 'new show for August';
+    songData._id = moment(Date.now()).unix();
+    songData.tag = $('#playlist-name').val();
 
     console.log(songData);
+    return;
     $.ajax({
           type: "POST",
           url: '/api/playlist/playlist',
-          data: songData,
+          data: JSON.stringify(songData),
           success: success,
           error: error,
           dataType: 'json',
@@ -330,10 +342,12 @@ function postCurrentSongs() {
     
     function success(data) {
         console.log(data.success);
+        l.stop();
     }
     
     function error(xhr, result, error) {
         console.log(error);
+        l.stop();
     }
 }
 
@@ -365,3 +379,10 @@ function getArtistsPerformances(sd) {
         l.stop();
     }
 }
+
+function getPlaylists() {
+    //var l = Ladda.create($('#get-playlists').get()[0]);
+    //l.start();
+}
+
+
