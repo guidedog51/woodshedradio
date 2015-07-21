@@ -57,10 +57,26 @@ function initSortable() {
     }).disableSelection();
     $('.showList').sortable({
         cursor: 'crosshair',
+        connectWith: '#trash-dropdown',
         //connectWith: 'trackList',
         receive: function(e, ui) {
             //reset the playlist linked lists
             createSongTable();
+            createShowTable();
+            console.log(currentShow);
+        }
+    }).disableSelection();
+    //$('.showList li').draggable();
+    $('#trash-playlist').droppable({
+        over: function(){
+            $('#trash-playlist').trigger('click');
+        }
+
+    });
+    $('#trash-dropdown').sortable({
+        cursor: 'crosshair',
+        connectWith: '.showList',
+        receive: function(e, ui){
             createShowTable();
             console.log(currentShow);
         }
@@ -109,6 +125,8 @@ function initUI() {
     $("#save-playlist").on("click", function(e) {
         savePlaylist();
     })
+
+
 }
 
 
@@ -251,6 +269,8 @@ function createSongTable() {
     });
 }
 
+
+//this is for the radio show TODO: show = radio show; performance = songkick performance data;
 function createShowTable() {
 
     currentShow = [{}];
@@ -319,6 +339,14 @@ function createShowTable() {
   }
 
 function savePlaylist() {
+    if (!$('#playlist-name').val()) {
+        alert('enter a playlist name!');
+        setTimeout(function(){
+            $('#playlist-name').focus();
+        }, 0);
+        return;
+    }
+
     var l = Ladda.create($('#save-playlist').get()[0]);
     l.start();
     var songData = {'unlinkedSongs' : unlinkedCurrentSongs};
@@ -329,7 +357,7 @@ function savePlaylist() {
     songData.tag = $('#playlist-name').val();
 
     console.log(songData);
-    return;
+    //return;
     $.ajax({
           type: "POST",
           url: '/api/playlist/playlist',
@@ -383,6 +411,26 @@ function getArtistsPerformances(sd) {
 function getPlaylists() {
     //var l = Ladda.create($('#get-playlists').get()[0]);
     //l.start();
+
+    $.ajax({
+        type: "GET",
+        url: '/api/playlist/all/playlist/',
+        data: {},
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        console.log(data);
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        //l.stop();
+    }
+
 }
 
 

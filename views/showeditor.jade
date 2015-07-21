@@ -12,6 +12,7 @@ block content
                     p(id='artist-name')='artist currently playing'
                     p(id='track-name')='track currently playing'
                     a(id='performance-link', href='#', style='margin-left: 10px;')='link to performance page'
+
     #playBar
 
         div(id='date-range', class='showlist-container control-group')
@@ -34,7 +35,7 @@ block content
                     span(class="ladda-label")
                     b(class='caret')
 
-                ul(class='dropdown-menu')
+                ul(id='show-list',class='dropdown-menu')
                     li Playlist A
                     li Playlist B
 
@@ -43,7 +44,18 @@ block content
                 span(class="ladda-label")
 
         div(class='showlist-container')
-                input(id='playlist-name', type='text', class='input-large', placeholder='enter a name for the playlist')
+            input(id='playlist-name', type='text', class='input-large', placeholder='enter a name for the playlist', required)
+
+        div(class='showlist-container')
+            div(class='dropdown')
+                button(id='trash-playlist', class='dropdown-toggle btn btn-default ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546")
+                    span(class="ladda-label")
+                    icon(class='icon-trash')
+                    b(class='caret')
+
+                ul(id='trash-dropdown', class='dropdown-menu')
+                    li track A
+                    li track B
 
     #songContainer(class='show-container')
         ul
