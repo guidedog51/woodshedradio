@@ -122,7 +122,11 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 //var jsFunctionString = jade.compileFileClient('./views/songlist.jade', {name: "songList"});
-//fs.writeFileSync("./public/scripts/templates.js", jsFunctionString);
+//fs.writeFileSync("./public/scripts/templates1.js", jsFunctionString);
+var jsFunctionString2 = jade.compileFileClient('./views/savedlist.jade', {'name': "savedList"});
+fs.writeFileSync("./public/scripts/templates2.js", jsFunctionString2);
+var jsFunctionString3 = jade.compileFileClient('./views/showlist.jade', {'name': "showList"});
+fs.writeFileSync("./public/scripts/templates3.js", jsFunctionString3);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

@@ -3,6 +3,7 @@ var currentSongs = [];
 var currentShow = [];
 var songsToPlay = [];
 var unlinkedCurrentSongs = [];
+var savedSongs = [];
 var curSong = null;
 //var curShowSong = null;
 var artistData;     //all the track metadata from the server
@@ -49,30 +50,48 @@ $(document).ready(function() {
 });
 
 function initSortable() {
+    if ($('.tracklist').sortable('instance')) {
+        $('.trackList').sortable('destroy')
+    };
     $('.trackList').sortable({
         connectWith: '.showList',
         cursor: 'crosshair',
         items: '.track-playable'
 
     }).disableSelection();
+    if ($('.showList').sortable('instance')) {
+        $('.showList').sortable('destroy')
+    };
     $('.showList').sortable({
         cursor: 'crosshair',
         connectWith: '#trash-dropdown',
         //connectWith: 'trackList',
         receive: function(e, ui) {
             //reset the playlist linked lists
+            unlinkedCurrentSongs.length=0;
             createSongTable();
-            createShowTable();
+            //createShowTable();
             console.log(currentShow);
+        },
+        update: function(e, ui) {
+            unlinkedCurrentSongs.length=0;
+            createShowTable();
         }
     }).disableSelection();
     //$('.showList li').draggable();
+    if($('#trash-playlist').droppable('instance')){
+        $('#trash-playlist').droppable('destroy');
+    }
+
     $('#trash-playlist').droppable({
         over: function(){
             $('#trash-playlist').trigger('click');
         }
 
     });
+    if ($('#trash-dropdown').sortable('instance')) {
+        $('#trash-dropdown').sortable('destroy')
+    };
     $('#trash-dropdown').sortable({
         cursor: 'crosshair',
         connectWith: '.showList',
@@ -133,7 +152,7 @@ function initUI() {
 function playNextSong() {
     if (curSong) {
         if (curSong.next) {
-            playSong(curSong.next);l
+            playSong(curSong.next);
         } 
     }  else {
         if (songsToPlay && songsToPlay.length > 0) {
@@ -195,9 +214,23 @@ function getSong(songId) {
 
 function getPerformance(performanceId) {
     var perf = {};
-    artistData.forEach(function(obj, num) {
-        if (obj.event_id == performanceId) {
-            perf = obj;
+    //artistData is fetched from songKick
+    //check if it is undefined or not -- if it is, get performance and track data
+    //from persisted unlinkedCurrentSongs
+    if (artistData) {
+        artistData.forEach(function(obj, num) {
+            if (obj.event_id == performanceId) {
+                perf = obj;
+
+            }
+        });
+    }
+
+    if (perf.event_id) return perf;
+    //these have been fetched from db
+    savedSongs.forEach(function(obj, num) {
+        if (obj.event.event_id == performanceId) {
+            perf = obj.event;
 
         }
     });
@@ -221,7 +254,7 @@ function createSongTable() {
     var rowNum = 1;
     
     //get the trackids from jquery
-    var trackList = $('li').map(function() {
+    var trackList = $('#songContainer li').map(function() {
         var id = $(this).data("track_id");
         var eventId = $(this).data('event_id');
         var performance = {};
@@ -252,10 +285,6 @@ function createSongTable() {
             song.id = obj.track_id;
             song.event = obj.event;
             song.track = obj.song;
-            //persist unlinked version
-            //unlinkedSong = jQuery.extend({}, song);
-            //delete unlinkedSong.next;
-            //delete unlinkedSong.prev;
         } else {
             song.last = null;
             song.id = obj.track_id;
@@ -264,8 +293,6 @@ function createSongTable() {
             unlinkedSong = jQuery.extend({}, song);
         }
         currentSongs.push(song);
-        //unlinkedCurrentSongs.push(unlinkedSong);
-        //debugger;
     });
 }
 
@@ -275,6 +302,7 @@ function createShowTable() {
 
     currentShow = [{}];
     var rowNum = 1;
+    //unlinkedCurrentSongs.length = 0;
 
     //get the trackids from jquery
     var showTrackList = $('.showList li').map(function() {
@@ -357,7 +385,7 @@ function savePlaylist() {
     songData.tag = $('#playlist-name').val();
 
     console.log(songData);
-    //return;
+
     $.ajax({
           type: "POST",
           url: '/api/playlist/playlist',
@@ -424,6 +452,48 @@ function getPlaylists() {
 
     function success(data) {
         console.log(data);
+
+        var savedShows = data.idList;
+        var markup = window.savedList(data);
+        $('#saved-list').html(markup);
+        $('#saved-list').off('click', 'li');
+        $('#saved-list').on('click', 'li', function(){
+            //alert($(this).data('saved-id'));
+            getSavedShow($(this).data('saved-id'));
+        });
+
+
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        //l.stop();
+    }
+
+}
+
+function getSavedShow(showID) {
+    //var l = Ladda.create($('#get-playlists').get()[0]);
+    //l.start();
+
+    $.ajax({
+        type: "GET",
+        url: '/api/playlist/playlist/' + showID,
+        data: {},
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        unlinkedCurrentSongs.length = 0;
+        savedSongs.length = 0;
+        savedSongs=data.savedShow[0].unlinkedSongs;
+        var markup = window.showList(data.savedShow[0]);
+        $('#showContainer').html(markup);
+        createShowTable();
+        initSortable();
     }
 
     function error(xhr, result, error) {

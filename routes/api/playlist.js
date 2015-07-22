@@ -14,21 +14,24 @@ var mongoskin = require('mongoskin'),
 
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
+var moment = require('moment');
 
 /* GET playlists. */
 router.get('/all/:collectionName', function(req, res) {
     //var col = db.collection(req.params.collectionName);
     var arr = [];
     mongoClient.connect(dbUrl, function(err, mdb){
-        var col = mdb.collection('playlist');
-        col.find({'tag':{$exists: true}}).toArray(function(err, result){
+        var col = mdb.collection(req.params.collectionName);
+        col.find({'tag':{$exists: true}}, {unlinkedSongs: 0}).toArray(function(err, result){
             if (err) return next(err);
-
-            result.map(function(obj, num){console.log(obj)
-                arr.push({id: obj._id, tag: obj.tag})
+            console.log(result)
+            result.map(function(obj, num){
+                arr.push({id: obj._id,
+                        tag: obj.tag,
+                        dateTime: moment.unix(obj._id).format("MM/DD/YYYY:hh:mm:ss")})
             })
 
-            res.send({"idlist": arr});
+            res.send({"idList": arr});
             mdb.close();
         });
     });
@@ -38,13 +41,24 @@ router.get('/all/:collectionName', function(req, res) {
 
 /* GET playlist by id */
 router.get('/:collectionName/:id', function(req, res) {
-    console.log('one playlist: ' + req.params.id);
-        var col = db.collection(req.params.collectionName);    
-        col.findById(req.params.id, function(e, result){
-            if (e) return next(e);
-            res.send(result)
-        })
-});
+
+    var arr = [];
+    mongoClient.connect(dbUrl, function(err, mdb){
+        var col = mdb.collection(req.params.collectionName);
+        col.find({'_id': Number(req.params.id)}).toArray(function(err, result){
+            if (err) return next(err);
+            console.log(result)
+            result.map(function(obj, num){
+                arr.push({id: obj._id,
+                    tag: obj.tag,
+                    unlinkedSongs: obj.unlinkedSongs})
+            })
+
+            res.send({"savedShow": arr});
+            mdb.close();
+        });
+    });
+ });
 
 
 /*POST new playlist */

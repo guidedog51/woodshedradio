@@ -1,11 +1,3 @@
 ul(class='showList')
-    for val in artistTracks
-        li(class='song-title')
-            a(href=val.event_uri, target='_blank')!=val.displayName
-        ul(class='trackList')
-            for item in val.trackList
-                li(id=item.row, class=(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable', data-track_id=item.foreign_id, data-event_id=item.event_id)= item.title
-            else
-                li(class='tracklist') no tracks!
-    else
-        li no artist!
+    for val in unlinkedSongs
+        li(class='tracklist track-playable', data-track_id=val.id, data-event_id=val.event.event_id)= val.track.title
