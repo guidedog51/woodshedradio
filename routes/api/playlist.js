@@ -49,7 +49,7 @@ router.get('/:collectionName/:id', function(req, res) {
             if (err) return next(err);
             console.log(result)
             result.map(function(obj, num){
-                arr.push({id: obj._id,
+                arr.push({'_id': obj._id,
                     tag: obj.tag,
                     unlinkedSongs: obj.unlinkedSongs})
             })

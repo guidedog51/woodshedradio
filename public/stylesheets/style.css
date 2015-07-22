@@ -84,6 +84,8 @@ input[type='text'] {
     min-width: 400px !important;
     padding-left: 40px !important;
     text-align: left !important;
+    height: 400px !important;
+    overflow-y: auto;
 }
 
 #saved-list li:hover {

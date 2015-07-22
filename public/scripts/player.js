@@ -1,6 +1,7 @@
 var R = window.R || {};
 var currentSongs = [];
 var currentShow = [];
+var savedShow = [];
 var songsToPlay = [];
 var unlinkedCurrentSongs = [];
 var savedSongs = [];
@@ -13,12 +14,6 @@ var laddaSpinner={};
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
     initUI();
-    //createSongTable();
-    //postCurrentSongs();
-    //initSortable();
-    //var jt = jade.render("/views/error.jade")
-
-    //var markup = window.songList({artistTracks: artistData});
 
     R.ready(
         function() {
@@ -142,7 +137,11 @@ function initUI() {
     })
 
     $("#save-playlist").on("click", function(e) {
-        savePlaylist();
+        if (savedShow._id) {
+            asyncConfirmYesNo('Save Show', 'Do you want to create a new show from this list?  Click <b>yes</b>.<br/><br/>Do you want to update the currently loaded show?  Click <b>no.</b>', saveNewPlaylist, saveCurrentPlaylist);
+        } else {
+            saveNewPlaylist();
+        }
     })
 
 
@@ -227,6 +226,7 @@ function getPerformance(performanceId) {
     }
 
     if (perf.event_id) return perf;
+
     //these have been fetched from db
     savedSongs.forEach(function(obj, num) {
         if (obj.event.event_id == performanceId) {
@@ -366,23 +366,41 @@ function createShowTable() {
       console.log(event);
   }
 
-function savePlaylist() {
+function saveNewPlaylist() {
+    savePlaylist(true);
+}
+
+function saveCurrentPlaylist() {
+    savePlaylist(false);
+}
+
+
+function savePlaylist(createNew) {
     if (!$('#playlist-name').val()) {
-        alert('enter a playlist name!');
+        //alert('enter a playlist name!');
         setTimeout(function(){
             $('#playlist-name').focus();
         }, 0);
         return;
     }
 
+    if (currentShow.length == 0) {
+        $('#showContainer').removeClass('playlist-active');
+        $('#songContainer').removeClass('playlist-active');
+        $('#showContainer').addClass('playlist-active');
+        return;
+    }
+
+    if (createNew===true) {
+        //timestamp will be the id
+        //tag is for the curator from UI
+        songData._id = moment(Date.now()).unix();
+    }
+    songData.tag = $('#playlist-name').val();
+
     var l = Ladda.create($('#save-playlist').get()[0]);
     l.start();
     var songData = {'unlinkedSongs' : unlinkedCurrentSongs};
-
-    //timestamp will be the id
-    //tag is for the curator from UI
-    songData._id = moment(Date.now()).unix();
-    songData.tag = $('#playlist-name').val();
 
     console.log(songData);
 
@@ -398,6 +416,7 @@ function savePlaylist() {
     
     function success(data) {
         console.log(data.success);
+        savedShow = songData;
         l.stop();
     }
     
@@ -489,9 +508,12 @@ function getSavedShow(showID) {
     function success(data) {
         unlinkedCurrentSongs.length = 0;
         savedSongs.length = 0;
+        savedShow.length = 0;
+        savedShow = data.savedShow[0];
         savedSongs=data.savedShow[0].unlinkedSongs;
         var markup = window.showList(data.savedShow[0]);
         $('#showContainer').html(markup);
+        $('#playlist-name').val(data.savedShow[0].tag);
         createShowTable();
         initSortable();
     }
@@ -501,6 +523,21 @@ function getSavedShow(showID) {
         //l.stop();
     }
 
+}
+
+function asyncConfirmYesNo(title, msg, yesFn, noFn) {
+    var $confirm = $("#modalConfirmYesNo");
+    $confirm.modal('show');
+    $("#lblTitleConfirmYesNo").html(title);
+    $("#lblMsgConfirmYesNo").html(msg);
+    $("#btnYesConfirmYesNo").off('click').click(function () {
+        yesFn();
+        $confirm.modal("hide");
+    });
+    $("#btnNoConfirmYesNo").off('click').click(function () {
+        noFn();
+        $confirm.modal("hide");
+    });
 }
 
 
