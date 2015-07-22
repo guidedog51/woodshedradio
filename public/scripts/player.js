@@ -96,7 +96,7 @@ function initSortable() {
         cursor: 'crosshair',
         connectWith: '.showList',
         receive: function(e, ui){
-            createShowTable();
+            //createShowTable();
             console.log(currentShow);
         }
     }).disableSelection();
