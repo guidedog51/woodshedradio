@@ -138,7 +138,7 @@ function initUI() {
 
     $("#save-playlist").on("click", function(e) {
         if (savedShow._id) {
-            asyncConfirmYesNo('Save Show', 'Do you want to create a new show from this list?  Click <b>Save.</b><br/><br/>Do you want to update the currently loaded show?  Click <b>Save As.</b>', 'Save', 'Save As', saveNewPlaylist, saveCurrentPlaylist);
+            asyncConfirmYesNo('Save Show', 'Do you want to create a new show from this list?  Click <b>Save New.</b><br/><br/>Do you want to update the currently loaded show?  Click <b>Update.</b>', 'Save New', 'Update', saveNewPlaylist, saveCurrentPlaylist);
         } else {
             saveNewPlaylist();
         }
@@ -376,6 +376,12 @@ function saveCurrentPlaylist() {
 
 
 function savePlaylist(createNew) {
+
+    if (createNew===false) {
+        alert('not implemented!')
+        return;
+    }
+
     if (!$('#playlist-name').val()) {
         //alert('enter a playlist name!');
         setTimeout(function(){
@@ -390,17 +396,21 @@ function savePlaylist(createNew) {
         $('#showContainer').addClass('playlist-active');
         return;
     }
+    var l = Ladda.create($('#save-playlist').get()[0]);
+    l.start();
+
+    var songData = {'unlinkedSongs' : unlinkedCurrentSongs};
 
     if (createNew===true) {
         //timestamp will be the id
         //tag is for the curator from UI
         songData._id = moment(Date.now()).unix();
+    } else {
+
+        songData._id = savedShow._id;
     }
     songData.tag = $('#playlist-name').val();
 
-    var l = Ladda.create($('#save-playlist').get()[0]);
-    l.start();
-    var songData = {'unlinkedSongs' : unlinkedCurrentSongs};
 
     console.log(songData);
 
