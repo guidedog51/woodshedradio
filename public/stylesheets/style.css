@@ -125,6 +125,10 @@ input[type='text'] {
     margin-left: 20px;
 }
 
+#showContainer ul {
+    min-height: 800px;
+}
+
 .showlist-container {
 
     display: inline-block;
