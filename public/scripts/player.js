@@ -138,7 +138,7 @@ function initUI() {
 
     $("#save-playlist").on("click", function(e) {
         if (savedShow._id) {
-            asyncConfirmYesNo('Save Show', 'Do you want to create a new show from this list?  Click <b>yes</b>.<br/><br/>Do you want to update the currently loaded show?  Click <b>no.</b>', saveNewPlaylist, saveCurrentPlaylist);
+            asyncConfirmYesNo('Save Show', 'Do you want to create a new show from this list?  Click <b>Save.</b><br/><br/>Do you want to update the currently loaded show?  Click <b>Save As.</b>', 'Save', 'Save As', saveNewPlaylist, saveCurrentPlaylist);
         } else {
             saveNewPlaylist();
         }
@@ -525,11 +525,13 @@ function getSavedShow(showID) {
 
 }
 
-function asyncConfirmYesNo(title, msg, yesFn, noFn) {
+function asyncConfirmYesNo(title, msg, yesBtnText, noBtnText, yesFn, noFn) {
     var $confirm = $("#modalConfirmYesNo");
     $confirm.modal('show');
     $("#lblTitleConfirmYesNo").html(title);
     $("#lblMsgConfirmYesNo").html(msg);
+    $('#btnYesConfirmYesNo').text(yesBtnText || 'Yes');
+    $('#btnNoConfirmYesNo').text(noBtnText || 'No');
     $("#btnYesConfirmYesNo").off('click').click(function () {
         yesFn();
         $confirm.modal("hide");
