@@ -377,13 +377,15 @@ function saveCurrentPlaylist() {
 
 function savePlaylist(createNew) {
 
-    if (createNew===false) {
-        alert('not implemented!')
-        return;
-    }
+    //if (createNew===false) {
+    //    alert('not implemented!')
+    //    return;
+    //}
+
+    var verb = 'POST';
 
     if (!$('#playlist-name').val()) {
-        //alert('enter a playlist name!');
+        //resetting focus in this context likes a separate thread
         setTimeout(function(){
             $('#playlist-name').focus();
         }, 0);
@@ -406,7 +408,7 @@ function savePlaylist(createNew) {
         //tag is for the curator from UI
         songData._id = moment(Date.now()).unix();
     } else {
-
+        verb = 'PUT';
         songData._id = savedShow._id;
     }
     songData.tag = $('#playlist-name').val();
@@ -415,7 +417,7 @@ function savePlaylist(createNew) {
     console.log(songData);
 
     $.ajax({
-          type: "POST",
+          type: verb,
           url: '/api/playlist/playlist',
           data: JSON.stringify(songData),
           success: success,
@@ -425,7 +427,6 @@ function savePlaylist(createNew) {
     });
     
     function success(data) {
-        console.log(data.success);
         savedShow = songData;
         l.stop();
     }

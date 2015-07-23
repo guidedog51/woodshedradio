@@ -81,14 +81,23 @@ router.post('/:collectionName', function(req, res, next) {
     
 });
            
-/*PUT new playlist */
-router.put('/:id', function(req, res) {
-    console.log('update playlist: ' + req.data);
-    
-    //mongo
-    
-    
-    res.send('mongoId');
+/*PUT update playlist */
+router.put('/:collectionName', function(req, res) {
+    var id = req.body._id;
+    var tag = req.body.tag;
+    var unlinkedSongs = req.body.unlinkedSongs;
+
+    mongoClient.connect(dbUrl, function(err, mdb){
+        var col = mdb.collection(req.params.collectionName);
+        col.update({'_id': id}, {$set:{unlinkedSongs: unlinkedSongs, tag: tag}}, function(error, result){
+            if (error) {
+                console.log(error);
+                return next(error);
+            }
+            res.send({"success": true});
+            mdb.close();
+        });
+    });
 });
 
 /*DELETE new playlist */
