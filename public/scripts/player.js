@@ -10,6 +10,7 @@ var curSong = null;
 var artistData;     //all the track metadata from the server
 //var jade = require("jade");
 var laddaSpinner={};
+var deleteId=null;
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
@@ -59,7 +60,7 @@ function initSortable() {
     };
     $('.showList').sortable({
         cursor: 'crosshair',
-        connectWith: '#trash-dropdown',
+        connectWith: '#trash-playlist',
         //connectWith: 'trackList',
         receive: function(e, ui) {
             //reset the playlist linked lists
@@ -74,26 +75,31 @@ function initSortable() {
         }
     }).disableSelection();
     //$('.showList li').draggable();
-    if($('#trash-playlist').droppable('instance')){
-        $('#trash-playlist').droppable('destroy');
+    if($('#trash-playlist').sortable('instance')){
+        $('#trash-playlist').sortable('destroy');
     }
-
-    $('#trash-playlist').droppable({
+    $('#trash-playlist').sortable({
         over: function(){
-            $('#trash-playlist').trigger('click');
+            //$('#trash-playlist').trigger('click');
+        },
+        receive: function(e, ui) {
+            //TODO: turn the button red
+            $(ui.item).remove();
+            if ($(ui.item).data('saved-id')) {
+
+                deleteId = $(ui.item).data('saved-id');
+
+                asyncConfirmYesNo('Delete Show', 'Delete saved playlist<br/><br/> <b>' + $(ui.item).text() + '?<br/><br/></b>This cannot be undone.', 'Delete', 'Cancel', deleteSavedShow, dismissModal);
+            }
         }
 
     });
-    if ($('#trash-dropdown').sortable('instance')) {
-        $('#trash-dropdown').sortable('destroy')
+    if ($('#saved-list').sortable('instance')) {
+        $('#saved-list').sortable('destroy')
     };
-    $('#trash-dropdown').sortable({
+    $('#saved-list').sortable({
         cursor: 'crosshair',
-        connectWith: '.showList',
-        receive: function(e, ui){
-            //createShowTable();
-            console.log(currentShow);
-        }
+        connectWith: '#trash-playlist'
     }).disableSelection();
 }
 
@@ -134,7 +140,7 @@ function initUI() {
 
     $("#get-playlists").on("click", function(e) {
         getPlaylists();
-    })
+    });
 
     $("#save-playlist").on("click", function(e) {
         if (savedShow._id) {
@@ -142,9 +148,12 @@ function initUI() {
         } else {
             saveNewPlaylist();
         }
-    })
+    });
 
+    $('#trash-playlist').on('click', function(e) {
+        $('li', $(this)).remove();
 
+    });
 }
 
 
@@ -204,8 +213,6 @@ function getSong(songId) {
     songsToPlay.forEach(function(obj, num) {
         if (obj.id == songId) {
             newSong = obj;
-
-            
         }
     });
     return newSong;
@@ -267,7 +274,7 @@ function createSongTable() {
                 $('#showContainer').removeClass('playlist-active');
                 $('#songContainer').addClass('playlist-active');
             });
-            $(this).attr('id', rowNum);
+            $(this).attr('id', 'p' + rowNum);
             rowNum++;
             return {'track_id': id,
                     'event': getPerformance(eventId),
@@ -290,8 +297,9 @@ function createSongTable() {
             song.id = obj.track_id;
             song.event = obj.event;
             song.track = obj.song;
-            unlinkedSong = jQuery.extend({}, song);
+            unlinkedSong = jQuery.extend({}, song); //clones song
         }
+        song.rowId = 'p' + (num + 1);
         currentSongs.push(song);
     });
 }
@@ -311,9 +319,9 @@ function createShowTable() {
         var performance = {};
         var songToPlay = {};
         if (id != 'none' && $(this).hasClass('track-playable')) {
-            songsToPlay = currentShow;
             $(this).off('click');
             $(this).on('click', function() {
+                songsToPlay = currentShow;
                 $('#songContainer').removeClass('playlist-active');
                 $('#showContainer').addClass('playlist-active');
                 songToPlay = getSong(id);
@@ -348,6 +356,7 @@ function createShowTable() {
             song.track = obj.song;
             unlinkedSong = jQuery.extend({}, song);
         }
+        song.rowId = 's' + (num + 1);
         currentShow.push(song);
         unlinkedCurrentSongs.push(unlinkedSong);
         //debugger;
@@ -363,6 +372,8 @@ function createShowTable() {
       $('#track-name').text(song.track.title);
       $('#performance-link').attr('href', event.event_uri);
       $('#performance-link').text(event.displayName);
+      $('li').removeClass('track-playing');
+      $('#' + song.rowId).addClass('track-playing');
       console.log(event);
   }
 
@@ -372,6 +383,10 @@ function saveNewPlaylist() {
 
 function saveCurrentPlaylist() {
     savePlaylist(false);
+}
+
+function deleteSavedShow() {
+    alert(deleteId);
 }
 
 
@@ -492,7 +507,7 @@ function getPlaylists() {
             getSavedShow($(this).data('saved-id'));
         });
 
-
+        initSortable();
     }
 
     function error(xhr, result, error) {
@@ -534,6 +549,9 @@ function getSavedShow(showID) {
         //l.stop();
     }
 
+}
+
+function dismissModal() {
 }
 
 function asyncConfirmYesNo(title, msg, yesBtnText, noBtnText, yesFn, noFn) {

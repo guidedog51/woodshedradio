@@ -43,19 +43,13 @@ block content
             button(id='save-playlist', class='btn btn-default ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Save Playlist
                 span(class="ladda-label")
 
-        div(class='showlist-container')
             input(id='playlist-name', type='text', class='input-large', placeholder='enter a name for the playlist', required)
 
         div(class='showlist-container')
-            div(class='dropdown')
-                button(id='trash-playlist', class='dropdown-toggle btn btn-default ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546")
-                    span(class="ladda-label")
-                    icon(class='icon-trash')
-                    b(class='caret')
-
-                ul(id='trash-dropdown', class='dropdown-menu')
-                    li track A
-                    li track B
+            button(id='trash-playlist', class=' btn btn-default ladda-button', data-style='expand-left', data-spinner-color="#46a546")
+                span(class="ladda-label")
+                icon(class='icon-trash')
+                //b(class='caret')
 
     #songContainer(class='show-container')
         ul

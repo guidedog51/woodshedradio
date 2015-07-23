@@ -84,8 +84,8 @@ input[type='text'] {
     min-width: 400px !important;
     padding-left: 40px !important;
     text-align: left !important;
-    height: 400px !important;
-    overflow-y: auto;
+    /*height: 400px !important;
+    overflow: hidden !important;*/
 }
 
 #saved-list li:hover {
@@ -93,6 +93,10 @@ input[type='text'] {
     cursor: pointer;
 }
 
+.tracklist:hover {
+    background: #46a546;
+    cursor: pointer;
+}
 
 .track-playable {
     cursor: pointer;
@@ -100,7 +104,7 @@ input[type='text'] {
 }
 .track-playing {
     cursor: pointer;
-    background-color: beige;
+    background-color: #46a546;
 }
 
 .song-container {
