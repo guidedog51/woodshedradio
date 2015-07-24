@@ -12,6 +12,13 @@ block content
                     p(id='artist-name')='artist currently playing'
                     p(id='track-name')='track currently playing'
                     a(id='performance-link', href='#', style='margin-left: 10px;')='link to performance page'
+            tr
+        div(id='play-buttons', class='btn-group showlist-container')
+            button(id='playPrev', class="btn btn-default pb")<i class="icon-backward"></i>
+            button(id='playPlay', class="btn btn-default pb")<i class="icon-play"></i>
+            button(id='playPause', class="btn btn-default pb")<i class="icon-pause"></i>
+            button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
+
 
     #playBar
 
@@ -23,13 +30,7 @@ block content
                         span(class="icon-calendar")
                     input(id='performance-date', type='text', class='date-picker form-control', placeholder='enter a date!')
 
-        div(id='play-buttons', class='btn-group showlist-container')
-            button(id='playPrev', class="btn btn-default pb")<i class="icon-backward"></i>
-            button(id='playPlay', class="btn btn-default pb")<i class="icon-play"></i>
-            button(id='playPause', class="btn btn-default pb")<i class="icon-pause"></i>
-            button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
-
-        div(class='showlist-container')
+         div(class='showlist-container')
             div(class='dropdown')
                 button(id='get-playlists', class='dropdown-toggle btn ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Load playlist here
                     span(class="ladda-label")
