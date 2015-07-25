@@ -11,6 +11,8 @@ var artistData;     //all the track metadata from the server
 //var jade = require("jade");
 var laddaSpinner={};
 var deleteId=null;
+var currentShowDirty=false;
+var dirtyShowId;
 
 $(document).ready(function() {
     $.ajaxSetup( {cache: false});
@@ -66,12 +68,11 @@ function initSortable() {
             //reset the playlist linked lists
             unlinkedCurrentSongs.length=0;
             createSongTable();
-            //createShowTable();
-            console.log(currentShow);
         },
         update: function(e, ui) {
             unlinkedCurrentSongs.length=0;
             createShowTable();
+            currentShowDirty = true;
         }
     }).disableSelection();
     //$('.showList li').draggable();
@@ -90,6 +91,9 @@ function initSortable() {
                 deleteId = $(ui.item).data('saved-id');
 
                 asyncConfirmYesNo('Delete Show', 'Delete saved playlist<br/><br/> <b>' + $(ui.item).text() + '?<br/><br/></b>This cannot be undone.', 'Delete', 'Cancel', deleteSavedShow, dismissModal);
+            }   else {
+
+                currentShowDirty = true;
             }
         }
 
@@ -386,17 +390,11 @@ function saveCurrentPlaylist() {
 }
 
 function deleteSavedShow() {
-    alert(deleteId);
+    deletePlaylist(deleteId)
 }
 
 
 function savePlaylist(createNew) {
-
-    //if (createNew===false) {
-    //    alert('not implemented!')
-    //    return;
-    //}
-
     var verb = 'POST';
 
     if (!$('#playlist-name').val()) {
@@ -427,10 +425,6 @@ function savePlaylist(createNew) {
         songData._id = savedShow._id;
     }
     songData.tag = $('#playlist-name').val();
-
-
-    console.log(songData);
-
     $.ajax({
           type: verb,
           url: '/api/playlist/playlist',
@@ -443,12 +437,37 @@ function savePlaylist(createNew) {
     
     function success(data) {
         savedShow = songData;
+        currentShowDirty = false;
         l.stop();
     }
     
     function error(xhr, result, error) {
         console.log(error);
         l.stop();
+    }
+}
+
+function deletePlaylist(plId) {
+
+    //var l = Ladda.create($('#get-playlists').get()[0]);
+    //l.start();
+
+    $.ajax({
+        type: "DELETE",
+        url: '/api/playlist/playlist/' + plId,
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        console.log(data);
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        //l.stop();
     }
 }
 
@@ -504,7 +523,7 @@ function getPlaylists() {
         $('#saved-list').off('click', 'li');
         $('#saved-list').on('click', 'li', function(){
             //alert($(this).data('saved-id'));
-            getSavedShow($(this).data('saved-id'));
+            loadSavedShow($(this).data('saved-id'));
         });
 
         initSortable();
@@ -515,6 +534,27 @@ function getPlaylists() {
         //l.stop();
     }
 
+}
+
+function loadSavedShow(showId) {
+    if (!currentShowDirty) {
+        getSavedShow(showId)
+    } else {
+        dirtyShowId = showId;
+        asyncConfirmYesNo('Load Saved Show', 'Before loading another saved show, do you want to save changes to show you have been working on?  Click <b>Save.</b><br/><br/><b>Or: </b> just load the selected show?  Click <b>Load.</b>', 'Save', 'Load', triggerSaveShow, promptForSavedShow);
+    }
+}
+
+function promptForSavedShow() {
+    getSavedShow(dirtyShowId);
+}
+
+function triggerSaveShow(){
+    if (!currentShowDirty) {return;}
+    $('#modalConfirmYesNo').css('display', 'block');    //hack to allow chaining of the bootstrap modal
+    setTimeout(function(){
+        $("#save-playlist").trigger('click');
+    }, 500);
 }
 
 function getSavedShow(showID) {
@@ -542,6 +582,7 @@ function getSavedShow(showID) {
         $('#playlist-name').val(data.savedShow[0].tag);
         createShowTable();
         initSortable();
+        currentShowDirty = false;
     }
 
     function error(xhr, result, error) {
@@ -552,6 +593,8 @@ function getSavedShow(showID) {
 }
 
 function dismissModal() {
+    var $confirm = $("#modalConfirmYesNo");
+    $confirm.modal("hide");
 }
 
 function asyncConfirmYesNo(title, msg, yesBtnText, noBtnText, yesFn, noFn) {
@@ -562,12 +605,12 @@ function asyncConfirmYesNo(title, msg, yesBtnText, noBtnText, yesFn, noFn) {
     $('#btnYesConfirmYesNo').text(yesBtnText || 'Yes');
     $('#btnNoConfirmYesNo').text(noBtnText || 'No');
     $("#btnYesConfirmYesNo").off('click').click(function () {
-        yesFn();
         $confirm.modal("hide");
+        yesFn();
     });
     $("#btnNoConfirmYesNo").off('click').click(function () {
-        noFn();
         $confirm.modal("hide");
+        noFn();
     });
 }
 

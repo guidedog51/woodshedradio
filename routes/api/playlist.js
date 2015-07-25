@@ -101,8 +101,18 @@ router.put('/:collectionName', function(req, res) {
 });
 
 /*DELETE new playlist */
-router.delete('/:id', function(req, res) {
-    console.log('delete playlist: ' + req.params.id);
+router.delete('/:collectionName/:id', function(req, res) {
+    mongoClient.connect(dbUrl, function(err, mdb){
+        var col = mdb.collection(req.params.collectionName);
+        col.remove({'_id': Number(req.params.id)}, function(error, result){
+            if (error) {
+                console.log(error);
+                return next(error);
+            }
+            res.send({"success": true});
+            mdb.close();
+        });
+    });
 });
 
 module.exports = router;
