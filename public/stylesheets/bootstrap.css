@@ -2437,10 +2437,6 @@ table th[class*="span"],
   background-position: -264px -24px;
 }
 
-.icon-menu-hamburger {
-  background-position: -336px -48px;
-}
-
 .icon-lock {
   background-position: -287px -24px;
 }
@@ -2530,6 +2526,10 @@ table th[class*="span"],
 }
 
 .icon-align-justify {
+  background-position: -336px -48px;
+}
+
+.icon-menu-hamburger {
   background-position: -336px -48px;
 }
 

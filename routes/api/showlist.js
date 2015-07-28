@@ -13,6 +13,7 @@ router.get('/:startdate', function(req, res) {
     var events = [];
     var artistTracks = [];
     var dateRange = _getSoundKickDateRange(req.params.startdate);
+    var bucketId = 'rdio-US';   //7digital-US rdio-US spotify
 
     var eventIndex = 0;
     var options = {
@@ -20,7 +21,8 @@ router.get('/:startdate', function(req, res) {
         artist_icon_url: soundkickStaticEndpoint + 'profile_images/artists/AID/huge_avatar'
     };
     
-    var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:rdio-US';//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
+//    var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:rdio-US';//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
+    var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:' + bucketId;//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
     var echonestOptions = {
         url: echonestUrl
     };

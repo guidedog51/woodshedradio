@@ -13,9 +13,21 @@ var laddaSpinner={};
 var deleteId=null;
 var currentShowDirty=false;
 var dirtyShowId;
+var adminAuthenticated = false;
 
 $(document).ready(function() {
-    $.ajaxSetup( {cache: false});
+    $.ajaxSetup( {
+        cache: false,
+        beforeSend: function(xhr, opts) {
+            if (!adminAuthenticated) {
+                xhr.abort();
+
+                setTimeout(function() {
+                    $('#modal-login').modal('show');
+                }, 200)
+            }
+        }
+    });
     initUI();
 
     R.ready(
@@ -156,8 +168,11 @@ function initUI() {
 
     $('#trash-playlist').on('click', function(e) {
         $('li', $(this)).remove();
-
     });
+
+    if (!adminAuthenticated) {
+        $('#modal-login').modal('show');
+    }
 }
 
 
