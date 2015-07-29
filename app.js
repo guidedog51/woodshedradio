@@ -1,6 +1,7 @@
 var express = require('express');
-var app = express();
-
+app = express();
+var session = require('express-session');
+//app = express();
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -13,6 +14,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var comingsoon = require('./routes/comingsoon');
 var showeditor = require('./routes/showeditor');
+var login = require('./routes/login');
 var playlistapi = require('./routes/api/playlist');
 var showlistapi = require('./routes/api/showlist');
 //var jade_browser = require('jade-browser');
@@ -20,21 +22,7 @@ var jade = require('jade');
 var fs = require('fs');
 
 //mongoskin
-//var mongoskin = require('mongoskin'),
-//  dbUrl = process.env.MONGOHQ_URL || 'mongodb://@127.0.0.1:27017/playlist',
-//  db = mongoskin.db(dbUrl, {safe: true}),
-//  collections = {
-//    //artistData: db.collection('artistData'),
-//    //tracks: db.collection('tracks'),
-//    playlist: db.collection('playlist')
-//  };
-//
-////console.log(collections);
-//
-//db.collection('playlist').find(function(error, item) {
-//    console.log('findOne:' + item);
-//})
-
+var dbUrl = process.env.MONGOHQ_URL || 'mongodb://@127.0.0.1:27017/playlist';
 var SOUNDKICK_API_KEY = 'xdy5yMc0BaLlDZ0V';
 var SOUNDKICK_ENDPOINT = 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY;
 var SOUNDKICK_STATIC_ENDPOINT = 'http://images.sk-static.com/images/media/';
@@ -50,6 +38,10 @@ app.set('SOUNDKICK_ENDPOINT', SOUNDKICK_ENDPOINT);
 app.set('ECHONEST_ENDPOINT', ECHONEST_ENDPOINT);
 app.set('SOUNDKICK_STATIC_ENDPOINT', SOUNDKICK_STATIC_ENDPOINT);
 
+//mongo config
+app.set('dbUrl', dbUrl);
+
+
 app.use(favicon(__dirname + '/public/favicon.ico'));
 console.log(__dirname);
 //app.use(favicon('http://woodshed.cloudapp.net/favicon.ico'));
@@ -59,7 +51,8 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser('c2da2f90-a7fe-441f-a3e9-982c250947d0'));
+app.use(session('e45a0035-1478-40d8-9e6e-dfa24164afd6'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //app.param('collectionName', function(req, res, next, collectionName){
@@ -71,6 +64,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/comingsoon', comingsoon);
 app.use('/showeditor', showeditor);
+app.use('/login', login);
 app.use('/api/playlist', playlistapi);
 app.use('/api/showlist', showlistapi);
 //app.use('/api/playlist/:id', api);
@@ -86,6 +80,13 @@ app.use('/api/showlist', showlistapi);
 
 //middleware to compile templates for local use
 //app.use(jade_browser('./public/scripts/templatesold.js', '**', {}));
+
+//auth stuff
+app.use(function(req, res, next) {
+    if (req.session && req.session.admin){
+        res.locals.admin = true;
+    }
+})
 
 
 /// catch 404 and forwarding to error handler
@@ -121,8 +122,10 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-//var jsFunctionString = jade.compileFileClient('./views/songlist.jade', {name: "songList"});
-//fs.writeFileSync("./public/scripts/templates1.js", jsFunctionString);
+
+//TODO: set up proper grunt compiler for these templates
+var jsFunctionString = jade.compileFileClient('./views/songlist.jade', {name: "songList"});
+fs.writeFileSync("./public/scripts/templates1.js", jsFunctionString);
 var jsFunctionString2 = jade.compileFileClient('./views/savedlist.jade', {'name': "savedList"});
 fs.writeFileSync("./public/scripts/templates2.js", jsFunctionString2);
 var jsFunctionString3 = jade.compileFileClient('./views/showlist.jade', {'name': "showList"});

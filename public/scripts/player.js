@@ -17,16 +17,16 @@ var adminAuthenticated = false;
 
 $(document).ready(function() {
     $.ajaxSetup( {
-        cache: false,
-        beforeSend: function(xhr, opts) {
-            if (!adminAuthenticated) {
-                xhr.abort();
-
-                setTimeout(function() {
-                    $('#modal-login').modal('show');
-                }, 200)
-            }
-        }
+        cache: false
+        //beforeSend: function(xhr, opts) {
+            //if (!adminAuthenticated) {
+            //    xhr.abort();
+            //
+            //    setTimeout(function() {
+            //        $('#modal-login').modal('show');
+            //    }, 200)
+            //}
+        //}
     });
     initUI();
 
@@ -173,6 +173,10 @@ function initUI() {
     if (!adminAuthenticated) {
         $('#modal-login').modal('show');
     }
+
+    $('#submit-login').on('click', function(e) {
+        loginCurator();
+    })
 }
 
 
@@ -606,6 +610,34 @@ function getSavedShow(showID) {
     }
 
 }
+
+function loginCurator() {
+    //var l = Ladda.create($('#get-playlists').get()[0]);
+    //l.start();
+    var formData = ({'username': $('#user-name').val(), 'password': $('#password').val()})
+    $.ajax({
+        type: "POST",
+        url: '/login',
+        data: JSON.stringify(formData),
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data, response, xhr) {
+        adminAuthenticated = data.auth;
+        $('#modal-login').modal('hide');
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        adminAuthenticated = false;
+        //l.stop();
+    }
+
+}
+
 
 function dismissModal() {
     var $confirm = $("#modalConfirmYesNo");
