@@ -9,7 +9,7 @@ var curSong = null;
 //var curShowSong = null;
 var artistData;     //all the track metadata from the server
 //var jade = require("jade");
-var laddaSpinner={};
+var laddaSpinner = null;
 var deleteId=null;
 var currentShowDirty=false;
 var dirtyShowId;
@@ -28,7 +28,9 @@ $(document).ready(function() {
             //}
         //}
     });
-    initUI();
+
+    adminAuthenticated = isAuthenticated(initUI);
+    //initUI();
 
     R.ready(
         function() {
@@ -120,6 +122,20 @@ function initSortable() {
 }
 
 function initUI() {
+    $.ajaxSetup( {
+        beforeSend: function(xhr, opts) {
+            if (!adminAuthenticated) {
+                xhr.abort();
+
+                setTimeout(function() {
+                    $('#modal-login').modal('show');
+                }, 200)
+            } else {if (laddaSpinner){laddaSpinner.start();}}
+
+        }
+    });
+
+
     $("#save").click(function() {
         savePlaylist();
     });
@@ -491,8 +507,7 @@ function deletePlaylist(plId) {
 }
 
 function getArtistsPerformances(sd) {
-    var l = Ladda.create($('#date-button').get()[0]);
-    l.start();
+    laddaSpinner = Ladda.create($('#date-button').get()[0]);
     $.ajax({
         type: "GET",
         url: '/api/showlist/' + moment(sd).unix(),
@@ -510,7 +525,9 @@ function getArtistsPerformances(sd) {
         $('#songContainer').html(markup);
         createSongTable();
         initSortable();
-        l.stop();
+        laddaSpinner.stop();
+        //laddaSpinner.destroy();
+        laddaSpinner = null;
     }
 
     function error(xhr, result, error) {
@@ -619,6 +636,7 @@ function loginCurator() {
         type: "POST",
         url: '/login',
         data: JSON.stringify(formData),
+        beforeSend: function(){},
         success: success,
         error: error,
         dataType: 'json',
@@ -638,6 +656,35 @@ function loginCurator() {
 
 }
 
+
+function isAuthenticated(callback) {
+    if (adminAuthenticated) {return true;};
+
+    $.ajax({
+        type: "GET",
+        url: '/login/auth',
+        beforeSend: function(){},
+        data: {},
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data, response, xhr) {
+        adminAuthenticated = data.auth;
+        callback();
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        adminAuthenticated = false;
+        $('#modal-login').modal('show');
+        //l.stop();
+        callback();
+    }
+
+}
 
 function dismissModal() {
     var $confirm = $("#modalConfirmYesNo");

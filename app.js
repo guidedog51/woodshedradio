@@ -20,26 +20,27 @@ var showlistapi = require('./routes/api/showlist');
 //var jade_browser = require('jade-browser');
 var jade = require('jade');
 var fs = require('fs');
+var config = require('./config');
 
 //mongoskin
-var dbUrl = process.env.MONGOHQ_URL || 'mongodb://@127.0.0.1:27017/playlist';
-var SOUNDKICK_API_KEY = 'xdy5yMc0BaLlDZ0V';
-var SOUNDKICK_ENDPOINT = 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY;
-var SOUNDKICK_STATIC_ENDPOINT = 'http://images.sk-static.com/images/media/';
-var ECHONEST_API_KEY= 'M8TCQASXDTEGU9VRO';
-var ECHONEST_ENDPOINT = 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY;
+//var dbUrl = config.dbUrl;   //process.env.MONGOHQ_URL || 'mongodb://@127.0.0.1:27017/playlist';
+//var SOUNDKICK_API_KEY = 'xdy5yMc0BaLlDZ0V';
+//var SOUNDKICK_ENDPOINT = 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY;
+//var SOUNDKICK_STATIC_ENDPOINT = 'http://images.sk-static.com/images/media/';
+//var ECHONEST_API_KEY= 'M8TCQASXDTEGU9VRO';
+//var ECHONEST_ENDPOINT = 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('port', process.env.PORT || 3000);
+app.set('port', config.port); //process.env.PORT || 3000);
 app.set('request', request);
-app.set('SOUNDKICK_ENDPOINT', SOUNDKICK_ENDPOINT);
-app.set('ECHONEST_ENDPOINT', ECHONEST_ENDPOINT);
-app.set('SOUNDKICK_STATIC_ENDPOINT', SOUNDKICK_STATIC_ENDPOINT);
+app.set('SOUNDKICK_ENDPOINT', config.soundkick_endpoint);
+app.set('ECHONEST_ENDPOINT', config.echonest_endpoint);
+app.set('SOUNDKICK_STATIC_ENDPOINT', config.soundkick_static_endpoint);
 
 //mongo config
-app.set('dbUrl', dbUrl);
+app.set('dbUrl', config.dbUrl);
 
 
 app.use(favicon(__dirname + '/public/favicon.ico'));

@@ -2,13 +2,14 @@ var express = require('express');
 var router = express.Router();
 var callbackCount = 0;
 var moment = require('moment');
+var config = require('../../config.js');
 
 /* GET home page. */
 router.get('/:startdate', function(req, res) {
     var request = req.app.settings.request;
-    var soundkickEndpoint = req.app.settings.SOUNDKICK_ENDPOINT;
-    var echonestEndpoint = req.app.settings.ECHONEST_ENDPOINT;
-    var soundkickStaticEndpoint = req.app.settings.SOUNDKICK_STATIC_ENDPOINT;
+    var soundkickEndpoint = config.soundkick_endpoint;  //req.app.settings.SOUNDKICK_ENDPOINT;
+    var echonestEndpoint = config.echonest_endpoint; //req.app.settings.ECHONEST_ENDPOINT;
+    var soundkickStaticEndpoint = config.soundkick_static_endpoint;     //req.app.settings.SOUNDKICK_STATIC_ENDPOINT;
     var page = 1;
     var events = [];
     var artistTracks = [];
