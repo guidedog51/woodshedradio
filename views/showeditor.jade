@@ -14,28 +14,32 @@ block content
                     a(id='performance-link', href='#', style='margin-left: 10px;')='link to performance page'
             tr
         div(id='play-buttons', class='btn-group showlist-container')
-            button(id='playPrev', class="btn btn-default pb")<i class="icon-backward"></i>
-            button(id='playPlay', class="btn btn-default pb")<i class="icon-play"></i>
-            button(id='playPause', class="btn btn-default pb")<i class="icon-pause"></i>
-            button(id='playNext', class="btn btn-default pb")<i class="icon-forward"></i>
+            button(id='playPrev', class="btn btn-default pb")<i class="glyphicon glyphicon-backward"></i>
+            button(id='playPlay', class="btn btn-default pb")<i class="glyphicon glyphicon-play"></i>
+            button(id='playPause', class="btn btn-default pb")<i class="glyphicon glyphicon-pause"></i>
+            button(id='playNext', class="btn btn-default pb")<i class="glyphicon glyphicon-forward"></i>
 
 
     #playBar
         div(class='showlist-container')
-            button(class="btn btn-default" type="button")
-                span(class="icon-menu-hamburger" aria-hidden="true")
+            div(class='dropdown')
+                button(class="btn btn-default dropdown-toggle", data-toggle='dropdown', type="button")
+                    span(class="glyphicon glyphicon-menu-hamburger" aria-hidden="true")
+                ul(id='global-menu',class='dropdown-menu')
+                    li
+                        a(id='btn-upload', href='javascript:void(0)') Upload song for upcoming artist / performance
 
-        div(id='date-range', class='showlist-container control-group')
+        div(id='date-range', class='showlist-container control-group', style='vertical-align:middle')
             div(class='controls')
-                div(class='input-group')
-                    label(id='date-button', for="performance-date" class="input-group-addon btn ladda-button", data-style='expand-left', data-spinner-color="#46a546")
+                div(class='input-group', style='width:200px;')
+                    label(id='date-button', for="performance-date" class="input-group-addon btn btn-default ladda-button", data-style='expand-left', data-spinner-color="#46a546")
                         span(class="ladda-label")
-                        span(class="icon-calendar")
-                    input(id='performance-date', type='text', class='date-picker form-control', placeholder='enter a date!')
+                        span(class="glyphicon glyphicon-calendar")
+                    input(id='performance-date', type='text', class='date-picker form-control', style='width:200px;', placeholder='enter a date!')
 
          div(class='showlist-container')
             div(class='dropdown')
-                button(id='get-playlists', class='dropdown-toggle btn ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Load playlist here
+                button(id='get-playlists', class='dropdown-toggle btn btn-default ladda-button', type='button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Load playlist here
                     span(class="ladda-label")
                     b(class='caret')
 
@@ -44,15 +48,17 @@ block content
                     li Playlist B
 
         div(class='showlist-container')
-            button(id='save-playlist', class='btn btn-default ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Save Playlist
-                span(class="ladda-label")
+            div(class='input-group')
 
-            input(id='playlist-name', type='text', class='input-large', placeholder='enter a name for the playlist', required)
+                label(id='save-playlist', for='playlist-name', class='btn btn-default ladda-button', data-toggle='dropdown', data-style='expand-left', data-spinner-color="#46a546") Save Playlist
+                    span(class="ladda-label")
+
+                input(id='playlist-name', type='text', class='form-control', placeholder='enter a name for the playlist', required)
 
         div(class='showlist-container')
             button(id='trash-playlist', class=' btn btn-default ladda-button', data-style='expand-left', data-spinner-color="#46a546")
                 span(class="ladda-label")
-                icon(class='icon-trash')
+                icon(class='glyphicon glyphicon-trash')
                 //b(class='caret')
 
     #songContainer(class='show-container')

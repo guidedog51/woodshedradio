@@ -129,6 +129,7 @@ function initUI() {
 
                 setTimeout(function() {
                     $('#modal-login').modal('show');
+                    $('#login-message').hide();
                 }, 200)
             } else {if (laddaSpinner){laddaSpinner.start();}}
 
@@ -192,6 +193,12 @@ function initUI() {
 
     $('#submit-login').on('click', function(e) {
         loginCurator();
+    })
+
+    $('#upload-track').fileinput();
+
+    $('#btn-upload').on('click', function(){
+        $('#modal-upload').modal('show');
     })
 }
 
@@ -645,7 +652,11 @@ function loginCurator() {
 
     function success(data, response, xhr) {
         adminAuthenticated = data.auth;
-        $('#modal-login').modal('hide');
+        if (!adminAuthenticated) {
+            $('#login-message').show();
+        } else {
+            $('#modal-login').modal('hide');
+        }
     }
 
     function error(xhr, result, error) {

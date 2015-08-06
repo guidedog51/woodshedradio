@@ -2,12 +2,14 @@ doctype html
 html
   head
     title= title
-    //link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")
-    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")
+    //link(rel="stylesheet", href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css")
+    //link(rel='stylesheet', href='/stylesheets/bootstrap.css')
     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css")
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/ladda-themeless.css')
+    link(rel='stylesheet', href='/stylesheets/fileinput.css')
 
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')
@@ -21,6 +23,7 @@ html
     script(src='/scripts/runtime.js')
     script(src='/scripts/spin.min.js')
     script(src='/scripts/ladda.js')
+    script(src='/scripts/fileinput.js')
 
     script(src='//use.typekit.net/hwf0ocb.js')
     script try{Typekit.load();}catch(e){}
@@ -30,3 +33,4 @@ html
     block content
     include modalconfirm.jade
     include modallogin.jade
+    include modalupload.jade

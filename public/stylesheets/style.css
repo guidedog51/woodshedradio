@@ -132,7 +132,8 @@ input[type='text'] {
 .showlist-container {
 
     display: inline-block;
-    margin-left: 40px;
+    margin-left: 20px;
+    vertical-align: middle;
 }
 
 .song-title {
@@ -141,4 +142,12 @@ input[type='text'] {
 
 .playlist-active {
     border: thick solid greenyellow;
+}
+
+#playlist-name {
+    width: 200px;
+}
+
+#login-message {
+    display: none;
 }

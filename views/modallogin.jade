@@ -1,11 +1,11 @@
-div(id='modal-login', class='modal fade', style='width: 360px')
+div(id='modal-login', class='modal fade')
     div(class='modal-dialog')
         div(class='modal-content')
             div(class='modal-header')
                 button(type='button', class='close', data-dismiss='modal', aria-label='Close')
                     span(aria-hidden='true') &times;
                 h4(id='lblTitle', class='modal-title')  Admin Login
-            div(class='modal-body')
+            div(class='modal-body' style='display;block; overflow:auto;')
                 div(class="form col-md-12 center-block form-signin")
                     div(class="form-group")
                         input(id='user-name', class="form-control input-xlarge", placeholder="Email", type="text", style='margin-bottom: 10px !important;', required, autofocus)
@@ -13,6 +13,7 @@ div(id='modal-login', class='modal fade', style='width: 360px')
                         input(id='password', class="form-control input-xlarge", placeholder="Password", type="password", required)
                     div(class="form-group")
                         button(class="btn btn-primary" id='submit-login')  Sign In
+                        span(id='login-message', class="help-inline", style='padding-left:10px;')  Invalid login
 
             div(class='modal-footer')
                 div(class='col-md-12')
