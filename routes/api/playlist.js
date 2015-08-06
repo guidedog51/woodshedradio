@@ -56,18 +56,33 @@ router.post('/:collectionName', function(req, res, next) {
     //var payload = {'name' : 'naked barbies' };
     var payload = req.body;
     console.log(payload);
-    var col = db.collection(req.params.collectionName);
+    //var col = db.collection(req.params.collectionName);
     
-    col.insert(payload, {}, function(error, results) {
-        if (error) {
-            console.log(error);
-            return next(error);
-        }
-        var success = JSON.stringify({'success': true});
-        res.send(results ? success : results);
-    })
-    
-    
+    //col.insert(payload, {}, function(error, results) {
+    //    if (error) {
+    //        console.log(error);
+    //        return next(error);
+    //    }
+    //    var success = JSON.stringify({'success': true});
+    //    res.send(results ? success : results);
+    //})
+
+
+    mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
+        var col = mdb.collection(req.params.collectionName);
+        col.insert(payload, function(error, result){
+            if (error) {
+                console.log(error);
+                return next(error);
+            }
+            res.send({"success": true});
+            mdb.close();
+        });
+    });
+
+
+
+
 });
            
 /*PUT update playlist */
