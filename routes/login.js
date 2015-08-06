@@ -23,6 +23,11 @@ router.post('/', function(req, res) {
     });
 });
 
+router.get('/logoff', function(req, res){
+    req.session.destroy();
+    res.send(JSON.stringify({'success': true}))
+});
+
 router.get('/auth', function(req, res){
 
     res.send(JSON.stringify({auth: req.session.auth == undefined ? false : req.session.auth}));

@@ -200,6 +200,10 @@ function initUI() {
     $('#btn-upload').on('click', function(){
         $('#modal-upload').modal('show');
     })
+
+    $('#btn-logoff').on('click', function(){
+        logOnOrOff();
+    })
 }
 
 
@@ -635,6 +639,44 @@ function getSavedShow(showID) {
 
 }
 
+
+function logOnOrOff() {
+    if (adminAuthenticated) {
+        logoutCurator();
+    } else {
+        $('#modal-login').modal('show');
+    }
+}
+
+
+function logoutCurator() {
+
+    //var l = Ladda.create($('#get-playlists').get()[0]);
+    //l.start();
+    $.ajax({
+        type: "GET",
+        url: '/login/logoff',
+        data: {},
+        beforeSend: function(){},
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data, response, xhr) {
+        adminAuthenticated = false;
+        //modify the login menu text
+        $('#btn-logoff').text("Log in");
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        adminAuthenticated = false;
+        //l.stop();
+    }
+}
+
 function loginCurator() {
     //var l = Ladda.create($('#get-playlists').get()[0]);
     //l.start();
@@ -656,6 +698,8 @@ function loginCurator() {
             $('#login-message').show();
         } else {
             $('#modal-login').modal('hide');
+            //modify login menu text
+            $('#btn-logoff').text('Log off');
         }
     }
 
