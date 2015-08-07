@@ -1,4 +1,5 @@
 var express = require('express');
+var multer = require('multer');
 app = express();
 var session = require('express-session');
 //app = express();
@@ -17,10 +18,12 @@ var showeditor = require('./routes/showeditor');
 var login = require('./routes/login');
 var playlistapi = require('./routes/api/playlist');
 var showlistapi = require('./routes/api/showlist');
+var uploadapi = require('./routes/api/upload');
 //var jade_browser = require('jade-browser');
 var jade = require('jade');
 var fs = require('fs');
 var config = require('./config');
+var uploadcomplete = false;
 
 //mongoskin
 //var dbUrl = config.dbUrl;   //process.env.MONGOHQ_URL || 'mongodb://@127.0.0.1:27017/playlist';
@@ -68,6 +71,27 @@ app.use('/showeditor', showeditor);
 app.use('/login', login);
 app.use('/api/playlist', playlistapi);
 app.use('/api/showlist', showlistapi);
+app.use('/api/upload', uploadapi);
+
+app.use(function(req, res, next){
+    multer({ dest: './uploads/',
+        rename: function (fieldname, filename) {
+            return filename+Date.now();
+        },
+        onFileUploadStart: function (file) {
+            console.log(file.originalname + ' is starting ...')
+        },
+        onParseEnd: function(req, next) {
+            console.log('Done parsing!');
+            next();
+        },
+        onFileUploadComplete: function (file) {
+            console.log(file.fieldname + ' uploaded to  ' + file.path)
+            uploadcomplete=true;
+        }
+    })
+})
+
 //app.use('/api/playlist/:id', api);
 
 //app.use(function(req, res, next) {
@@ -120,6 +144,9 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+
+
 
 module.exports = app;
 

@@ -195,7 +195,9 @@ function initUI() {
         loginCurator();
     })
 
-    $('#upload-track').fileinput();
+    $('#upload-track').fileinput({
+        uploadUrl: '/api/upload',
+    });
 
     $('#btn-upload').on('click', function(){
         $('#modal-upload').modal('show');
