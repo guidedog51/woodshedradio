@@ -8,7 +8,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var http = require('http');
+//var http = require('http');
 var request = require('request');
 
 var routes = require('./routes/index');
@@ -23,15 +23,7 @@ var uploadapi = require('./routes/api/upload');
 var jade = require('jade');
 var fs = require('fs');
 var config = require('./config');
-var uploadcomplete = false;
-
-//mongoskin
-//var dbUrl = config.dbUrl;   //process.env.MONGOHQ_URL || 'mongodb://@127.0.0.1:27017/playlist';
-//var SOUNDKICK_API_KEY = 'xdy5yMc0BaLlDZ0V';
-//var SOUNDKICK_ENDPOINT = 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY;
-//var SOUNDKICK_STATIC_ENDPOINT = 'http://images.sk-static.com/images/media/';
-//var ECHONEST_API_KEY= 'M8TCQASXDTEGU9VRO';
-//var ECHONEST_ENDPOINT = 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY;
+var done = false;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,11 +51,6 @@ app.use(cookieParser('c2da2f90-a7fe-441f-a3e9-982c250947d0'));
 app.use(session('e45a0035-1478-40d8-9e6e-dfa24164afd6'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.param('collectionName', function(req, res, next, collectionName){
-//  req.collection = db.collection(collectionName)
-//  return next()
-//})
-//
 app.use('/', routes);
 app.use('/users', users);
 app.use('/comingsoon', comingsoon);
@@ -72,39 +59,6 @@ app.use('/login', login);
 app.use('/api/playlist', playlistapi);
 app.use('/api/showlist', showlistapi);
 app.use('/api/upload', uploadapi);
-
-app.use(function(req, res, next){
-    multer({ dest: './uploads/',
-        rename: function (fieldname, filename) {
-            return filename+Date.now();
-        },
-        onFileUploadStart: function (file) {
-            console.log(file.originalname + ' is starting ...')
-        },
-        onParseEnd: function(req, next) {
-            console.log('Done parsing!');
-            next();
-        },
-        onFileUploadComplete: function (file) {
-            console.log(file.fieldname + ' uploaded to  ' + file.path)
-            uploadcomplete=true;
-        }
-    })
-})
-
-//app.use('/api/playlist/:id', api);
-
-//app.use(function(req, res, next) {
-// //if (!collections.playlist || ! collections.playlist) return next(new Error("No collections."))
-//  req.collections = collections;
-//  next();
-//});
-
-//app.use('/api/playlist', api);
-//app.use('/api/playlist/:id', api);
-
-//middleware to compile templates for local use
-//app.use(jade_browser('./public/scripts/templatesold.js', '**', {}));
 
 //auth stuff
 app.use(function(req, res, next) {
@@ -159,7 +113,10 @@ fs.writeFileSync("./public/scripts/templates2.js", jsFunctionString2);
 var jsFunctionString3 = jade.compileFileClient('./views/showlist.jade', {'name': "showList"});
 fs.writeFileSync("./public/scripts/templates3.js", jsFunctionString3);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+//http.createServer(app).listen(app.get('port'), function(){
+//  console.log("Express server listening on port " + app.get('port'));
+//});
 
+app.listen(app.get('port'),function(){
+    console.log("Working on port 3080");
+});

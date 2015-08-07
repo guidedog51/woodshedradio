@@ -50,7 +50,21 @@ var multer = require('multer');
 //});
 
 /*POST new track */
-upload.post('/', function(req, res, next) {
+upload.post('/', [multer({ dest: './uploads/',
+
+    rename: function (fieldname, filename) {
+        return filename+Date.now();
+    },
+    onFileUploadStart: function (file) {
+        console.log(file.originalname + ' is starting ...')
+    },
+    onFileUploadComplete: function (file) {
+        console.log(file.fieldname + ' uploaded to  ' + file.path);
+        uploadcomplete=true;
+    }}),
+
+
+    function(req, res, next) {
     //console.log(req.params.collectionName);
     //var payload = {'name' : 'naked barbies' };
     //var payload = req.body;
@@ -62,7 +76,7 @@ upload.post('/', function(req, res, next) {
     }
 
 
-});
+}]);
            
 
 module.exports = upload;
