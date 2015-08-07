@@ -100,8 +100,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-
 module.exports = app;
 
 
@@ -118,5 +116,5 @@ fs.writeFileSync("./public/scripts/templates3.js", jsFunctionString3);
 //});
 
 app.listen(app.get('port'),function(){
-    console.log("Working on port 3080");
+    console.log("Working on port " + app.get('port'));
 });
