@@ -24,23 +24,17 @@ upload.post('/', [multer({ dest: './uploads/',
         uploadcomplete=true;
     }}),
 
-
     function(req, res, next) {
-    //console.log(req.params.collectionName);
-    //var payload = {'name' : 'naked barbies' };
-    //var payload = req.body;
-    //console.log(payload);
-    console.log('posting file')
-    if(uploadcomplete==true){
-        console.log(req.files);
-        writeToBlobStorage();
-        res.end("File uploaded.");
-    }
+        console.log('posting file')
+        if(uploadcomplete==true){
+            console.log(req.files);
+            writeToBlobStorage(function(){res.end("File uploaded.");});
+              //TODO: use a callback to end the response, as the write to blob storage is async
+        }
+    }]
+);
 
-
-}]);
-
-function writeToBlobStorage(){
+function writeToBlobStorage(callback){
     blobService.createContainerIfNotExists(containerName, function(err, result, response) {
         if (err) {
             console.log("Couldn't create container %s", containerName);
@@ -61,8 +55,10 @@ function writeToBlobStorage(){
                     if(error){
                         console.log("Couldn't upload file %s", fileName);
                         console.error(error);
+                        callback();
                     } else {
                         console.log('File %s uploaded successfully', fileName);
+                        callback();
                     }
                 }
             );
