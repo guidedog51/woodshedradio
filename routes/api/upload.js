@@ -3,16 +3,21 @@ var upload = express.Router();
 var uploadcomplete = false;
 var multer = require('multer');
 var storage = require('azure-storage');
+var mongoClient = require('mongodb').MongoClient;
+
 var blobService = storage.createBlobService();
 var containerName = 'mpc-test-container';
 var fs = require('fs');
-var uploadFilePath, uploadFileName;
+var uploadFilePath, uploadFileName, uploadFileId, originalFileName;
+var timestamp;
 
 /*POST new track */
-upload.post('/', [multer({ dest: './uploads/',
+upload.post('/:collectionName', [multer({ dest: './uploads/',
 
     rename: function (fieldname, filename) {
-        return filename+Date.now();
+        timestamp = Date.now();
+        uploadFileId = 'ws' + timestamp;
+        return filename + timestamp;
     },
     onFileUploadStart: function (file) {
         console.log(file.originalname + ' is starting ...')
@@ -20,6 +25,7 @@ upload.post('/', [multer({ dest: './uploads/',
     onFileUploadComplete: function (file) {
         uploadFilePath = file.path;
         uploadFileName = file.name;
+        originalFileName = file.originalname;
         console.log(file.fieldname + ' uploaded to  ' + file.path);
         uploadcomplete=true;
     }}),
@@ -28,13 +34,13 @@ upload.post('/', [multer({ dest: './uploads/',
         console.log('posting file')
         if(uploadcomplete==true){
             console.log(req.files);
-            writeToBlobStorage(function(){res.end("File uploaded.");});
-              //TODO: use a callback to end the response, as the write to blob storage is async
+            writeToBlobStorage(req, res, function(){res.end("File uploaded.");});
+            //TODO: use a callback to end the response, as the write to blob storage is async
         }
     }]
 );
 
-function writeToBlobStorage(callback){
+function writeToBlobStorage(req, res, callback){
     blobService.createContainerIfNotExists(containerName, function(err, result, response) {
         if (err) {
             console.log("Couldn't create container %s", containerName);
@@ -58,7 +64,28 @@ function writeToBlobStorage(callback){
                         callback();
                     } else {
                         console.log('File %s uploaded successfully', fileName);
-                        callback();
+
+                        //write doc to mongo woodshedlibrary
+                        mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
+                            var col = mdb.collection(req.params.collectionName);
+                            var payload = req.body;
+                            payload._id = uploadFileId;
+                            payload.trackUrl = req.app.get('blob_base_url') + uploadFileName;
+                            payload.title = originalFileName.split('.')[0];
+                            col.insert(payload, function(error, result){
+                                if (error) {
+                                    console.log(error);
+                                    return next(error);
+                                }
+
+                                mdb.close();
+                                callback();
+
+                            });
+                        });
+
+
+
                     }
                 }
             );

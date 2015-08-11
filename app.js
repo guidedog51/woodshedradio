@@ -36,6 +36,8 @@ app.set('SOUNDKICK_STATIC_ENDPOINT', config.soundkick_static_endpoint);
 
 //mongo config
 app.set('dbUrl', config.dbUrl);
+app.set('blob_base_url', config.blob_base_url);
+app.set('woodshed_library', config.woodshed_library);
 
 
 app.use(favicon(__dirname + '/public/favicon.ico'));

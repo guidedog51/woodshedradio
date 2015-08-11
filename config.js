@@ -16,5 +16,7 @@ module.exports = {
     soundkick_endpoint: 'http://api.songkick.com/api/3.0/metro_areas/26330-us-sf-bay-area/calendar.json?apikey=' + SOUNDKICK_API_KEY,
     soundkick_static_endpoint: 'http://images.sk-static.com/images/media/',
     echonest_api_key: ECHONEST_API_KEY,
-    echonest_endpoint: 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY
+    echonest_endpoint: 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY,
+    blob_base_url: 'https://woodshedradio.blob.core.windows.net/mpc-test-container/',
+    woodshed_library: 'woodshedlibrary'
 }

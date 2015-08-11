@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoClient = require('mongodb').MongoClient;
 var router = express.Router();
 var callbackCount = 0;
 var moment = require('moment');
@@ -6,6 +7,12 @@ var config = require('../../config.js');
 
 /* GET home page. */
 router.get('/:startdate', function(req, res) {
+    //var col = {};
+    //
+    //mongoClient.connect(req.app.get('dbUrl'), function(err, mdb) {
+    //    col = mdb.collection(req.app.get('woodshed_library'));
+    //})
+
     var request = req.app.settings.request;
     var soundkickEndpoint = config.soundkick_endpoint;  //req.app.settings.SOUNDKICK_ENDPOINT;
     var echonestEndpoint = config.echonest_endpoint; //req.app.settings.ECHONEST_ENDPOINT;
@@ -77,7 +84,10 @@ router.get('/:startdate', function(req, res) {
     function echonestCallback(error, response, body) {
         callbackCount++;        // = callbackCount + 1;
         //console.log(response.statusCode);
- 
+
+
+
+        //fetch any tracks for this artist from woodshed library
 	    if (!error && (response.statusCode == 200 || response.statusCode == 429)) {
             
             if (response.statusCode == 429 && ! throttled) {
@@ -89,11 +99,11 @@ router.get('/:startdate', function(req, res) {
             var ndx = response.request.href.split('#')[1];
             if (tracks.response.songs != undefined) {
                 //console.log(tracks.response.songs);
-                
+
                 tracks.response.songs.forEach(function (obj, num) {
                     //console.log(artistTracks[ndx]);
                     var fId = obj.tracks.length > 0 ? obj.tracks[0].foreign_id.replace('rdio-US:track:', '') : 'none';
-                    artistTracks[ndx].trackList.push( {
+                    artistTracks[ndx].trackList.push({
                         'title': obj.title,
                         'artist_name': obj.artist_name,
                         'artist_id': artistTracks[ndx].artist_id,
@@ -105,10 +115,31 @@ router.get('/:startdate', function(req, res) {
                     //console.log(fId);
                 });
 
+                mongoClient.connect(req.app.get('dbUrl'), function (err, mdb) {
+                    var col = mdb.collection(req.app.get('woodshed_library'));
+                    var artistTrack = artistTracks[ndx];
+                    var aId = artistTrack.artist_id.toString(); //OMG you wouldn't think so but mongo didn't like the numeric version
+                    col.find({'artist_id': aId}).toArray(function (err, result) {
+                        if (err) return;
+                        console.log('artist: ' + artistTrack.artist_id + ' result:' + result)
+                        result.map(function (obj, num) {
+                            artistTrack.trackList.push({
+                                '_id': obj._id,
+                                'title': obj.title,
+                                //'artist_name': obj.artist_name,
+                                'artist_id': obj.artist_id,
+                                'event_id': artistTrack.event_id,
+                                'id': obj.id,
+                                'woodshed_url': obj.trackUrl,
+                                'catalog': 'woodshed'
+                            })
+                        })
+                        mdb.close();
+                    });
+                });
             }
-                
             //artistTracks[ndx].trackList = tracklist;
-            if (callbackCount == artistTracks.length && ! rendered) {
+            if (callbackCount >= artistTracks.length && ! rendered) {
                 //console.log(artistTracks.length + '  ' + callbackCount);
                 rendered = true;
                 throttled = false;

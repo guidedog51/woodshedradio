@@ -14,6 +14,7 @@ var deleteId=null;
 var currentShowDirty=false;
 var dirtyShowId;
 var adminAuthenticated = false;
+var uploadedSongData = {};
 
 $(document).ready(function() {
     $.ajaxSetup( {
@@ -196,7 +197,8 @@ function initUI() {
     })
 
     $('#upload-track').fileinput({
-        uploadUrl: '/api/upload',
+        uploadUrl: '/api/upload/woodshedlibrary',
+        uploadExtraData: uploadedSongData,
     });
 
     $('#btn-upload').on('click', function(){
@@ -427,7 +429,20 @@ function createShowTable() {
       $('li').removeClass('track-playing');
       $('#' + song.rowId).addClass('track-playing');
       console.log(event);
+      updateUpload(song)
   }
+
+function updateUpload(song) {
+    var event = song.event;
+    $('#artist-thumbnail-upload').attr('src', event.thumbnail_uri);
+    $('#artist-name-upload').text(song.track.artist_name);
+    $('#track-name-upload').text(song.track.title);
+    $('#performance-link-upload').attr('href', event.event_uri);
+    $('#performance-link-upload').text(event.displayName);
+
+    uploadedSongData.artist_id = song.track.artist_id;
+    uploadedSongData.artist_name = song.track.artist_name;
+}
 
 function saveNewPlaylist() {
     savePlaylist(true);
