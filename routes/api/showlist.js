@@ -124,13 +124,13 @@ router.get('/:startdate', function(req, res) {
                         console.log('artist: ' + artistTrack.artist_id + ' result:' + result)
                         result.map(function (obj, num) {
                             artistTrack.trackList.push({
-                                '_id': obj._id,
                                 'title': obj.title,
-                                //'artist_name': obj.artist_name,
+                                'artist_name': obj.artist_name,
                                 'artist_id': obj.artist_id,
                                 'event_id': artistTrack.event_id,
-                                'id': obj.id,
-                                'woodshed_url': obj.trackUrl,
+                                'id': obj._id,
+                                'foreign_id': obj._id,
+                                'track_url': obj.trackUrl,
                                 'catalog': 'woodshed'
                             })
                         })

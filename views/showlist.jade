@@ -1,3 +1,3 @@
 ul(class='showList')
     for val in unlinkedSongs
-        li(class='tracklist track-playable', data-track_id=val.id, data-event_id=val.event.event_id)= val.track.title
+        li(class='tracklist track-playable', data-track_id=val.id, data-track_url=val.track.track_url, data-event_id=val.event.event_id)= val.track.title
