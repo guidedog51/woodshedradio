@@ -24,11 +24,10 @@ block content
                         a(href="#play", class="sm2-inline-button play-pause")  Play / pause
 
                 div(class="sm2-inline-element sm2-inline-status")
-                    div(class="sm2-playlist")
+                    div(class="sm2-playlist crawler")
                         div(class="sm2-playlist-target")
-                            ul(class="sm2-playlist-bd")
-                                li  32" Gong Sounds
-
+                            ul(class="sm2-playlist-bd crawler")
+                                li(class="crawler")  32" Gong Sounds
 
                     div(class="sm2-progress")
                         div(class="sm2-row")
@@ -72,8 +71,8 @@ block content
 
     script(type='text/javascript').
         playlist =!{JSON.stringify(playlist)}
-    script(src='/scripts/radioplayer.js')
     script(src='/scripts/soundmanager2.js')
+    script(src='/scripts/radioplayer.js')
     script(src='/scripts/bar-ui.js')
     link(rel='stylesheet', href='/stylesheets/bar-ui.css')
 

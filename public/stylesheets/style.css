@@ -151,3 +151,12 @@ input[type='text'] {
 #login-message {
     display: none;
 }
+
+.crawler {
+    width: 75%;
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    animation: marquee 50s linear infinite;
+}
