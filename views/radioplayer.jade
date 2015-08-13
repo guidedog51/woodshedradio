@@ -1,0 +1,79 @@
+extends layout
+
+block content
+    h2(class='centered') Welcome to #{title} -- your source for the very best music from artists appearing here soon!
+    h3(class='centered') Some of our friends playing in town this week:
+    #nowPlaying(class='centered')
+        table
+            tr
+                td(class='thumb-cell')
+                    img(id='artist-thumbnail', src='', class='img-circle artist')
+                td(class='description-cell')
+                    p(id='artist-name')='artist currently playing'
+                    p(id='track-name')='track currently playing'
+                    a(id='performance-link', href='#', style='margin-left: 10px;')='link to performance page'
+            tr(style='height:40px;')
+
+
+        div(class="sm2-bar-ui compact full-width dark-text")
+            div(class="bd sm2-main-controls")
+                div(class="sm2-inline-texture")
+                div(class="sm2-inline-gradient")
+                div(class="sm2-inline-element sm2-button-element")
+                    div(class="sm2-button-bd")
+                        a(href="#play", class="sm2-inline-button play-pause")  Play / pause
+
+                div(class="sm2-inline-element sm2-inline-status")
+                    div(class="sm2-playlist")
+                        div(class="sm2-playlist-target")
+                            ul(class="sm2-playlist-bd")
+                                li  32" Gong Sounds
+
+
+                    div(class="sm2-progress")
+                        div(class="sm2-row")
+                            div(class="sm2-inline-time")  0:00
+                                div(class="sm2-progress-bd")
+                                    div(class="sm2-progress-track")
+                                        div(class="sm2-progress-bar")
+                                            div(class="sm2-progress-ball")
+                                            div(class="icon-overlay")
+
+                                    div(class="sm2-inline-duration")  0:00
+
+                div(class="sm2-inline-element sm2-button-element sm2-volume")
+                    div(class="sm2-button-bd")
+                        span(class="sm2-inline-button sm2-volume-control volume-shade")
+                        a(href="#volume", class="sm2-inline-button sm2-volume-control")  volume
+
+            div(class="bd sm2-playlist-drawer sm2-element")
+                div(class="sm2-inline-texture")
+                    div(class="sm2-box-shadow")
+
+            //playlist content is mirrored here
+            div(class="sm2-playlist-wrapper")
+                ul(class="sm2-playlist-bd")
+                    li(class="selected")
+                        a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/04%20The%20Sun%20Ain't%20Gonna%20Shine%20Anymore1438992438659.m4a")  The Sun Ain't Gonna Shine Anymore
+
+
+
+
+
+
+
+    #footer(class='container span10 offset1')
+        small Powered by
+            a(href='http://soundkick.com') Soundkick
+            |  ,&nbsp;
+            |  <a href='http://echonest.com'>The Echo Nest</a>
+            |  &nbsp;and&nbsp;
+            |  <a href='http://rdio.com'>Rdio</a>
+
+    script(type='text/javascript').
+        playlist =!{JSON.stringify(playlist)}
+    script(src='/scripts/radioplayer.js')
+    script(src='/scripts/soundmanager2.js')
+    script(src='/scripts/bar-ui.js')
+    link(rel='stylesheet', href='/stylesheets/bar-ui.css')
+
