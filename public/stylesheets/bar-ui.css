@@ -33,7 +33,7 @@
 .sm2-bar-ui .sm2-playlist li {
  text-align: center;
  margin-top: -2px;
- font-size: 95%;
+ font-size: 16px;
  line-height: 1em;
 }
 
@@ -290,8 +290,8 @@
   * if you play with UI width/height, these are the important ones.
   * NOTE: match these values if you want square UI buttons.
   */
- min-width: 2.8em;
- min-height: 2.8em;
+ min-width: 3.8em;
+ min-height: 3.8em;
 }
 
 .sm2-bar-ui .sm2-inline-button {

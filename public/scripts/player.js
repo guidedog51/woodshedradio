@@ -208,6 +208,10 @@ function initUI() {
     $('#btn-logoff').on('click', function(){
         logOnOrOff();
     })
+
+    $('#btn-publish-playlist').on('click', function() {
+        confirmPublishPlaylist();
+    })
 }
 
 
@@ -456,8 +460,7 @@ function deleteSavedShow() {
     deletePlaylist(deleteId)
 }
 
-
-function savePlaylist(createNew) {
+function savePlaylist() {
     var verb = 'POST';
 
     if (!$('#playlist-name').val()) {
@@ -474,6 +477,7 @@ function savePlaylist(createNew) {
         $('#showContainer').addClass('playlist-active');
         return;
     }
+
     var l = Ladda.create($('#save-playlist').get()[0]);
     l.start();
 
@@ -489,9 +493,65 @@ function savePlaylist(createNew) {
     }
     songData.tag = $('#playlist-name').val();
     $.ajax({
-          type: verb,
-          url: '/api/playlist/playlist',
-          data: JSON.stringify(songData),
+        type: verb,
+        url: '/api/playlist/playlist',
+        data: JSON.stringify(songData),
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        savedShow = songData;
+        currentShowDirty = false;
+        l.stop();
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        l.stop();
+    }
+
+}
+
+function confirmPublishPlaylist() {
+
+    asyncConfirmYesNo('Publish Playlist <b>'+ $('#playlist-name').val() + '</b>', 'Publishing this playlist will replace the current stream with new stream of this playlist.<br/><br/></b>Current listeners will receive new stream when their current playlist is done playing.', 'Publish', 'Cancel', publishCurrentPlaylist, dismissModal);
+
+}
+
+function publishCurrentPlaylist() {
+    var verb = 'POST';
+
+    if (!$('#playlist-name').val()) {
+        //resetting focus in this context likes a separate thread
+        setTimeout(function(){
+            $('#playlist-name').focus();
+        }, 0);
+        return;
+    }
+
+    if (savedShow.length == 0) {
+        //TODO: validate -- only allow publishing for non-dirty saved show
+
+        return;
+    }
+
+    if (savedShow._id) {
+
+    }
+
+
+    var l = Ladda.create($('#btnYesConfirmYesNo').get()[0]);
+    l.start();
+
+    savedShow.archived = false;
+
+    $.ajax({
+          type: 'POST',
+          url: '/api/playlist/streamPlaylist',
+          data: JSON.stringify(savedShow),
           success: success,
           error: error,
           dataType: 'json',
@@ -499,8 +559,6 @@ function savePlaylist(createNew) {
     });
     
     function success(data) {
-        savedShow = songData;
-        currentShowDirty = false;
         l.stop();
     }
     
