@@ -460,7 +460,7 @@ function deleteSavedShow() {
     deletePlaylist(deleteId)
 }
 
-function savePlaylist() {
+function savePlaylist(createNew) {
     var verb = 'POST';
 
     if (!$('#playlist-name').val()) {
@@ -532,13 +532,9 @@ function publishCurrentPlaylist() {
         return;
     }
 
-    if (savedShow.length == 0) {
+    if (savedShow.id) {
         //TODO: validate -- only allow publishing for non-dirty saved show
-
-        return;
-    }
-
-    if (savedShow._id) {
+        if (currentShowDirty) {return;}
 
     }
 
@@ -548,9 +544,15 @@ function publishCurrentPlaylist() {
 
     savedShow.archived = false;
 
+    //strip the tracklist
+    savedShow.unlinkedSongs.forEach(function(obj, num){
+        delete obj.event.trackList;
+    })
+
+
     $.ajax({
           type: 'POST',
-          url: '/api/playlist/streamPlaylist',
+          url: '/api/playlist/publish/streamPlaylist',
           data: JSON.stringify(savedShow),
           success: success,
           error: error,

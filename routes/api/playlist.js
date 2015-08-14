@@ -76,56 +76,40 @@ router.get('/:collectionName/current', function(req, res) {
 
 
 
-/*POST new playlist */
-router.post('/:collectionName', function(req, res, next) {
+/*POST new stream playlist */
+router.post('/publish/:collectionName', function(req, res, next) {
     //console.log(req.params.collectionName);
     //var payload = {'name' : 'naked barbies' };
     var payload = req.body;
     console.log(payload);
-    //var col = db.collection(req.params.collectionName);
-    
-    //col.insert(payload, {}, function(error, results) {
-    //    if (error) {
-    //        console.log(error);
-    //        return next(error);
-    //    }
-    //    var success = JSON.stringify({'success': true});
-    //    res.send(results ? success : results);
-    //})
-
 
     mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
         var col = mdb.collection(req.params.collectionName);
 
         //set archive flag for all members where archive flag = true
-
-
-
-
-        //in response handle add the new current show
-        col.insert(payload, function(error, result){
+        col.update({}, {$set:{'archived': true}}, {'multi': true}, function(error, result){
             if (error) {
                 console.log(error);
                 return next(error);
             }
 
+            //in response handle add the new current show
+            col.insert(payload, function(error, result){
+                if (error) {
+                    console.log(error);
+                    return next(error);
+                }
 
-
-
-
-            res.send({"success": true});
-            mdb.close();
+                res.send({"success": true});
+                mdb.close();
+            });
         });
     });
-
-
-
-
 });
 
 
 /*POST new playlist */
-router.post('/:collectionName/publish', function(req, res, next) {
+router.post('/:collectionName', function(req, res, next) {
     //console.log(req.params.collectionName);
     //var payload = {'name' : 'naked barbies' };
     var payload = req.body;
