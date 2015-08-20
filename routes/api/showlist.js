@@ -7,11 +7,6 @@ var config = require('../../config.js');
 
 /* GET home page. */
 router.get('/:startdate', function(req, res) {
-    //var col = {};
-    //
-    //mongoClient.connect(req.app.get('dbUrl'), function(err, mdb) {
-    //    col = mdb.collection(req.app.get('woodshed_library'));
-    //})
 
     var request = req.app.settings.request;
     var soundkickEndpoint = config.soundkick_endpoint;  //req.app.settings.SOUNDKICK_ENDPOINT;
@@ -29,7 +24,6 @@ router.get('/:startdate', function(req, res) {
         artist_icon_url: soundkickStaticEndpoint + 'profile_images/artists/AID/huge_avatar'
     };
     
-//    var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:rdio-US';//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
     var echonestUrl = echonestEndpoint  + '&artist_id=songkick:artist:SKAID&sort=song_hotttnesss-desc&results=5&bucket=tracks&bucket=id:' + bucketId;//&bucket=id:tracks:rdio-US;//&bucket=audio_summary';
     var echonestOptions = {
         url: echonestUrl
@@ -179,9 +173,6 @@ var _getSoundKickDateRange = function(startdate, enddate) {
         var mDay = moment.unix(startDate);
         return mDay.add(days, 'd');
     }
-
-
-
 
     function padDateItem(item) {
         return ('0' + item).slice(-2);

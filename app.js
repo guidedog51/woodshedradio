@@ -39,6 +39,7 @@ app.set('SOUNDKICK_STATIC_ENDPOINT', config.soundkick_static_endpoint);
 app.set('dbUrl', config.dbUrl);
 app.set('blob_base_url', config.blob_base_url);
 app.set('woodshed_library', config.woodshed_library);
+app.set('stream_collection', config.stream_collection);
 
 
 app.use(favicon(__dirname + '/public/favicon.ico'));

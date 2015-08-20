@@ -52,7 +52,8 @@ router.get('/:collectionName/:id', function(req, res) {
 
 
 /* GET current playlist by archived=false flag */
-router.get('/:collectionName/current', function(req, res) {
+
+router.get('/current/show/:collectionName', function(req, res) {
 
     var arr = [];
     mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
@@ -67,7 +68,7 @@ router.get('/:collectionName/current', function(req, res) {
                     unlinkedSongs: obj.unlinkedSongs})
             })
 
-            res.send({"currentPlaylist": arr});
+            res.send({'currentPlaylist': arr});
             mdb.close();
         });
     });
@@ -137,13 +138,7 @@ router.post('/:collectionName', function(req, res, next) {
             mdb.close();
         });
     });
-
-
-
-
 });
-
-
 
 
 /*PUT update playlist */

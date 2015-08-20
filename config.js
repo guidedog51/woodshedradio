@@ -18,5 +18,6 @@ module.exports = {
     echonest_api_key: ECHONEST_API_KEY,
     echonest_endpoint: 'http://developer.echonest.com/api/v4/song/search?api_key=' + ECHONEST_API_KEY,
     blob_base_url: 'https://woodshedradio.blob.core.windows.net/mpc-test-container/',
-    woodshed_library: 'woodshedlibrary'
+    woodshed_library: 'woodshedlibrary',
+    stream_collection: 'streamPlaylist'
 }

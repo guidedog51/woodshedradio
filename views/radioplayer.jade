@@ -52,17 +52,16 @@ block content
                 //playlist content is mirrored here
                 div(class="sm2-playlist-wrapper", style='display:none;')
                     ul(class="sm2-playlist-bd", style='display:none;')
-                        li(class="selected")
-                            a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/04%20The%20Sun%20Ain't%20Gonna%20Shine%20Anymore1438992438659.m4a")  Walker Brothers -- The Sun Ain't Gonna Shine Anymore
-                        li
-                            a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/12%20Casa%20Dega%20(Single%20Version)1438992207379.m4a")  Tom Petty and the Heartbreakers -- Casa Dega (Single Version)
-                        li
-                            a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/09%20Eat%20At%20Home1438990645168.m4a")  Paul & Linda McCartney -- Eat At Home
-
-
-
-
-
+                        for val in currentPlaylist.unlinkedSongs
+                            li(data-song_id=val.track.id)
+                                a(href=val.track.track_url, data-song_id=val.track.id)= val.track.artist_name + ' -- ' + val.track.title
+                        else
+                            li(class="selected")
+                                a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/04%20The%20Sun%20Ain't%20Gonna%20Shine%20Anymore1438992438659.m4a")  Walker Brothers -- The Sun Ain't Gonna Shine Anymore
+                            li
+                                a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/12%20Casa%20Dega%20(Single%20Version)1438992207379.m4a")  Tom Petty and the Heartbreakers -- Casa Dega (Single Version)
+                            li
+                                a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/09%20Eat%20At%20Home1438990645168.m4a")  Paul & Linda McCartney -- Eat At Home
 
 
     #footer(class='container span10 offset1')
@@ -74,7 +73,7 @@ block content
             |  <a href='http://rdio.com'>Rdio</a>
 
     script(type='text/javascript').
-        playlist =!{JSON.stringify(playlist)}
+        window.currentPlaylist =!{JSON.stringify(currentPlaylist)}
     script(src='/scripts/soundmanager2.js')
     script(src='/scripts/radioplayer.js')
     script(src='/scripts/bar-ui.js')

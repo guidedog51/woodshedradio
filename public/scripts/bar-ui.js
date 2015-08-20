@@ -28,7 +28,8 @@
     /*
     play: function(player) {
       console.log('playing', player);
-    },
+    }
+
     finish: function(player) {
       // each sound
       console.log('finish', player);
