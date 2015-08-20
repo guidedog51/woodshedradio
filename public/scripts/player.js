@@ -15,6 +15,7 @@ var currentShowDirty=false;
 var dirtyShowId;
 var adminAuthenticated = false;
 var uploadedSongData = {};
+var uploadedSongDataStringified = {};
 
 $(document).ready(function() {
     $.ajaxSetup( {
@@ -198,7 +199,15 @@ function initUI() {
 
     $('#upload-track').fileinput({
         uploadUrl: '/api/upload/woodshedlibrary',
-        uploadExtraData: uploadedSongData,
+        uploadExtraData: uploadedSongDataStringified
+    });
+
+    $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+        console.log('File uploaded triggered');
+        //since all is well, append track item to the showlist and reset the dirty flag
+
     });
 
     $('#btn-upload').on('click', function(){
@@ -212,6 +221,7 @@ function initUI() {
     $('#btn-publish-playlist').on('click', function() {
         confirmPublishPlaylist();
     })
+
 }
 
 
@@ -305,12 +315,14 @@ function getPerformance(performanceId) {
 function getTrackDataForPerformance(eventId, trackId) {
     var perf = getPerformance(eventId);
     var trackData = {};
-    perf.trackList.forEach(function(obj, num) {
-        if (obj.foreign_id == trackId) {
-            trackData = obj;
+    if (perf.trackList) {
+        perf.trackList.forEach(function (obj, num) {
+            if (obj.foreign_id == trackId) {
+                trackData = obj;
 
-        }
-    });
+            }
+        });
+    }
     return trackData;
 }
 
@@ -423,18 +435,32 @@ function createShowTable() {
 }
 
 
-  function updateNowPlaying(song) {
-      var event = song.event;
-      $('#artist-thumbnail').attr('src', event.thumbnail_uri);
-      $('#artist-name').text(song.track.artist_name);
-      $('#track-name').text(song.track.title);
-      $('#performance-link').attr('href', event.event_uri);
-      $('#performance-link').text(event.displayName);
-      $('li').removeClass('track-playing');
-      $('#' + song.rowId).addClass('track-playing');
-      console.log(event);
-      updateUpload(song)
-  }
+function updateNowPlaying(song) {
+    var event = song.event;
+    $('#artist-thumbnail').attr('src', event.thumbnail_uri);
+    $('#artist-name').text(song.track.artist_name);
+    $('#track-name').text(song.track.title);
+    $('#performance-link').attr('href', event.event_uri);
+    $('#performance-link').text(event.displayName);
+    $('li').removeClass('track-playing');
+    $('#' + song.rowId).addClass('track-playing');
+    console.log(event);
+    updateUpload(song)
+}
+
+function updateNowPlayingFromEvent(id) {
+    var event = getPerformance(id);
+    //var event = song.event;
+    $('#artist-thumbnail').attr('src', event.thumbnail_uri);
+    $('#artist-name').text(event.artist_name);
+    $('#track-name').text('select a track');
+    $('#performance-link').attr('href', event.event_uri);
+    $('#performance-link').text(event.displayName);
+    //$('li').removeClass('track-playing');
+    //$('#' + song.rowId).addClass('track-playing');
+    //console.log(event);
+    updateUploadFromEvent(event)
+}
 
 function updateUpload(song) {
     var event = song.event;
@@ -446,6 +472,20 @@ function updateUpload(song) {
 
     uploadedSongData.artist_id = song.track.artist_id;
     uploadedSongData.artist_name = song.track.artist_name;
+    uploadedSongDataStringified = JSON.stringify(uploadedSongData)
+
+}
+
+function updateUploadFromEvent(event) {
+    $('#artist-thumbnail-upload').attr('src', event.thumbnail_uri);
+    $('#artist-name-upload').text(event.artist_name);
+    //$('#track-name-upload').text(song.track.title);
+    $('#performance-link-upload').attr('href', event.event_uri);
+    $('#performance-link-upload').text(event.displayName);
+
+    uploadedSongData.artist_id = event.artist_id;
+    uploadedSongData.artist_name = event.artist_name;
+    uploadedSongDataStringified = JSON.stringify(uploadedSongData)
 }
 
 function saveNewPlaylist() {
@@ -613,6 +653,9 @@ function getArtistsPerformances(sd) {
         $('#songContainer').html(markup);
         createSongTable();
         initSortable();
+        $('.song-title').on('click', function(){
+            updateNowPlayingFromEvent($(this).data('event_id'));
+        })
         laddaSpinner.stop();
         //laddaSpinner.destroy();
         laddaSpinner = null;

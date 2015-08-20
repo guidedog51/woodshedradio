@@ -2,7 +2,7 @@ function songList(locals) {
     var buf = [];
     var jade_mixins = {};
     var jade_interp;
-    ;var locals_for_with = (locals || {});(function (artistTracks) {
+    ;var locals_for_with = (locals || {});(function (artistTracks, item) {
         buf.push("<ul>");
 // iterate artistTracks
         ;(function(){
@@ -13,7 +13,7 @@ function songList(locals) {
                     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
                         var val = $$obj[$index];
 
-                        buf.push("<li class=\"song-title\"><a" + (jade.attr("href", val.event_uri, true, false)) + " target=\"_blank\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "</a></li><ul class=\"trackList\">");
+                        buf.push("<li" + (jade.attr("data-event_uri", val.event_uri, true, false)) + (jade.attr("data-event_id", val.event_id, true, false)) + " class=\"song-title\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "<!--a(href=val.event_uri, target='_blank')!=val.displayName--></li><ul class=\"trackList\">");
 // iterate val.trackList
                         ;(function(){
                             var $$obj = val.trackList;
@@ -34,7 +34,7 @@ function songList(locals) {
                                 for (var $index in $$obj) {
                                     $$l++;      var item = $$obj[$index];
 
-                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.trackUrl, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable'], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable'], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                                 }
 
                                 if ($$l === 0) {
@@ -54,7 +54,7 @@ function songList(locals) {
                 for (var $index in $$obj) {
                     $$l++;      var val = $$obj[$index];
 
-                    buf.push("<li class=\"song-title\"><a" + (jade.attr("href", val.event_uri, true, false)) + " target=\"_blank\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "</a></li><ul class=\"trackList\">");
+                    buf.push("<li" + (jade.attr("data-event_uri", val.event_uri, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + " class=\"song-title\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "<!--a(href=val.event_uri, target='_blank')!=val.displayName--></li><ul class=\"trackList\">");
 // iterate val.trackList
                     ;(function(){
                         var $$obj = val.trackList;
@@ -64,7 +64,7 @@ function songList(locals) {
                                 for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
                                     var item = $$obj[$index];
 
-                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.trackUrl, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable'], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable'], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                                 }
 
                             } else {
@@ -75,7 +75,7 @@ function songList(locals) {
                             for (var $index in $$obj) {
                                 $$l++;      var item = $$obj[$index];
 
-                                buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.trackUrl, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable'], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([(item.foreign_id === 'none') ? 'tracklist' : 'tracklist track-playable'], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                             }
 
                             if ($$l === 0) {
@@ -93,7 +93,7 @@ function songList(locals) {
             }
         }).call(this);
 
-        buf.push("</ul>");}.call(this,"artistTracks" in locals_for_with?locals_for_with.artistTracks:typeof artistTracks!=="undefined"?artistTracks:undefined));;return buf.join("");
+        buf.push("</ul>");}.call(this,"artistTracks" in locals_for_with?locals_for_with.artistTracks:typeof artistTracks!=="undefined"?artistTracks:undefined,"item" in locals_for_with?locals_for_with.item:typeof item!=="undefined"?item:undefined));;return buf.join("");
 }
 function savedList(locals) {
     var buf = [];

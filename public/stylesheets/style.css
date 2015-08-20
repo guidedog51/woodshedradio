@@ -140,6 +140,11 @@ input[type='text'] {
     font-weight: 600;
 }
 
+.song-title:hover {
+    cursor: pointer;
+    background-color: #46a546;
+}
+
 .playlist-active {
     border: thick solid greenyellow;
 }

@@ -34,7 +34,7 @@ upload.post('/:collectionName', [multer({ dest: './uploads/',
         console.log('posting file')
         if(uploadcomplete==true){
             console.log(req.files);
-            writeToBlobStorage(req, res, function(){res.end("File uploaded.");});
+            writeToBlobStorage(req, res, function(fileData){res.send({"success": true, 'fileData': fileData});});
             //TODO: use a callback to end the response, as the write to blob storage is async
         }
     }]
@@ -61,7 +61,7 @@ function writeToBlobStorage(req, res, callback){
                     if(error){
                         console.log("Couldn't upload file %s", fileName);
                         console.error(error);
-                        callback();
+                        callback({});
                     } else {
                         console.log('File %s uploaded successfully', fileName);
 
@@ -79,7 +79,7 @@ function writeToBlobStorage(req, res, callback){
                                 }
 
                                 mdb.close();
-                                callback();
+                                callback(payload);
 
                             });
                         });

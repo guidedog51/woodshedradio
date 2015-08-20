@@ -56,6 +56,7 @@ router.get('/:startdate', function(req, res) {
                     if (obj.performance[0]) {
                         artistTracks.push({'displayName': obj.displayName,
                                             'artist_id': obj.performance[0].artist.id,
+                                            'artist_name': obj.performance[0].artist.displayName,
                                             'event_id': obj.id,
                                             'event_uri': obj.uri,
                                             'thumbnail_uri': options.artist_icon_url.replace('AID', obj.performance[0].artist.id),
