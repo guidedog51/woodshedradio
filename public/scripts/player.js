@@ -203,15 +203,19 @@ function initUI() {
     });
 
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
-        var form = data.form, files = data.files, extra = data.extra,
-            response = data.response, reader = data.reader;
         console.log('File uploaded triggered');
         //since all is well, append track item to the showlist and reset the dirty flag
         var markup = window.showListItem(data.response.fileData);
         $('.showList').append(markup);
 
+        //artistData.event.tracklist  and/or savedSongs[lastNdx].event.tracklist
+
+        addUploadedTrackToPerformance(data.response.fileData.event_id, data.response.fileData)
+
+        unlinkedCurrentSongs.length=0;
         createShowTable();
         currentShowDirty = true;
+
 
     });
 
@@ -290,6 +294,30 @@ function getSong(songId) {
     });
     return newSong;
 }
+
+function addUploadedTrackToPerformance(performanceId, track) {
+    if (artistData) {
+        artistData.forEach(function(obj, num) {
+            if (obj.event_id == performanceId) {
+                obj.event.trackList.push(track);
+
+            }
+        });
+    }
+    if (savedSongs) {
+
+        var evt = getPerformance(performanceId);
+        track.id = track._id;
+        track.foreign_id = track.id;
+        evt.trackList.push(track);
+        savedSongs.push({
+            'track': track,
+            'event': evt,
+            'id': track._id
+        })
+    }
+}
+
 
 function getPerformance(performanceId) {
     var perf = {};
