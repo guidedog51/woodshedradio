@@ -15,7 +15,7 @@ var currentShowDirty=false;
 var dirtyShowId;
 var adminAuthenticated = false;
 var uploadedSongData = {};
-var uploadedSongDataStringified = {};
+//var uploadedSongDataStringified = {};
 
 $(document).ready(function() {
     $.ajaxSetup( {
@@ -199,7 +199,7 @@ function initUI() {
 
     $('#upload-track').fileinput({
         uploadUrl: '/api/upload/woodshedlibrary',
-        uploadExtraData: uploadedSongDataStringified
+        uploadExtraData: uploadedSongData
     });
 
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
@@ -207,6 +207,11 @@ function initUI() {
             response = data.response, reader = data.reader;
         console.log('File uploaded triggered');
         //since all is well, append track item to the showlist and reset the dirty flag
+        var markup = window.showListItem(data.response.fileData);
+        $('.showList').append(markup);
+
+        createShowTable();
+        currentShowDirty = true;
 
     });
 
@@ -472,7 +477,8 @@ function updateUpload(song) {
 
     uploadedSongData.artist_id = song.track.artist_id;
     uploadedSongData.artist_name = song.track.artist_name;
-    uploadedSongDataStringified = JSON.stringify(uploadedSongData)
+    uploadedSongData.event_id = event.event_id;
+    //uploadedSongDataStringified = JSON.stringify(uploadedSongData)
 
 }
 
@@ -485,7 +491,8 @@ function updateUploadFromEvent(event) {
 
     uploadedSongData.artist_id = event.artist_id;
     uploadedSongData.artist_name = event.artist_name;
-    uploadedSongDataStringified = JSON.stringify(uploadedSongData)
+    uploadedSongData.event_id = event.event_id;
+    //uploadedSongDataStringified = JSON.stringify(uploadedSongData)
 }
 
 function saveNewPlaylist() {

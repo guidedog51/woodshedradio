@@ -153,3 +153,10 @@ function showList(locals) {
 
         buf.push("</ul>");}.call(this,"unlinkedSongs" in locals_for_with?locals_for_with.unlinkedSongs:typeof unlinkedSongs!=="undefined"?unlinkedSongs:undefined));;return buf.join("");
 }
+function showListItem(locals) {
+    var buf = [];
+    var jade_mixins = {};
+    var jade_interp;
+    ;var locals_for_with = (locals || {});(function (_id, trackUrl, event_id, title) {
+        buf.push("<li" + (jade.attr("data-track_id", _id, true, false)) + (jade.attr("data-track_url", trackUrl, true, false)) + (jade.attr("data-event_id", event_id, true, false)) + " class=\"tracklist track-playable\">" + (jade.escape(null == (jade_interp = title) ? "" : jade_interp)) + "</li>");}.call(this,"_id" in locals_for_with?locals_for_with._id:typeof _id!=="undefined"?_id:undefined,"trackUrl" in locals_for_with?locals_for_with.trackUrl:typeof trackUrl!=="undefined"?trackUrl:undefined,"event_id" in locals_for_with?locals_for_with.event_id:typeof event_id!=="undefined"?event_id:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
+}

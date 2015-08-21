@@ -115,6 +115,8 @@ var jsFunctionString2 = jade.compileFileClient('./views/savedlist.jade', {'name'
 fs.writeFileSync("./public/scripts/templates2.js", jsFunctionString2);
 var jsFunctionString3 = jade.compileFileClient('./views/showlist.jade', {'name': "showList"});
 fs.writeFileSync("./public/scripts/templates3.js", jsFunctionString3);
+var jsFunctionString4 = jade.compileFileClient('./views/showlist_item.jade', {'name': "showListItem"});
+fs.writeFileSync("./public/scripts/templates4.js", jsFunctionString4);
 
 //http.createServer(app).listen(app.get('port'), function(){
 //  console.log("Express server listening on port " + app.get('port'));
