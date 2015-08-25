@@ -269,6 +269,13 @@ function playSong(song) {
         if (id == null) {
             playNextSong();
         } else {
+            //if we have a ws id, use the hidden alternate player
+            //its playlist will be re-rendered after selecting or uploading items -- do this in createShowTable
+            //use the ids to check current index of playlist -- if next song
+            //is not ws uploaded, trigger playnext for rdio player
+            //use the index to add selected class to playlist item, then trigger play on html player
+            //if next item is ws uploaded, etc
+
             R.player.play({source: id});
             updateNowPlaying(song);
         }
