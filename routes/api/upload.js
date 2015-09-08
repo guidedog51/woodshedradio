@@ -71,16 +71,34 @@ function writeToBlobStorage(req, res, callback){
                     } else {
                         console.log('File %s uploaded successfully', fileName);
 
-                        //write doc to mongo woodshedlibrary
+                        //write doc to mongo woodshedlibrary  TODO: change to upsert
                         mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
                             var col = mdb.collection(req.params.collectionName);
                             var payload = req.body;
                             payload._id = uploadFileId;
-                            payload.trackUrl = req.app.get('blob_base_url') + uploadFileName;
+                            payload.track_url = req.app.get('blob_base_url') + uploadFileName;
                             payload.title = originalFileName.split('.')[0];
                             payload.artist_id = req.body.artist_id;
                             payload.event_id = req.body.event_id;
                             payload.artist_name = req.body.artist_name;
+
+
+                            //col.update({_id: uploadFileId}, payload, {upsert: true}, function(error, count){
+                            //
+                            //    if (error) {
+                            //        console.log(error);
+                            //        return next(error);
+                            //    }
+                            //
+                            //    mdb.close();
+                            //    callback(payload);
+                            //
+                            //
+                            //
+                            //
+                            //});
+
+
                             col.insert(payload, function(error, result){
                                 if (error) {
                                     console.log(error);

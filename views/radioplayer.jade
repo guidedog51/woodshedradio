@@ -54,7 +54,7 @@ block content
                     ul(class="sm2-playlist-bd", style='display:none;')
                         for val in currentPlaylist.unlinkedSongs
                             li(data-song_id=val.track.id)
-                                a(href=val.track.trackUrl, data-song_id=val.track.id)= val.track.artist_name + ' -- ' + val.track.title
+                                a(href=val.track.track_url, data-song_id=val.track.id)= val.track.artist_name + ' -- ' + val.track.title
                         else
                             li(class="selected")
                                 a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/04%20The%20Sun%20Ain't%20Gonna%20Shine%20Anymore1438992438659.m4a")  Walker Brothers -- The Sun Ain't Gonna Shine Anymore

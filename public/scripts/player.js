@@ -5,6 +5,7 @@ var savedShow = [];
 var songsToPlay = [];
 var unlinkedCurrentSongs = [];
 var savedSongs = [];
+var unsavedSongs = [];
 var curSong = null;
 //var curShowSong = null;
 var artistData;     //all the track metadata from the server
@@ -303,26 +304,38 @@ function getSong(songId) {
 }
 
 function addUploadedTrackToPerformance(performanceId, track) {
+    var evt = getPerformance(performanceId);
+    track.id = track._id;
+    track.foreign_id = track.id;
+    evt.trackList.push(track);
     if (artistData) {
         artistData.forEach(function(obj, num) {
             if (obj.event_id == performanceId) {
-                obj.event.trackList.push(track);
-
+                if (!obj.event) {
+                    obj.event = evt;
+                    if (!obj.event.trackList){
+                        obj.event.trackList = [];
+                        obj.event.trackList.push(track);
+                    }
+                }
             }
         });
     }
+
     if (savedSongs) {
 
-        var evt = getPerformance(performanceId);
-        track.id = track._id;
-        track.foreign_id = track.id;
-        evt.trackList.push(track);
         savedSongs.push({
             'track': track,
             'event': evt,
             'id': track._id
         })
     }
+    //we're building a show and haven't saved anything yet
+    unsavedSongs.push({
+        'track': track,
+        'event': evt,
+        'id': track._id
+    })
 }
 
 
@@ -349,7 +362,17 @@ function getPerformance(performanceId) {
 
         }
     });
+
+
+    if (unsavedSongs) {
+        if (obj.event.event_id == performanceId) {
+            perf = obj.event;
+
+        }
+    }
     return perf;
+
+
 }
 
 function getTrackDataForPerformance(eventId, trackId) {
@@ -783,6 +806,7 @@ function getSavedShow(showID) {
     function success(data) {
         unlinkedCurrentSongs.length = 0;
         savedSongs.length = 0;
+        unsavedSongs.length=0;
         savedShow.length = 0;
         savedShow = data.savedShow[0];
         savedSongs=data.savedShow[0].unlinkedSongs;

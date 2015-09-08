@@ -95,15 +95,33 @@ router.post('/publish/:collectionName', function(req, res, next) {
             }
 
             //in response handle add the new current show
-            col.insert(payload, function(error, result){
+            //col.insert(payload, function(error, result){
+            //    if (error) {
+            //        console.log(error);
+            //        return next(error);
+            //    }
+            //
+            //    res.send({"success": true});
+            //    mdb.close();
+            //});
+
+
+
+            col.update({_id: payload._id}, payload, {upsert: true}, function(error, count){
+
                 if (error) {
                     console.log(error);
                     return next(error);
                 }
-
-                res.send({"success": true});
+                res.send({'success': true})
                 mdb.close();
+
             });
+
+
+
+
+
         });
     });
 });

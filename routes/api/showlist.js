@@ -125,7 +125,7 @@ router.get('/:startdate', function(req, res) {
                                 'event_id': artistTrack.event_id,
                                 'id': obj._id,
                                 'foreign_id': obj._id,
-                                'track_url': obj.trackUrl,
+                                'track_url': obj.track_url,
                                 'catalog': 'woodshed'
                             })
                         })
