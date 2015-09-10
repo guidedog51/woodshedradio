@@ -5,7 +5,7 @@ var savedShow = [];
 var songsToPlay = [];
 var unlinkedCurrentSongs = [];
 var savedSongs = [];
-var unsavedSongs = [];
+//var unsavedSongs = [];
 var curSong = null;
 //var curShowSong = null;
 var artistData;     //all the track metadata from the server
@@ -307,22 +307,22 @@ function addUploadedTrackToPerformance(performanceId, track) {
     var evt = getPerformance(performanceId);
     track.id = track._id;
     track.foreign_id = track.id;
-    evt.trackList.push(track);
+    //evt.trackList.push(track);
     if (artistData) {
         artistData.forEach(function(obj, num) {
             if (obj.event_id == performanceId) {
                 if (!obj.event) {
-                    obj.event = evt;
+                    obj.event =  jQuery.extend({},evt); //if you don't clone the perf you'll get events nested into infinity
                     if (!obj.event.trackList){
                         obj.event.trackList = [];
-                        obj.event.trackList.push(track);
                     }
                 }
+                obj.event.trackList.push(track);
             }
         });
     }
 
-    if (savedSongs) {
+    if (savedSongs.length > 0) {
 
         savedSongs.push({
             'track': track,
@@ -330,12 +330,6 @@ function addUploadedTrackToPerformance(performanceId, track) {
             'id': track._id
         })
     }
-    //we're building a show and haven't saved anything yet
-    unsavedSongs.push({
-        'track': track,
-        'event': evt,
-        'id': track._id
-    })
 }
 
 
@@ -364,19 +358,19 @@ function getPerformance(performanceId) {
     });
 
 
-    if (unsavedSongs) {
-        if (obj.event.event_id == performanceId) {
-            perf = obj.event;
-
-        }
-    }
+    //if (unsavedSongs) {
+    //    if (obj.event.event_id == performanceId) {
+    //        perf = obj.event;
+    //
+    //    }
+    //}
     return perf;
 
 
 }
 
-function getTrackDataForPerformance(eventId, trackId) {
-    var perf = getPerformance(eventId);
+function getTrackDataForPerformance(perf, trackId) {
+    //var perf = getPerformance(eventId);
     var trackData = {};
     if (perf.trackList) {
         perf.trackList.forEach(function (obj, num) {
@@ -386,6 +380,20 @@ function getTrackDataForPerformance(eventId, trackId) {
             }
         });
     }
+
+    //if we haven't found trackdata, check the savedSongs array
+    if (!trackData.foreign_id) {
+        if (savedSongs.length > 0) {
+            savedSongs.forEach(function(obj, num){
+                if (obj.track){
+                    if (obj.track.foreign_id == trackId) {
+                        trackData = obj.track;
+                    }
+                }
+            })
+        }
+    }
+
     return trackData;
 }
 
@@ -397,7 +405,7 @@ function createSongTable() {
     var trackList = $('#songContainer li').map(function() {
         var id = $(this).data("track_id");
         var eventId = $(this).data('event_id');
-        var performance = {};
+        var performance = getPerformance(eventId);
         var songToPlay = {};
         if (id != 'none' && $(this).hasClass('track-playable')) {
             $(this).on('click', function() {
@@ -410,8 +418,8 @@ function createSongTable() {
             $(this).attr('id', 'p' + rowNum);
             rowNum++;
             return {'track_id': id,
-                    'event': getPerformance(eventId),
-                    'song': getTrackDataForPerformance(eventId, id)};
+                    'event': performance,
+                    'song': getTrackDataForPerformance(performance, id)};
         }
     }).get();    
     
@@ -449,7 +457,7 @@ function createShowTable() {
     var showTrackList = $('.showList li').map(function() {
         var id = $(this).data("track_id");
         var eventId = $(this).data('event_id');
-        var performance = {};
+        var performance = getPerformance(eventId);
         var songToPlay = {};
         if (id != 'none' && $(this).hasClass('track-playable')) {
             $(this).off('click');
@@ -464,13 +472,20 @@ function createShowTable() {
             $(this).attr('id', 's' + rowNum);
             rowNum++;
             return {'track_id': id,
-                'event': getPerformance(eventId),
-                'song': getTrackDataForPerformance(eventId, id)};
+                'event': jQuery.extend({}, performance),
+                'song': getTrackDataForPerformance(performance, id)};
         }
     }).get();
 
+
+
     showTrackList.forEach(function(obj, num) {
         var song = {};
+        //arg -- for some reason events get nested when starting with blank playlist and uploading
+        //this is a hack
+        if (obj.event.event) {
+            delete obj.event.event;
+        };
         if (currentShow.length > 0) {
             var last = currentShow[currentShow.length - 1];
             last.next = song;
@@ -806,7 +821,7 @@ function getSavedShow(showID) {
     function success(data) {
         unlinkedCurrentSongs.length = 0;
         savedSongs.length = 0;
-        unsavedSongs.length=0;
+        //unsavedSongs.length=0;
         savedShow.length = 0;
         savedShow = data.savedShow[0];
         savedSongs=data.savedShow[0].unlinkedSongs;
