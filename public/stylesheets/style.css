@@ -102,6 +102,11 @@ input[type='text'] {
     cursor: pointer;
     background-color: beige;
 }
+
+.track-uploaded {
+    font-weight: bolder;
+}
+
 .track-playing {
     cursor: pointer;
     background-color: #46a546;

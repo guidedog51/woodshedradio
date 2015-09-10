@@ -1,1 +1,4 @@
-li(class='tracklist track-playable', data-track_id=_id, data-track_url=track_url, data-event_id=event_id)= title
+- var baseClass = 'tracklist track-playable'
+- var uploaded = track_url ? ' track-uploaded' : ''
+- baseClass = baseClass + uploaded
+li(class=baseClass, data-track_id=_id, data-track_url=track_url, data-event_id=event_id)= title

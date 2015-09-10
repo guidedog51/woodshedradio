@@ -85,10 +85,11 @@ block content
             |  &nbsp;and&nbsp;
             |  <a href='http://rdio.com'>Rdio</a>
 
+    script(src='/scripts/soundmanager2.js')
+    script(src='/scripts/initSoundManager.js')
     script(type='text/javascript').
         artistData =!{JSON.stringify(artistTracks)}
     script(src='https://rdio.com/api/api.js?client_id=uidoeau3k5frvc3yat3hxb3h2q')
     script(src='/scripts/get_key_with_callback.js')
     script(src='/scripts/player.js')
     script(src='/scripts/touchpunch.js')
-       

@@ -7,7 +7,7 @@ var EchoNestAPI = (function () {
         var dates = [];
         var sep = '-';
         var today = getDayWhen(0);
-        var future = getDayWhen(7);          
+        var future = getDayWhen(1);
 
         dates.push(today.getFullYear() + sep + padDateItem(today.getMonth() + 1) + sep + padDateItem(today.getDate()));
         dates.push(future.getFullYear() + sep + padDateItem(future.getMonth() + 1) + sep + padDateItem(future.getDate()));

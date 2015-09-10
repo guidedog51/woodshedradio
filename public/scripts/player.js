@@ -155,11 +155,13 @@ function initUI() {
                 playSong(songsToPlay[0]);
             }
         } else {
-            R.player.togglePause();
+            //R.player.togglePause();
+            playSong(curSong);
         }
     });
     $("#playPause").click(function() {
-        R.player.togglePause();
+        //R.player.togglePause();
+        playSong(curSong);
     }).hide();
 
 
@@ -261,7 +263,25 @@ function playPrevSong() {
 
 function playSong(song) {
     if (song === curSong) {
-        R.player.togglePause();
+        if (curSong.soundManagerId) {
+            //TODO: move to togglePause function
+            var s = soundManager.getSoundById(curSong.soundManagerId);
+            if (curSong.playing) {
+                s.pause();
+                $("#playPlay").show();
+                $("#playPause").hide();
+                delete curSong.playing;
+            }  else {
+                s.play();
+                $("#playPlay").hide();
+                $("#playPause").show();
+                curSong.playing = true;
+            }
+        } else {
+            R.player.togglePause();
+        }
+
+
     } else {
         var oldSong = curSong;
         curSong = song;
@@ -270,21 +290,49 @@ function playSong(song) {
         if (id == null) {
             playNextSong();
         } else {
-            //if we have a ws id, use the hidden alternate player
+            //if we have a ws id, use the alternate player -- soundManager2 sound
             //its playlist will be re-rendered after selecting or uploading items -- do this in createShowTable
             //use the ids to check current index of playlist -- if next song
             //is not ws uploaded, trigger playnext for rdio player
             //use the index to add selected class to playlist item, then trigger play on html player
             //if next item is ws uploaded, etc
+            if (id.slice(0, 2) == 'ws') {
+                var mySound = soundManager.createSound({
+                    id: id,
+                    url: song.track.track_url,
+                    onfinish: function(){
+                        this.destruct();
+                        playNextSong();
+                        $("#playPlay").show();
+                        $("#playPause").hide();
 
-            R.player.play({source: id});
-            updateNowPlaying(song);
+                    }
+                });
+                mySound.play();
+                song.soundManagerId = id;
+                song.playing = true;
+                $("#playPlay").hide();
+                $("#playPause").show();
+
+                updateNowPlaying(song);
+            } else {
+
+                R.player.play({source: id});
+                updateNowPlaying(song);
+            }
         }
     }
 }
 
 function songChanged(song) {
     if (song) {
+        if (song.playing) {
+            var s = soundManager.getSoundById(song.soundManagerId)
+            s.stop();
+            s.unload();
+            s.destruct();
+            delete song.playing;
+        }
         if (song === curSong && R.player.playState() === R.player.PLAYSTATE_PLAYING) {
             //song.row.addClass('success');
         } else {
