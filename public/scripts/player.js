@@ -122,6 +122,25 @@ function initSortable() {
         cursor: 'crosshair',
         connectWith: '#trash-playlist'
     }).disableSelection();
+
+    if ($('#saved-merge-playlists').sortable('instance')) {
+        $('#saved-merge-playlists').sortable('destroy')
+    };
+
+    $('#saved-merge-playlists').sortable({
+        cursor: 'crosshair',
+        connectWith: '#playlists-to-merge'
+    }).disableSelection();
+
+    if ($('#playlists-to-merge').sortable('instance')) {
+        $('#playlists-to-merge').sortable('destroy')
+    };
+
+    $('#playlists-to-merge').sortable({
+        cursor: 'crosshair',
+        connectWith: '#saved-merge-playlists'
+    }).disableSelection();
+
 }
 
 function initUI() {
@@ -234,6 +253,21 @@ function initUI() {
         confirmPublishPlaylist();
     })
 
+    $('#btn-merge-playlists').on('click', function() {
+        $('#modal-merge-playlists').modal('show');
+        getPlaylists(true);
+    })
+
+    $('#save-merged-playlist').on('click', function(e){
+        var mergedList = $('#playlists-to-merge li').map(function() {
+            var id = $(this).data("saved-id");
+            if (id) {
+                return {'playlist_id': id};
+            }
+        }).get();
+        mergePlaylist(mergedList)
+    })
+
 }
 
 
@@ -278,9 +312,16 @@ function playSong(song) {
                 curSong.playing = true;
             }
         } else {
-            R.player.togglePause();
-        }
 
+            if (R.player.playState() === 0){
+                R.player.play({source: song.id});
+                updateNowPlaying(song);
+                $("#playPlay").hide();
+                $("#playPause").show();
+            } else {
+                R.player.togglePause();
+            }
+        }
 
     } else {
         var oldSong = curSong;
@@ -290,6 +331,11 @@ function playSong(song) {
         if (id == null) {
             playNextSong();
         } else {
+
+            if (R.player.playState() === R.player.PLAYSTATE_PLAYING) {
+                R.player.togglePause();
+            }
+
             //if we have a ws id, use the alternate player -- soundManager2 sound
             //its playlist will be re-rendered after selecting or uploading items -- do this in createShowTable
             //use the ids to check current index of playlist -- if next song
@@ -316,6 +362,21 @@ function playSong(song) {
 
                 updateNowPlaying(song);
             } else {
+                if (oldSong) {
+                    if (oldSong.playing) {
+                        var s = soundManager.getSoundById(oldSong.soundManagerId)
+                        if (s) {
+                            s.stop();
+                            s.unload();
+                            s.destruct();
+
+                        }
+                        delete oldSong.playing;
+
+                    }
+
+                }
+
 
                 R.player.play({source: id});
                 updateNowPlaying(song);
@@ -326,13 +387,13 @@ function playSong(song) {
 
 function songChanged(song) {
     if (song) {
-        if (song.playing) {
-            var s = soundManager.getSoundById(song.soundManagerId)
-            s.stop();
-            s.unload();
-            s.destruct();
-            delete song.playing;
-        }
+        //if (song.playing) {
+        //    var s = soundManager.getSoundById(song.soundManagerId)
+        //    s.stop();
+        //    s.unload();
+        //    s.destruct();
+        //    delete song.playing;
+        //}
         if (song === curSong && R.player.playState() === R.player.PLAYSTATE_PLAYING) {
             //song.row.addClass('success');
         } else {
@@ -738,6 +799,61 @@ function publishCurrentPlaylist() {
     }
 }
 
+function mergePlaylist(playList) {
+    if (!$('#merged-playlist-name').val()) {
+        //resetting focus in this context likes a separate thread
+        setTimeout(function(){
+            $('#merged-playlist-name').focus();
+        }, 0);
+        return;
+    }
+
+    var l = Ladda.create($('#save-merged-playlist').get()[0]);
+    l.start();
+
+    console.log(playList)
+
+
+
+    var verb = 'POST';
+
+
+    //if (createNew===true) {
+    //    //timestamp will be the id
+    //    //tag is for the curator from UI
+    //playList._id = moment(Date.now()).unix();
+    //} else {
+    //    verb = 'PUT';
+    //    songData._id = savedShow._id;
+    //}
+
+
+    var payload = {
+        _id: moment(Date.now()).unix(),
+        tag: $('#merged-playlist-name').val(),
+        id_list: playList
+    }
+
+    $.ajax({
+        type: verb,
+        url: '/api/playlist/merge/playlist',
+        data: JSON.stringify(payload),
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        l.stop();
+    }
+
+    function error(xhr, result, error) {
+        console.log(error);
+        l.stop();
+    }
+}
+
 function deletePlaylist(plId) {
 
     //var l = Ladda.create($('#get-playlists').get()[0]);
@@ -795,7 +911,7 @@ function getArtistsPerformances(sd) {
     }
 }
 
-function getPlaylists() {
+function getPlaylists(fromMergePopup) {
     //var l = Ladda.create($('#get-playlists').get()[0]);
     //l.start();
 
@@ -814,12 +930,18 @@ function getPlaylists() {
 
         var savedShows = data.idList;
         var markup = window.savedList(data);
-        $('#saved-list').html(markup);
-        $('#saved-list').off('click', 'li');
-        $('#saved-list').on('click', 'li', function(){
-            //alert($(this).data('saved-id'));
-            loadSavedShow($(this).data('saved-id'));
-        });
+        if (fromMergePopup){
+            $('#saved-merge-playlists').html(markup);
+
+        } else {
+            $('#saved-list').html(markup);
+            $('#saved-list').off('click', 'li');
+            $('#saved-list').on('click', 'li', function(){
+                //alert($(this).data('saved-id'));
+                loadSavedShow($(this).data('saved-id'));
+            });
+
+        }
 
         initSortable();
     }

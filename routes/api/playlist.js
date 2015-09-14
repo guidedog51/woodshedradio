@@ -74,9 +74,6 @@ router.get('/current/show/:collectionName', function(req, res) {
     });
 });
 
-
-
-
 /*POST new stream playlist */
 router.post('/publish/:collectionName', function(req, res, next) {
     //console.log(req.params.collectionName);
@@ -94,19 +91,6 @@ router.post('/publish/:collectionName', function(req, res, next) {
                 return next(error);
             }
 
-            //in response handle add the new current show
-            //col.insert(payload, function(error, result){
-            //    if (error) {
-            //        console.log(error);
-            //        return next(error);
-            //    }
-            //
-            //    res.send({"success": true});
-            //    mdb.close();
-            //});
-
-
-
             col.update({_id: payload._id}, payload, {upsert: true}, function(error, count){
 
                 if (error) {
@@ -117,11 +101,6 @@ router.post('/publish/:collectionName', function(req, res, next) {
                 mdb.close();
 
             });
-
-
-
-
-
         });
     });
 });
@@ -133,17 +112,6 @@ router.post('/:collectionName', function(req, res, next) {
     //var payload = {'name' : 'naked barbies' };
     var payload = req.body;
     console.log(payload);
-    //var col = db.collection(req.params.collectionName);
-
-    //col.insert(payload, {}, function(error, results) {
-    //    if (error) {
-    //        console.log(error);
-    //        return next(error);
-    //    }
-    //    var success = JSON.stringify({'success': true});
-    //    res.send(results ? success : results);
-    //})
-
 
     mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
         var col = mdb.collection(req.params.collectionName);
@@ -192,6 +160,43 @@ router.delete('/:collectionName/:id', function(req, res) {
         });
     });
 });
+
+
+/*POST new merged playlist */
+router.post('/merge/:collectionName', function(req, res, next) {
+    //console.log(req.params.collectionName);
+    //var payload = {'name' : 'naked barbies' };
+    var payload = req.body;
+    console.log(payload);
+
+    mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
+
+        //first fetch playlists by id
+
+
+
+        //append playlists
+
+
+
+        //write new document to collection
+
+
+        //var col = mdb.collection(req.params.collectionName);
+        //col.insert(payload, function(error, result){
+        //    if (error) {
+        //        console.log(error);
+        //        return next(error);
+        //    }
+            res.send({"success": true});
+            mdb.close();
+        //});
+    });
+});
+
+
+
+
 
 module.exports = router;
 
