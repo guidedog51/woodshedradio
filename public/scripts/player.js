@@ -262,7 +262,8 @@ function initUI() {
         var mergedList = $('#playlists-to-merge li').map(function() {
             var id = $(this).data("saved-id");
             if (id) {
-                return {'playlist_id': id};
+                //return {'playlist_id': id};
+                return id;
             }
         }).get();
         mergePlaylist(mergedList)

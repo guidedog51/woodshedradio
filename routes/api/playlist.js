@@ -168,35 +168,41 @@ router.post('/merge/:collectionName', function(req, res, next) {
     //var payload = {'name' : 'naked barbies' };
     var payload = req.body;
     console.log(payload);
+    var newPayload = {};
+    var mergedULS = [];
 
     mongoClient.connect(req.app.get('dbUrl'), function(err, mdb){
 
-        //first fetch playlists by id
+        var col = mdb.collection(req.params.collectionName);
+        col.find({_id: {$in: payload.id_list}}).toArray(function(error, result){
+            if (error) {
+                console.log(error);
+                return next(error);
+            }
 
+            newPayload.tag = payload.tag;
+            newPayload._id = payload._id;
 
+            //map this result array and concatenate the unlinkedSongs, adding tag and _id to array object
+            result.map(function(obj, num){
+                mergedULS = mergedULS.concat(obj.unlinkedSongs);
+            })
+            newPayload.unlinkedSongs = mergedULS;
 
-        //append playlists
+            //add merged PL to collection
+            col.update({_id: newPayload._id}, newPayload, {upsert: true}, function(error, count){
 
+                if (error) {
+                    console.log(error);
+                    return next(error);
+                }
+                res.send({'success': true})
+                mdb.close();
 
-
-        //write new document to collection
-
-
-        //var col = mdb.collection(req.params.collectionName);
-        //col.insert(payload, function(error, result){
-        //    if (error) {
-        //        console.log(error);
-        //        return next(error);
-        //    }
-            res.send({"success": true});
-            mdb.close();
-        //});
+            });
+        });
     });
 });
-
-
-
-
 
 module.exports = router;
 
