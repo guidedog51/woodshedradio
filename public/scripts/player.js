@@ -225,11 +225,11 @@ function initUI() {
     });
 
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
-        console.log('File uploaded triggered');
+
         //since all is well, append track item to the showlist and reset the dirty flag
         var markup = window.showListItem(data.response.fileData);
-        $('.showList').append(markup);
-
+        //$('.showList').append(markup);
+        $(markup).appendTo('.showList');
         //artistData.event.tracklist  and/or savedSongs[lastNdx].event.tracklist
 
         addUploadedTrackToPerformance(data.response.fileData.event_id, data.response.fileData)
@@ -613,10 +613,16 @@ function createShowTable() {
             song.track = obj.song;
             unlinkedSong = jQuery.extend({}, song);
         }
-        song.rowId = 's' + (num + 1);
-        currentShow.push(song);
-        unlinkedCurrentSongs.push(unlinkedSong);
-        //debugger;
+        //filter one last time, the mapping is funky for some reason after updating the
+        //markup dynamically -- may have to do with sortable, but there's some phantom list items
+        //showing up when doing just a get on the li inside showList
+        if (!showTrackList[song.id]) {
+            song.rowId = 's' + (num + 1);
+            currentShow.push(song);
+            unlinkedCurrentSongs.push(unlinkedSong);
+            //debugger;
+            showTrackList[song.id] = 1;
+        }
     });
 
 }
@@ -991,12 +997,12 @@ function getSavedShow(showID) {
     function success(data) {
         unlinkedCurrentSongs.length = 0;
         savedSongs.length = 0;
-        //unsavedSongs.length=0;
+        currentShow.length=0;
         savedShow.length = 0;
         savedShow = data.savedShow[0];
         savedSongs=data.savedShow[0].unlinkedSongs;
         var markup = window.showList(data.savedShow[0]);
-        $('#showContainer').html(markup);
+        $('#showContainer').empty().html(markup);
         $('#playlist-name').val(data.savedShow[0].tag);
         createShowTable();
         initSortable();
