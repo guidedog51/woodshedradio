@@ -16,6 +16,7 @@ var currentShowDirty=false;
 var dirtyShowId;
 var adminAuthenticated = false;
 var uploadedSongData = {};
+var songLoaded = false;
 //var uploadedSongDataStringified = {};
 
 $(document).ready(function() {
@@ -200,6 +201,9 @@ function initUI() {
     });
 
     $("#save-playlist").on("click", function(e) {
+        if (showLogin()) {
+            return;
+        }
         if (savedShow._id) {
             asyncConfirmYesNo('Save Show', 'Do you want to create a new show from this list?  Click <b>Save New.</b><br/><br/>Do you want to update the currently loaded show?  Click <b>Update.</b>', 'Save New', 'Update', saveNewPlaylist, saveCurrentPlaylist);
         } else {
@@ -242,6 +246,15 @@ function initUI() {
     });
 
     $('#btn-upload').on('click', function(){
+        if (showLogin()) {
+            return;
+        }
+
+        if (!songLoaded){
+            asyncAlert('Upload Track For Show', 'No show or artist selected.<br/><br/></b>Select a track or a show to load show data for the newly uploaded track.');
+            return;
+        }
+
         $('#modal-upload').modal('show');
     })
 
@@ -250,10 +263,24 @@ function initUI() {
     })
 
     $('#btn-publish-playlist').on('click', function() {
+        if (showLogin()) {
+            return;
+        }
         confirmPublishPlaylist();
     })
 
+    $('#btn-new-playlist').on('click', function() {
+        if (showLogin()) {
+            return;
+        }
+        clearCurrentShow();
+    })
+
     $('#btn-merge-playlists').on('click', function() {
+        if (showLogin()) {
+            return;
+        }
+
         $('#modal-merge-playlists').modal('show');
         getPlaylists(true);
     })
@@ -587,8 +614,6 @@ function createShowTable() {
         }
     }).get();
 
-
-
     showTrackList.forEach(function(obj, num) {
         var song = {};
         //arg -- for some reason events get nested when starting with blank playlist and uploading
@@ -625,7 +650,6 @@ function createShowTable() {
             showTrackList[song.id] = 1;
         }
     });
-
 }
 
 
@@ -639,7 +663,8 @@ function updateNowPlaying(song) {
     $('li').removeClass('track-playing');
     $('#' + song.rowId).addClass('track-playing');
     console.log(event);
-    updateUpload(song)
+    updateUpload(song);
+    songLoaded = true;
 }
 
 function updateNowPlayingFromEvent(id) {
@@ -653,7 +678,8 @@ function updateNowPlayingFromEvent(id) {
     //$('li').removeClass('track-playing');
     //$('#' + song.rowId).addClass('track-playing');
     //console.log(event);
-    updateUploadFromEvent(event)
+    updateUploadFromEvent(event);
+    songLoaded = true;
 }
 
 function updateUpload(song) {
@@ -667,8 +693,6 @@ function updateUpload(song) {
     uploadedSongData.artist_id = song.track.artist_id;
     uploadedSongData.artist_name = song.track.artist_name;
     uploadedSongData.event_id = event.event_id;
-    //uploadedSongDataStringified = JSON.stringify(uploadedSongData)
-
 }
 
 function updateUploadFromEvent(event) {
@@ -753,6 +777,10 @@ function savePlaylist(createNew) {
 
 function confirmPublishPlaylist() {
 
+    if (unlinkedCurrentSongs.length == 0 ){
+        asyncAlert('Publish Playlist', "You don't have anything ready to publish.<br/><br/>You have to add at least one song to the playlist.");
+        return;
+    }
     asyncConfirmYesNo('Publish Playlist <b>'+ $('#playlist-name').val() + '</b>', 'Publishing this playlist will replace the current stream with new stream of this playlist.<br/><br/></b>Current listeners will receive new stream when their current playlist is done playing.', 'Publish', 'Cancel', publishCurrentPlaylist, dismissModal);
 
 }
@@ -820,20 +848,7 @@ function mergePlaylist(playList) {
 
     console.log(playList)
 
-
-
     var verb = 'POST';
-
-
-    //if (createNew===true) {
-    //    //timestamp will be the id
-    //    //tag is for the curator from UI
-    //playList._id = moment(Date.now()).unix();
-    //} else {
-    //    verb = 'PUT';
-    //    songData._id = savedShow._id;
-    //}
-
 
     var payload = {
         _id: moment(Date.now()).unix(),
@@ -862,9 +877,6 @@ function mergePlaylist(playList) {
 }
 
 function deletePlaylist(plId) {
-
-    //var l = Ladda.create($('#get-playlists').get()[0]);
-    //l.start();
 
     $.ajax({
         type: "DELETE",
@@ -969,6 +981,24 @@ function loadSavedShow(showId) {
     }
 }
 
+function clearCurrentShow() {
+    if (!currentShowDirty) {
+        //clear the list
+        startNewPlaylist();
+    } else {
+        asyncConfirmYesNo('Load Saved Show', 'Before starting another playlist, do you want to save changes to the playlist you have been working on?  Click <b>Save.</b><br/><br/><b>Or: </b> just clear the current list and start a new one?  Click <b>new.</b>', 'Save', 'New', triggerSaveShow, startNewPlaylist);
+    }
+}
+
+function startNewPlaylist() {
+    $('.showList').empty();
+    currentShowDirty = false;
+    savedShow.length = 0;
+    savedSongs.length = 0;
+    unlinkedCurrentSongs.length = 0;
+    currentShow.length = 0;
+}
+
 function promptForSavedShow() {
     getSavedShow(dirtyShowId);
 }
@@ -1023,6 +1053,14 @@ function logOnOrOff() {
         logoutCurator();
     } else {
         $('#modal-login').modal('show');
+    }
+}
+
+
+function showLogin() {
+    if (!adminAuthenticated){
+        $('#modal-login').modal('show');
+        return true;
     }
 }
 
@@ -1138,6 +1176,18 @@ function asyncConfirmYesNo(title, msg, yesBtnText, noBtnText, yesFn, noFn) {
     $("#btnNoConfirmYesNo").off('click').click(function () {
         $confirm.modal("hide");
         noFn();
+    });
+}
+
+function asyncAlert(title, msg) {
+    var $confirm = $("#modalConfirmYesNo");
+    $confirm.modal('show');
+    $("#lblTitleConfirmYesNo").html(title);
+    $("#lblMsgConfirmYesNo").html(msg);
+    $('#btnNoConfirmYesNo').hide();
+    $('#btnYesConfirmYesNo').text('OK');
+    $("#btnYesConfirmYesNo").off('click').click(function () {
+        $confirm.modal("hide");
     });
 }
 
