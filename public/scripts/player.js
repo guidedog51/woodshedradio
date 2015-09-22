@@ -86,8 +86,10 @@ function initSortable() {
             //reset the playlist linked lists
             unlinkedCurrentSongs.length=0;
             createSongTable();
+            createShowTable();
+            currentShowDirty = true;
         },
-        update: function(e, ui) {
+        stop: function(e, ui) {
             unlinkedCurrentSongs.length=0;
             createShowTable();
             currentShowDirty = true;
@@ -276,6 +278,13 @@ function initUI() {
         clearCurrentShow();
     })
 
+    $('#btn-stale-playlist').on('click', function() {
+        if (showLogin()) {
+            return;
+        }
+        removeStaleShowListings();
+    })
+
     $('#btn-merge-playlists').on('click', function() {
         if (showLogin()) {
             return;
@@ -324,7 +333,7 @@ function playPrevSong() {
 }
 
 function playSong(song) {
-    if (song === curSong) {
+        if (song === curSong) {
         if (curSong.soundManagerId) {
             //TODO: move to togglePause function
             var s = soundManager.getSoundById(curSong.soundManagerId);
@@ -364,6 +373,12 @@ function playSong(song) {
                 R.player.togglePause();
             }
 
+            if (oldSong){
+                if (oldSong.playing){
+                    stopSoundManagerSong(oldSong);
+                }
+            }
+
             //if we have a ws id, use the alternate player -- soundManager2 sound
             //its playlist will be re-rendered after selecting or uploading items -- do this in createShowTable
             //use the ids to check current index of playlist -- if next song
@@ -392,24 +407,29 @@ function playSong(song) {
             } else {
                 if (oldSong) {
                     if (oldSong.playing) {
-                        var s = soundManager.getSoundById(oldSong.soundManagerId)
-                        if (s) {
-                            s.stop();
-                            s.unload();
-                            s.destruct();
-
-                        }
-                        delete oldSong.playing;
-
+                        stopSoundManagerSong(oldSong);
                     }
-
                 }
-
 
                 R.player.play({source: id});
                 updateNowPlaying(song);
             }
         }
+    }
+}
+
+function stopSoundManagerSong(song){
+
+    if (song.playing) {
+        var s = soundManager.getSoundById(song.soundManagerId)
+        if (s) {
+            s.stop();
+            s.unload();
+            s.destruct();
+
+        }
+        delete song.playing;
+
     }
 }
 
@@ -596,21 +616,25 @@ function createShowTable() {
         var eventId = $(this).data('event_id');
         var performance = getPerformance(eventId);
         var songToPlay = {};
-        if (id != 'none' && $(this).hasClass('track-playable')) {
-            $(this).off('click');
-            $(this).on('click', function() {
-                songsToPlay = currentShow;
-                $('#songContainer').removeClass('playlist-active');
-                $('#showContainer').addClass('playlist-active');
-                songToPlay = getSong(id);
-                playSong(songToPlay);
-            })
+        //if (id != 'none' && $(this).hasClass('track-playable')) {
+        if (id && $(this).hasClass('track-playable')) {
+            if (id != 'none') {
+                $(this).off('click');
+                $(this).on('click', function() {
+                    songsToPlay = currentShow;
+                    $('#songContainer').removeClass('playlist-active');
+                    $('#showContainer').addClass('playlist-active');
+                    songToPlay = getSong(id);
+                    playSong(songToPlay);
+                });
 
-            $(this).attr('id', 's' + rowNum);
-            rowNum++;
-            return {'track_id': id,
-                'event': jQuery.extend({}, performance),
-                'song': getTrackDataForPerformance(performance, id)};
+                $(this).attr('id', 's' + rowNum);
+                rowNum++;
+                return {'track_id': id,
+                    'event': jQuery.extend({}, performance),
+                    'song': getTrackDataForPerformance(performance, id)};
+            }
+
         }
     }).get();
 
@@ -643,13 +667,16 @@ function createShowTable() {
         //markup dynamically -- may have to do with sortable, but there's some phantom list items
         //showing up when doing just a get on the li inside showList
         if (!showTrackList[song.id]) {
-            song.rowId = 's' + (num + 1);
-            currentShow.push(song);
-            unlinkedCurrentSongs.push(unlinkedSong);
             //debugger;
             showTrackList[song.id] = 1;
+        } else {
+            showTrackList[song.id] += showTrackList[song.id] ;
         }
-    });
+        song.rowId = 's' + (num + 1);
+        currentShow.push(song);
+        unlinkedCurrentSongs.push(unlinkedSong);
+
+    })
 }
 
 
@@ -895,6 +922,50 @@ function deletePlaylist(plId) {
         console.log(error);
         //l.stop();
     }
+}
+
+function removeStaleShowListings() {
+    if (savedShow.unlinkedSongs.length == 0 ||  currentShowDirty) {
+        asyncAlert('Remove Stale Listings', "You've got to have a saved show loaded to remove stale listings.  <br/><br/>Load a saved show, or save the show you're working on.")
+        return;
+    }
+
+    var tempShow = jQuery.extend({}, savedShow);
+    var songArr = [];
+    //tempShow.unlinkedSongs.length=0
+
+    var nowDateOnly = moment().clone().startOf('day').unix();
+
+
+    savedShow.unlinkedSongs.forEach(function(obj, num) {
+        if (obj.event.event_date >= nowDateOnly) {
+
+            songArr.push(obj)
+
+        }
+
+
+    })
+
+
+
+    unlinkedCurrentSongs.length = 0;
+    currentShow.length=0;
+    //savedShow.length = 0;
+    savedShow = tempShow;
+    savedShow.unlinkedSongs = songArr;
+    savedSongs.length = 0;
+    savedSongs=tempShow.unlinkedSongs;
+    var markup = window.showList(savedShow);
+    $('#showContainer').empty().html(markup);
+    createShowTable();
+    initSortable();
+    currentShowDirty = true;
+
+
+
+
+
 }
 
 function getArtistsPerformances(sd) {

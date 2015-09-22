@@ -53,12 +53,14 @@ router.get('/:startdate', function(req, res) {
                 //get tracklist data from echonest
                 events.forEach(function(obj, num) {
                     //console.log(obj.performance);
+                    //TODO: loop through performance array -- you've got headliner and support acts here
                     if (obj.performance[0]) {
                         artistTracks.push({'displayName': obj.displayName,
                                             'artist_id': obj.performance[0].artist.id,
                                             'artist_name': obj.performance[0].artist.displayName,
                                             'event_id': obj.id,
                                             'event_uri': obj.uri,
+                                            'event_date': moment(obj.start.date).unix(),
                                             'thumbnail_uri': options.artist_icon_url.replace('AID', obj.performance[0].artist.id),
                                             'trackList': []})
                         }
