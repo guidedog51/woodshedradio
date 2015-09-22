@@ -925,7 +925,7 @@ function deletePlaylist(plId) {
 }
 
 function removeStaleShowListings() {
-    if (savedShow.unlinkedSongs.length == 0 ||  currentShowDirty) {
+    if (savedShow.length == 0 ||  currentShowDirty) {
         asyncAlert('Remove Stale Listings', "You've got to have a saved show loaded to remove stale listings.  <br/><br/>Load a saved show, or save the show you're working on.")
         return;
     }
