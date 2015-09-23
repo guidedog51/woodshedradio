@@ -18,8 +18,10 @@ var adminAuthenticated = false;
 var uploadedSongData = {};
 var songLoaded = false;
 //var uploadedSongDataStringified = {};
+var config;
 
 $(document).ready(function() {
+
     $.ajaxSetup( {
         cache: false
         //beforeSend: function(xhr, opts) {
@@ -840,6 +842,9 @@ function publishCurrentPlaylist() {
         delete obj.event.trackList;
     })
 
+    //if configured, strip out non-uploaded songs from clone of savedShow
+    var showToUpload = Jquery.extend({}, savedShow);
+
 
     $.ajax({
           type: 'POST',
@@ -932,26 +937,17 @@ function removeStaleShowListings() {
 
     var tempShow = jQuery.extend({}, savedShow);
     var songArr = [];
-    //tempShow.unlinkedSongs.length=0
-
     var nowDateOnly = moment().clone().startOf('day').unix();
 
 
     savedShow.unlinkedSongs.forEach(function(obj, num) {
         if (obj.event.event_date >= nowDateOnly) {
-
             songArr.push(obj)
-
         }
-
-
     })
-
-
 
     unlinkedCurrentSongs.length = 0;
     currentShow.length=0;
-    //savedShow.length = 0;
     savedShow = tempShow;
     savedShow.unlinkedSongs = songArr;
     savedSongs.length = 0;
@@ -962,8 +958,9 @@ function removeStaleShowListings() {
     initSortable();
     currentShowDirty = true;
 
+}
 
-
+function removeNonUploadedSongs() {
 
 
 }

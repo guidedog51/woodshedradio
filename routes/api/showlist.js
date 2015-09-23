@@ -3,7 +3,6 @@ var mongoClient = require('mongodb').MongoClient;
 var router = express.Router();
 var callbackCount = 0;
 var moment = require('moment');
-var config = require('../../config.js');
 
 /* GET home page. */
 router.get('/:startdate', function(req, res) {
