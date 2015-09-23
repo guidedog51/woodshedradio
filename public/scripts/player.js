@@ -825,7 +825,7 @@ function publishCurrentPlaylist() {
         return;
     }
 
-    if (savedShow.id) {
+    if (savedShow._id) {
         //TODO: validate -- only allow publishing for non-dirty saved show
         if (currentShowDirty) {return;}
 
@@ -843,13 +843,13 @@ function publishCurrentPlaylist() {
     })
 
     //if configured, strip out non-uploaded songs from clone of savedShow
-    var showToUpload = Jquery.extend({}, savedShow);
+    var showToUpload =  removeNonUploadedSongs(jQuery.extend({}, savedShow)) ;
 
 
     $.ajax({
           type: 'POST',
           url: '/api/playlist/publish/streamPlaylist',
-          data: JSON.stringify(savedShow),
+          data: JSON.stringify(showToUpload),
           success: success,
           error: error,
           dataType: 'json',
@@ -960,8 +960,22 @@ function removeStaleShowListings() {
 
 }
 
-function removeNonUploadedSongs() {
+function removeNonUploadedSongs(showToPublish) {
 
+    var songArr = [];
+
+
+    showToPublish.unlinkedSongs.forEach(function(obj, num) {
+        if (obj.track.track_url) {
+            if (obj.track.track_url.length > 0){
+                songArr.push(obj)
+            }
+        }
+    })
+
+    showToPublish.unlinkedSongs = songArr;
+
+    return showToPublish;
 
 }
 
