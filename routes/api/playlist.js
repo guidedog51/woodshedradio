@@ -43,7 +43,7 @@ router.get('/:collectionName/:id', function(req, res) {
                     unlinkedSongs: obj.unlinkedSongs})
             })
 
-            res.send({"savedShow": arr});
+            res.send({"savedShow": arr[0]});
             mdb.close();
         });
     });
@@ -68,7 +68,7 @@ router.get('/current/show/:collectionName', function(req, res) {
                     unlinkedSongs: obj.unlinkedSongs})
             })
 
-            res.send({'currentPlaylist': arr});
+            res.send({'currentPlaylist': arr[0]});
             mdb.close();
         });
     });

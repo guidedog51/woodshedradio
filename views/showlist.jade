@@ -1,4 +1,4 @@
-ul(class='showList')
+ul(class='showList', id='saved-show')
     for val in unlinkedSongs
         - var baseClass = 'tracklist track-playable'
         - var uploaded = val.track.track_url ? ' track-uploaded' : ''

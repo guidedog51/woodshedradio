@@ -1,7 +1,7 @@
 var R = window.R || {};
 var currentSongs = [];
 var currentShow = [];
-var savedShow = [];
+var savedShow = {};
 var songsToPlay = [];
 var unlinkedCurrentSongs = [];
 var savedSongs = [];
@@ -95,6 +95,12 @@ function initSortable() {
             unlinkedCurrentSongs.length=0;
             createShowTable();
             currentShowDirty = true;
+        },
+        change: function(e, ui) {
+
+        },
+        update: function(e, ui) {
+
         }
     }).disableSelection();
     //$('.showList li').draggable();
@@ -234,18 +240,22 @@ function initUI() {
 
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
 
-        //since all is well, append track item to the showlist and reset the dirty flag
-        var markup = window.showListItem(data.response.fileData);
-        //$('.showList').append(markup);
-        $(markup).appendTo('.showList');
-        //artistData.event.tracklist  and/or savedSongs[lastNdx].event.tracklist
+        if ($('.showList').sortable('instance')) {
+            $('.showList').sortable('destroy')
+        };
 
-        addUploadedTrackToPerformance(data.response.fileData.event_id, data.response.fileData)
+        //this will update the saved show
+        addUploadedTrackToPerformanceAndShow(data.response.fileData.event_id, data.response.fileData)
 
-        unlinkedCurrentSongs.length=0;
+
+        var markup = window.showList(savedShow);
+        $('#showContainer').empty().html(markup);
+        var ssName = savedShow.tag;
+
+        $('#playlist-name').val(ssName);
         createShowTable();
+        initSortable();
         currentShowDirty = true;
-
 
     });
 
@@ -462,7 +472,7 @@ function getSong(songId) {
     return newSong;
 }
 
-function addUploadedTrackToPerformance(performanceId, track) {
+function addUploadedTrackToPerformanceAndShow(performanceId, track) {
     var evt = getPerformance(performanceId);
     track.id = track._id;
     track.foreign_id = track.id;
@@ -481,7 +491,7 @@ function addUploadedTrackToPerformance(performanceId, track) {
         });
     }
 
-    if (savedSongs.length > 0) {
+    if (savedSongs) {
 
         savedSongs.push({
             'track': track,
@@ -489,6 +499,19 @@ function addUploadedTrackToPerformance(performanceId, track) {
             'id': track._id
         })
     }
+
+    if (savedShow) {
+
+        if (savedShow.unlinkedSongs) {
+            savedShow.unlinkedSongs = savedSongs;
+        } else {
+            savedShow = {
+                'unlinkedSongs': savedSongs,
+                '_id': '',
+                'tag': ''
+            };
+        }
+     }
 }
 
 
@@ -1075,7 +1098,7 @@ function clearCurrentShow() {
 function startNewPlaylist() {
     $('.showList').empty();
     currentShowDirty = false;
-    savedShow.length = 0;
+    //savedShow.length = 0;
     savedSongs.length = 0;
     unlinkedCurrentSongs.length = 0;
     currentShow.length = 0;
@@ -1111,12 +1134,12 @@ function getSavedShow(showID) {
         unlinkedCurrentSongs.length = 0;
         savedSongs.length = 0;
         currentShow.length=0;
-        savedShow.length = 0;
-        savedShow = data.savedShow[0];
-        savedSongs=data.savedShow[0].unlinkedSongs;
-        var markup = window.showList(data.savedShow[0]);
+        //savedShow.length = 0;
+        savedShow = data.savedShow;
+        savedSongs=data.savedShow.unlinkedSongs;
+        var markup = window.showList(data.savedShow);
         $('#showContainer').empty().html(markup);
-        $('#playlist-name').val(data.savedShow[0].tag);
+        $('#playlist-name').val(data.savedShow.tag);
         createShowTable();
         initSortable();
         currentShowDirty = false;
