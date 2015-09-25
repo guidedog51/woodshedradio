@@ -253,6 +253,8 @@ function initUI() {
         var ssName = savedShow.tag;
 
         $('#playlist-name').val(ssName);
+
+        unlinkedCurrentSongs.length = 0;
         createShowTable();
         initSortable();
         currentShowDirty = true;
