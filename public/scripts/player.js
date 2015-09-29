@@ -89,6 +89,12 @@ function initSortable() {
             unlinkedCurrentSongs.length=0;
             createSongTable();
             createShowTable();
+
+            if (!savedShow.unlinkedCurrentSongs){
+                savedShow.unlinkedCurrentSongs = unlinkedCurrentSongs;
+                savedSongs = unlinkedCurrentSongs;
+            }
+
             currentShowDirty = true;
         },
         stop: function(e, ui) {
@@ -141,17 +147,22 @@ function initSortable() {
     $('#saved-merge-playlists').sortable({
         cursor: 'crosshair',
         connectWith: '#playlists-to-merge'
+
     }).disableSelection();
 
     if ($('#playlists-to-merge').sortable('instance')) {
         $('#playlists-to-merge').sortable('destroy')
-    };
+    }
 
     $('#playlists-to-merge').sortable({
         cursor: 'crosshair',
-        connectWith: '#saved-merge-playlists'
-    }).disableSelection();
+        connectWith: '#saved-merge-playlists',
+        over: function(){
+        },
+        receive: function(e, ui) {
 
+        }
+    });
 }
 
 function initUI() {
@@ -1104,6 +1115,7 @@ function startNewPlaylist() {
     savedSongs.length = 0;
     unlinkedCurrentSongs.length = 0;
     currentShow.length = 0;
+    savedShow = {};
 }
 
 function promptForSavedShow() {

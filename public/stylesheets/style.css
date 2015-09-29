@@ -178,6 +178,10 @@ input[type='text'] {
     cursor: pointer;
 }
 
+#playlists-to-merge {
+    min-height: 400px;
+}
+
 .crawler {
     width: 75%;
     margin: 0 auto;
