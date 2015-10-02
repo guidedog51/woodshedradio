@@ -61,12 +61,13 @@ input[type='text'] {
 #nowPlaying {
     width: 610px;
     padding-bottom: 30px;
+    padding-top: 30px;
     margin: 0 auto;
 }
 
 #nowPlaying img {
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
 }
 
 .thumb-cell {
@@ -81,6 +82,16 @@ input[type='text'] {
     background-image: url('http://assets.sk-static.com/assets/default_images/huge_avatar/default-artist-798b09a.png');
     background-repeat: no-repeat;
     background-size: 150px auto;
+}
+
+#nowPlaying .woodshedw {
+    /*background-image: url('../images/woodshedW.svg');
+    background-repeat: no-repeat;
+    background-size: 145px 122px;
+    background-size: 120px;
+    background-position-y: 25px;
+    background-position-x: 15px;*/
+    background-position-y: 15px;
 }
 
 .tracklist {

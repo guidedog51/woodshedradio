@@ -65,7 +65,16 @@ function updateNowPlaying(id) {
     //return;
     var song = getSong(id);
     var event = song.event;
-    $('#artist-thumbnail').attr('src', event.thumbnail_uri);
+    var thumb_uri = event.thumbnail_uri;
+
+    if (thumb_uri.length == 0) {
+        thumb_uri = '../images/woodshedw.png';
+        $('#artist-thumbnail').removeClass('img-circle')
+    } else {
+        $('#artist-thumbnail').addClass('img-circle');
+    }
+
+    $('#artist-thumbnail').attr('src', thumb_uri);
     $('#artist-name').text(song.track.artist_name);
     $('#track-name').text(song.track.title);
     $('#performance-link').attr('href', event.event_uri);
