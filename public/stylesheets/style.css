@@ -201,3 +201,17 @@ input[type='text'] {
     box-sizing: border-box;
     animation: marquee 50s linear infinite;
 }
+
+#social-container .btn {
+    margin-right: 10px;
+}
+
+#social-container {
+    padding: 0;
+}
+
+#footer {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 5px;
+}

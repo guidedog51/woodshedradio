@@ -63,14 +63,26 @@ block content
                             li
                                 a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/09%20Eat%20At%20Home1438990645168.m4a")  Paul & Linda McCartney -- Eat At Home
 
-
-    #footer(class='container span10 offset1')
+    div(id='social-container', class="col-sm-4 social-buttons")
+        a(class="btn btn-social-icon btn-facebook")
+            i(class="fa fa-facebook")
+        a(class="btn btn-social-icon btn-twitter")
+            i(class="fa fa-twitter")
+        a(class="btn btn-social-icon btn-tumblr")
+            i(class="fa fa-tumblr")
+        a(class="btn btn-social-icon btn-linkedin")
+            i(class="fa fa-linkedin")
+    div(class='clearfix')
+    #footer(class='span10 offset1')
         small Powered by
-            a(href='http://soundkick.com') Soundkick
+            a(href='http://soundkick.com')
+            |  &nbsp;<a href='http://www.songkick.com/' target='_blank'>Songkick</a>
             |  ,&nbsp;
-            |  <a href='http://echonest.com'>The Echo Nest</a>
+            |  <a href='http://echonest.com' target='_blank'>The Echo Nest</a>
+            |  ,&nbsp;
+            |  <a href='http://www.schillmania.com/projects/soundmanager2/' target='_blank'>SoundManager2</a>
             |  &nbsp;and&nbsp;
-            |  <a href='http://rdio.com'>Rdio</a>
+            |  <a href='http://rdio.com' target='_blank'>Rdio</a>
 
     script(type='text/javascript').
         window.currentPlaylist =!{JSON.stringify(currentPlaylist)}
