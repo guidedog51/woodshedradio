@@ -75,23 +75,31 @@ input[type='text'] {
 }
 
 .description-cell {
-    width: 400px;
+    width: 300px;
 }
 
 #nowPlaying .artist {
     background-image: url('http://assets.sk-static.com/assets/default_images/huge_avatar/default-artist-798b09a.png');
     background-repeat: no-repeat;
-    background-size: 150px auto;
+    background-size: 200px auto;
 }
 
-#nowPlaying .woodshedw {
-    /*background-image: url('../images/woodshedW.svg');
+#nowPlaying .woodshedw{
+    background-image: url('../images/woodshedW.png');
     background-repeat: no-repeat;
-    background-size: 145px 122px;
-    background-size: 120px;
+    background-size: 200px;
+    background-position: 25px 47px;
+    /*background-size: 120px;
     background-position-y: 25px;
-    background-position-x: 15px;*/
+    background-position-x: 15px;
     background-position-y: 15px;
+    width: 200px;
+    height: 180px;*/
+}
+
+#nowPlaying .artist-thumbnail {
+    height: 200px;
+    width: 200px;
 }
 
 .tracklist {

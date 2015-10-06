@@ -716,11 +716,17 @@ function createShowTable() {
 
     })
 }
-
+function thumbError(image) {
+    image.onerror = "";
+    image.src = "../images/woodshedW";
+    return true;
+}
 
 function updateNowPlaying(song) {
     var event = song.event;
-    $('#artist-thumbnail').attr('src', event.thumbnail_uri);
+    var thumb_uri = event.thumbnail_uri;
+
+    $('#artist-thumbnail').attr('src', thumb_uri);
     $('#artist-name').text(song.track.artist_name);
     $('#track-name').text(song.track.title);
     $('#performance-link').attr('href', event.event_uri);
@@ -734,8 +740,9 @@ function updateNowPlaying(song) {
 
 function updateNowPlayingFromEvent(id) {
     var event = getPerformance(id);
-    //var event = song.event;
-    $('#artist-thumbnail').attr('src', event.thumbnail_uri);
+    var thumb_uri = event.thumbnail_uri;
+
+    $('#artist-thumbnail').attr('src', thumb_uri);
     $('#artist-name').text(event.artist_name);
     $('#track-name').text('select a track');
     $('#performance-link').attr('href', event.event_uri);
