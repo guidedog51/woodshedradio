@@ -39,23 +39,18 @@ $(document).ready(function(){
             updateNowPlaying(player.playlistController.getItem().getAttribute('data-song_id'));
         }
 
+
     }
 
-    //soundManager.onready(function(){
-    //    //for load testing -- autoplay one song
-    //    //var mySound = soundManager.createSound({
-    //    //    id: 'test',
-    //    //    url: "https://woodshedradio.blob.core.windows.net/mpc-test-container/04%20The%20Sun%20Ain't%20Gonna%20Shine%20Anymore1438992438659.m4a",
-    //    //    onfinish: function(){
-    //    //        this.destruct();
-    //    //        //this.play()
-    //    //        //$('#play').trigger('click');
-    //    //    }
-    //    //});
-    //    //mySound.play();
-    //
-    //})
 
+    $('#button-fb').on('click', function(){
+        FB.ui({
+            method: 'share',
+            href: 'http://woodshed.cloudapp.net/radioplayer',
+        }, function(response){
+            //I guess we could tell 'em it didn't work....
+        });
+    })
 
 
 });
