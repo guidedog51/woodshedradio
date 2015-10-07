@@ -64,6 +64,7 @@ block content
                                 a(href="https://woodshedradio.blob.core.windows.net/mpc-test-container/09%20Eat%20At%20Home1438990645168.m4a")  Paul & Linda McCartney -- Eat At Home
 
     div(id='social-container', class="col-sm-4 social-buttons")
+        div(class="fb-share-button btn btn-social-icon btn-facebook", data-href="http://woodshedradio.org/radioplayer", data-layout="icon")
         a(class="btn btn-social-icon btn-facebook")
             i(class="fa fa-facebook")
         a(class="btn btn-social-icon btn-twitter")
@@ -90,4 +91,7 @@ block content
     script(src='/scripts/radioplayer.js')
     script(src='/scripts/bar-ui.js')
     link(rel='stylesheet', href='/stylesheets/bar-ui.css')
-
+    meta(property="og:url", content="http://woodshedradio.org/radioplayer")
+    meta(property="og:type", content="website")
+    meta(property="og:description", content="Presenting artists playing soon in the San Francisco Bay Area")
+    meta(property="og:image", content="http://woodshedradio.org/images/woodshedW.png")
