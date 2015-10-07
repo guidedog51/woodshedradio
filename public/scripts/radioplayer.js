@@ -46,7 +46,7 @@ $(document).ready(function(){
     $('#button-fb').on('click', function(){
         FB.ui({
             method: 'share',
-            href: 'http://woodshedradio.org/radioplayer',
+            href: 'http://woodshed.cloudapp.net/radioplayer',
         }, function(response){
             //I guess we could tell 'em it didn't work....
         });
