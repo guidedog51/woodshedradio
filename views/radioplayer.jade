@@ -67,7 +67,7 @@ block content
         //div(class="fb-share-button btn btn-social-icon btn-facebook", data-href="http://woodshed.cloudapp.net/radioplayer", data-layout="icon")
         a(class="btn btn-social-icon btn-facebook", id='button-fb')
             i(class="fa fa-facebook")
-        a(class="btn btn-social-icon btn-twitter")
+        a(class="btn btn-social-icon btn-twitter", id='button-tweet')
             i(class="fa fa-twitter")
         a(class="btn btn-social-icon btn-tumblr")
             i(class="fa fa-tumblr")
@@ -91,3 +91,10 @@ block content
     script(src='/scripts/radioplayer.js')
     script(src='/scripts/bar-ui.js')
     link(rel='stylesheet', href='/stylesheets/bar-ui.css')
+    script.
+        twttr.ready(function (twttr) {
+            createTwitterShareButton(twttr)
+            //twttr.events.bind('click', function (event) {
+                //alert('yes');
+            //});
+        });

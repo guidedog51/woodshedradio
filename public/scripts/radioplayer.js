@@ -55,6 +55,20 @@ $(document).ready(function(){
 
 });
 
+function createTwitterShareButton(t){
+    t.widgets.createShareButton(
+        'http://woodshedradio.org/radioplayer',
+        document.getElementById('button-tweet'),
+        {
+            count: 'none',
+            text: 'Check out this great new radio station!',
+            size: 'large'
+        }).then(function (el) {
+            //total hack -- button is there but hidden
+            el.style.opacity = 0;
+            //console.log("Button created.")
+        });
+}
 
 function updateNowPlaying(id) {
     //return;
