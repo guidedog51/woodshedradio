@@ -31,6 +31,7 @@ html
     script(src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js')
     script(src='/scripts/shell.js')
     //script(src='/scripts/bootstrap.js')
+    script(src='/scripts/jquery.sharrre.min.js')
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
     script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js')
@@ -40,20 +41,20 @@ html
     script(src='/scripts/ladda.js')
     script(src='/scripts/fileinput.js')
     script.
-      window.twttr = (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0],
-                t = window.twttr || {};
-        if (d.getElementById(id)) return t;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-        t._e = [];
-        t.ready = function (f) {
-          t._e.push(f);
-        };
-        return t;
-      }(document, "script", "twitter-wjs"));
+        window.twttr = (function (d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+                  t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+          t._e = [];
+          t.ready = function (f) {
+            t._e.push(f);
+          };
+          return t;
+        }(document, "script", "twitter-wjs"));
 
 
     script(src='//use.typekit.net/hwf0ocb.js')

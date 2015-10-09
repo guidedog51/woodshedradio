@@ -38,8 +38,6 @@ $(document).ready(function(){
             console.log(player);
             updateNowPlaying(player.playlistController.getItem().getAttribute('data-song_id'));
         }
-
-
     }
 
 
@@ -52,6 +50,34 @@ $(document).ready(function(){
         });
     })
 
+    //see http://sharrre.com/#documentation if you want to hook up fb and twitter via sharrre
+    $('#button-google-plus').sharrre({
+        share: {
+            googlePlus: true
+        },
+        enableHover: false,
+        enableCounter: false,
+        enableTracking: false,
+        template: '<i class="fa fa-linkedin"></i>',
+        click: function(api, options){
+            api.simulateClick();
+            api.openPopup('googlePlus');
+        }
+    });
+
+    $('#button-linkedin').sharrre({
+        share: {
+            linkedin: true
+        },
+        enableHover: false,
+        enableCounter: false,
+        enableTracking: false,
+        template: '<i class="fa fa-linkedin"></i>',
+        click: function(api, options){
+            api.simulateClick();
+            api.openPopup('linkedin');
+        }
+    });
 
 });
 
