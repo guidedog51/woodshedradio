@@ -391,7 +391,7 @@
         // selection
         selectedIndex: 0,
 
-        loopMode: false,
+        loopMode: true,   //mpc mod - playlist will loopback indefinitely -- when reaching end we can check for new published playlist
 
         timer: null
 
@@ -468,6 +468,8 @@
           if (data.selectedIndex >= data.playlist.length) {
 
             if (data.loopMode) {
+
+              //TODO - add check here for new published playlist
 
               // loop to beginning
               data.selectedIndex = 0;
