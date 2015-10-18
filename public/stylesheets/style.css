@@ -142,6 +142,9 @@ input[type='text'] {
     background-color: #46a546;
 }
 
+.track-name-upload {
+    text-align: center;
+}
 .song-container {
     width: 600px;
     margin-left: auto;

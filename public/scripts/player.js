@@ -249,6 +249,19 @@ function initUI() {
         uploadExtraData: uploadedSongData
     });
 
+    $('#upload-track').on('filepreajax', function(event, previewId, index) {
+        //console.log('File pre ajax triggered');
+        //update the track name in uploadedSongData
+        uploadedSongData.track_name = $('#track-name-upload').val();
+    });
+
+    $('#upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
+        //console.log(file.name);
+        var cleanedName = file.name.split('.')[0];
+        $('#track-name-upload').val(cleanedName);
+        uploadedSongData.track_name = cleanedName;
+    });
+
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
 
         if ($('.showList').sortable('instance')) {
@@ -269,6 +282,9 @@ function initUI() {
         createShowTable();
         initSortable();
         currentShowDirty = true;
+
+        //update the track name in the upload marquee
+        //$('#track-name-upload').val('');
 
     });
 
@@ -758,7 +774,7 @@ function updateUpload(song) {
     var event = song.event;
     $('#artist-thumbnail-upload').attr('src', event.thumbnail_uri);
     $('#artist-name-upload').text(song.track.artist_name);
-    $('#track-name-upload').text(song.track.title);
+    $('#track-name-upload').val(song.track.title);
     $('#performance-link-upload').attr('href', event.event_uri);
     $('#performance-link-upload').text(event.displayName);
 
@@ -777,7 +793,6 @@ function updateUploadFromEvent(event) {
     uploadedSongData.artist_id = event.artist_id;
     uploadedSongData.artist_name = event.artist_name;
     uploadedSongData.event_id = event.event_id;
-    //uploadedSongDataStringified = JSON.stringify(uploadedSongData)
 }
 
 function saveNewPlaylist() {

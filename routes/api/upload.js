@@ -77,27 +77,10 @@ function writeToBlobStorage(req, res, callback){
                             var payload = req.body;
                             payload._id = uploadFileId;
                             payload.track_url = req.app.get('blob_base_url') + uploadFileName;
-                            payload.title = originalFileName.split('.')[0];
+                            payload.title = req.body.track_name;  //originalFileName.split('.')[0];
                             payload.artist_id = req.body.artist_id;
                             payload.event_id = req.body.event_id;
                             payload.artist_name = req.body.artist_name;
-
-
-                            //col.update({_id: uploadFileId}, payload, {upsert: true}, function(error, count){
-                            //
-                            //    if (error) {
-                            //        console.log(error);
-                            //        return next(error);
-                            //    }
-                            //
-                            //    mdb.close();
-                            //    callback(payload);
-                            //
-                            //
-                            //
-                            //
-                            //});
-
 
                             col.insert(payload, function(error, result){
                                 if (error) {
@@ -110,9 +93,6 @@ function writeToBlobStorage(req, res, callback){
 
                             });
                         });
-
-
-
                     }
                 }
             );
