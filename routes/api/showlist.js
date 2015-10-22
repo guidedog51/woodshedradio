@@ -55,15 +55,27 @@ router.get('/:startdate', function(req, res) {
                     //console.log(obj.performance);
                     //TODO: loop through performance array -- you've got headliner and support acts here
                     if (obj.performance[0]) {
-                        artistTracks.push({'displayName': obj.displayName,
-                                            'artist_id': obj.performance[0].artist.id,
-                                            'artist_name': obj.performance[0].artist.displayName,
-                                            'event_id': obj.id,
-                                            'event_uri': obj.uri,
-                                            'event_date': moment(obj.start.date).unix(),
-                                            'thumbnail_uri': options.artist_icon_url.replace('AID', obj.performance[0].artist.id),
-                                            'trackList': []})
-                        }
+
+                        var headliner = obj.performance[0].artist.displayName;
+
+                        obj.performance.forEach(function (perf, num) {
+                            var perfDisplayName = obj.displayName;
+                            if (num) {
+                                perfDisplayName = perf.artist.displayName + ' opening for ' + headliner +
+                                        ' at ' + obj.venue.displayName + ' (' + obj.start.date + ')';
+                            }
+                            artistTracks.push({
+
+                                'displayName': perfDisplayName,
+                                'artist_id': perf.artist.id,
+                                'artist_name': perf.artist.displayName,
+                                'event_id': obj.id,
+                                'event_uri': obj.uri,
+                                'event_date': moment(obj.start.date).unix(),
+                                'thumbnail_uri': options.artist_icon_url.replace('AID', perf.artist.id),
+                                'trackList': []})
+                        })
+                    }
                 });
                 
                 artistTracks.forEach(function(obj, num) {

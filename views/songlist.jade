@@ -7,7 +7,7 @@ ul
                 - var baseClass = item.foreign_id === 'none' ? 'tracklist' : 'tracklist track-playable'
                 - var uploaded = item.track_url ? ' track-uploaded' : ''
                 - baseClass = baseClass + uploaded
-                li(id=item.row, class=baseClass, data-track_id=item.foreign_id, data-track_url=item.track_url, data-event_id=item.event_id)= item.title
+                li(id=item.row, class=baseClass, data-track_id=item.foreign_id, data-track_url=item.track_url, data-event_id=item.event_id, data-artist_id=item.artist_id)= item.title
             else
                 li(class='tracklist') no tracks!
     else

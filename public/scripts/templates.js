@@ -26,7 +26,7 @@ function songList(locals) {
                                         var baseClass = item.foreign_id === 'none' ? 'tracklist' : 'tracklist track-playable'
                                         var uploaded = item.track_url ? ' track-uploaded' : ''
                                         baseClass = baseClass + uploaded
-                                        buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                        buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.attr("data-artist_id", item.artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                                     }
 
                                 } else {
@@ -40,7 +40,7 @@ function songList(locals) {
                                     var baseClass = item.foreign_id === 'none' ? 'tracklist' : 'tracklist track-playable'
                                     var uploaded = item.track_url ? ' track-uploaded' : ''
                                     baseClass = baseClass + uploaded
-                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.attr("data-artist_id", item.artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                                 }
 
                                 if ($$l === 0) {
@@ -73,7 +73,7 @@ function songList(locals) {
                                     var baseClass = item.foreign_id === 'none' ? 'tracklist' : 'tracklist track-playable'
                                     var uploaded = item.track_url ? ' track-uploaded' : ''
                                     baseClass = baseClass + uploaded
-                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                    buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.attr("data-artist_id", item.artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                                 }
 
                             } else {
@@ -87,7 +87,7 @@ function songList(locals) {
                                 var baseClass = item.foreign_id === 'none' ? 'tracklist' : 'tracklist track-playable'
                                 var uploaded = item.track_url ? ' track-uploaded' : ''
                                 baseClass = baseClass + uploaded
-                                buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+                                buf.push("<li" + (jade.attr("id", item.row, true, false)) + (jade.attr("data-track_id", item.foreign_id, true, false)) + (jade.attr("data-track_url", item.track_url, true, false)) + (jade.attr("data-event_id", item.event_id, true, false)) + (jade.attr("data-artist_id", item.artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
                             }
 
                             if ($$l === 0) {
@@ -140,7 +140,7 @@ function showList(locals) {
     var jade_mixins = {};
     var jade_interp;
     ;var locals_for_with = (locals || {});(function (unlinkedSongs) {
-        buf.push("<ul class=\"showList\">");
+        buf.push("<ul id=\"saved-show\" class=\"showList\">");
 // iterate unlinkedSongs
         ;(function(){
             var $$obj = unlinkedSongs;
@@ -152,7 +152,7 @@ function showList(locals) {
                     var baseClass = 'tracklist track-playable'
                     var uploaded = val.track.track_url ? ' track-uploaded' : ''
                     baseClass = baseClass + uploaded
-                    buf.push("<li" + (jade.attr("data-track_id", val.id, true, false)) + (jade.attr("data-track_url", val.track.track_url, true, false)) + (jade.attr("data-event_id", val.event.event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = val.track.title) ? "" : jade_interp)) + "</li>");
+                    buf.push("<li" + (jade.attr("data-track_id", val.id, true, false)) + (jade.attr("data-track_url", val.track.track_url, true, false)) + (jade.attr("data-event_id", val.event.event_id, true, false)) + (jade.attr("data-artist_id", val.event.artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = val.track.title) ? "" : jade_interp)) + "</li>");
                 }
 
             } else {
@@ -163,7 +163,7 @@ function showList(locals) {
                     var baseClass = 'tracklist track-playable'
                     var uploaded = val.track.track_url ? ' track-uploaded' : ''
                     baseClass = baseClass + uploaded
-                    buf.push("<li" + (jade.attr("data-track_id", val.id, true, false)) + (jade.attr("data-track_url", val.track.track_url, true, false)) + (jade.attr("data-event_id", val.event.event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = val.track.title) ? "" : jade_interp)) + "</li>");
+                    buf.push("<li" + (jade.attr("data-track_id", val.id, true, false)) + (jade.attr("data-track_url", val.track.track_url, true, false)) + (jade.attr("data-event_id", val.event.event_id, true, false)) + (jade.attr("data-artist_id", val.event.artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = val.track.title) ? "" : jade_interp)) + "</li>");
                 }
 
             }
@@ -175,9 +175,9 @@ function showListItem(locals) {
     var buf = [];
     var jade_mixins = {};
     var jade_interp;
-    ;var locals_for_with = (locals || {});(function (track_url, _id, event_id, title) {
+    ;var locals_for_with = (locals || {});(function (track_url, _id, event_id, artist_id, title) {
         var baseClass = 'tracklist track-playable'
         var uploaded = track_url ? ' track-uploaded' : ''
         baseClass = baseClass + uploaded
-        buf.push("<li" + (jade.attr("data-track_id", _id, true, false)) + (jade.attr("data-track_url", track_url, true, false)) + (jade.attr("data-event_id", event_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = title) ? "" : jade_interp)) + "</li>");}.call(this,"track_url" in locals_for_with?locals_for_with.track_url:typeof track_url!=="undefined"?track_url:undefined,"_id" in locals_for_with?locals_for_with._id:typeof _id!=="undefined"?_id:undefined,"event_id" in locals_for_with?locals_for_with.event_id:typeof event_id!=="undefined"?event_id:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
+        buf.push("<li" + (jade.attr("data-track_id", _id, true, false)) + (jade.attr("data-track_url", track_url, true, false)) + (jade.attr("data-event_id", event_id, true, false)) + (jade.attr("data-artist_id", artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = title) ? "" : jade_interp)) + "</li>");}.call(this,"track_url" in locals_for_with?locals_for_with.track_url:typeof track_url!=="undefined"?track_url:undefined,"_id" in locals_for_with?locals_for_with._id:typeof _id!=="undefined"?_id:undefined,"event_id" in locals_for_with?locals_for_with.event_id:typeof event_id!=="undefined"?event_id:undefined,"artist_id" in locals_for_with?locals_for_with.artist_id:typeof artist_id!=="undefined"?artist_id:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
 }

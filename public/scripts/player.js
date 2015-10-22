@@ -269,7 +269,7 @@ function initUI() {
         };
 
         //this will update the saved show
-        addUploadedTrackToPerformanceAndShow(data.response.fileData.event_id, data.response.fileData)
+        addUploadedTrackToPerformanceAndShow(data.response.fileData.event_id, data.response.fileData, data.response.fileData.artist_id)
 
 
         var markup = window.showList(savedShow);
@@ -501,8 +501,8 @@ function getSong(songId) {
     return newSong;
 }
 
-function addUploadedTrackToPerformanceAndShow(performanceId, track) {
-    var evt = getPerformance(performanceId);
+function addUploadedTrackToPerformanceAndShow(performanceId, track, artistId) {
+    var evt = getPerformance(performanceId, artistId);
     track.id = track._id;
     track.foreign_id = track.id;
     //evt.trackList.push(track);
@@ -544,14 +544,14 @@ function addUploadedTrackToPerformanceAndShow(performanceId, track) {
 }
 
 
-function getPerformance(performanceId) {
+function getPerformance(performanceId, artistId) {
     var perf = {};
     //artistData is fetched from songKick
     //check if it is undefined or not -- if it is, get performance and track data
     //from persisted unlinkedCurrentSongs
     if (artistData) {
         artistData.forEach(function(obj, num) {
-            if (obj.event_id == performanceId) {
+            if (obj.event_id == performanceId && obj.artist_id == artistId) {
                 perf = obj;
 
             }
@@ -616,7 +616,10 @@ function createSongTable() {
     var trackList = $('#songContainer li').map(function() {
         var id = $(this).data("track_id");
         var eventId = $(this).data('event_id');
-        var performance = getPerformance(eventId);
+        var artistId = $(this).data('artist_id')
+        //b/c we are now getting supporting artists, pass in the artist id
+        //TODO: add artist_id data attribute to list templates
+        var performance = getPerformance(eventId, artistId);
         var songToPlay = {};
         if (id != 'none' && $(this).hasClass('track-playable')) {
             $(this).on('click', function() {
@@ -668,7 +671,8 @@ function createShowTable() {
     var showTrackList = $('.showList li').map(function() {
         var id = $(this).data("track_id");
         var eventId = $(this).data('event_id');
-        var performance = getPerformance(eventId);
+        var artistId = $(this).data('artist_id')
+        var performance = getPerformance(eventId, artistId);
         var songToPlay = {};
         //if (id != 'none' && $(this).hasClass('track-playable')) {
         if (id && $(this).hasClass('track-playable')) {
@@ -720,6 +724,7 @@ function createShowTable() {
         //filter one last time, the mapping is funky for some reason after updating the
         //markup dynamically -- may have to do with sortable, but there's some phantom list items
         //showing up when doing just a get on the li inside showList
+        //TODO: don't need this after changing the callback on the sort
         if (!showTrackList[song.id]) {
             //debugger;
             showTrackList[song.id] = 1;
@@ -754,8 +759,8 @@ function updateNowPlaying(song) {
     songLoaded = true;
 }
 
-function updateNowPlayingFromEvent(id) {
-    var event = getPerformance(id);
+function updateNowPlayingFromEvent(id, artistId) {
+    var event = getPerformance(id, artistId);
     var thumb_uri = event.thumbnail_uri;
 
     $('#artist-thumbnail').attr('src', thumb_uri);
@@ -1057,7 +1062,7 @@ function getArtistsPerformances(sd) {
         createSongTable();
         initSortable();
         $('.song-title').on('click', function(){
-            updateNowPlayingFromEvent($(this).data('event_id'));
+            updateNowPlayingFromEvent($(this).data('event_id'), ($this).data('artist_id'));
         })
         laddaSpinner.stop();
         //laddaSpinner.destroy();

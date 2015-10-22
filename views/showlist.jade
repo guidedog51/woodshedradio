@@ -3,4 +3,4 @@ ul(class='showList', id='saved-show')
         - var baseClass = 'tracklist track-playable'
         - var uploaded = val.track.track_url ? ' track-uploaded' : ''
         - baseClass = baseClass + uploaded
-        li(class=baseClass, data-track_id=val.id, data-track_url=val.track.track_url, data-event_id=val.event.event_id)= val.track.title
+        li(class=baseClass, data-track_id=val.id, data-track_url=val.track.track_url, data-event_id=val.event.event_id, data-artist_id=val.event.artist_id)= val.track.title
