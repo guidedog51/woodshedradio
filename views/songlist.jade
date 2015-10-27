@@ -1,6 +1,6 @@
 ul
     for val in artistTracks
-        li(class='song-title', data-event_uri=val.event_uri, data-event_id=val.event_id)!=val.displayName
+        li(class='song-title', data-event_uri=val.event_uri, data-event_id=val.event_id, data-artist_id=val.artist_id)!=val.displayName
             //a(href=val.event_uri, target='_blank')!=val.displayName
         ul(class='trackList')
             for item in val.trackList

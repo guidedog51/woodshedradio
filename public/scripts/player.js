@@ -1062,7 +1062,7 @@ function getArtistsPerformances(sd) {
         createSongTable();
         initSortable();
         $('.song-title').on('click', function(){
-            updateNowPlayingFromEvent($(this).data('event_id'), ($this).data('artist_id'));
+            updateNowPlayingFromEvent($(this).data('event_id'), $(this).data('artist_id'));
         })
         laddaSpinner.stop();
         //laddaSpinner.destroy();

@@ -13,7 +13,7 @@ function songList(locals) {
                     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
                         var val = $$obj[$index];
 
-                        buf.push("<li" + (jade.attr("data-event_uri", val.event_uri, true, false)) + (jade.attr("data-event_id", val.event_id, true, false)) + " class=\"song-title\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "<!--a(href=val.event_uri, target='_blank')!=val.displayName--></li><ul class=\"trackList\">");
+                        buf.push("<li" + (jade.attr("data-event_uri", val.event_uri, true, false)) + (jade.attr("data-event_id", val.event_id, true, false)) + (jade.attr("data-artist_id", val.artist_id, true, false)) + " class=\"song-title\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "<!--a(href=val.event_uri, target='_blank')!=val.displayName--></li><ul class=\"trackList\">");
 // iterate val.trackList
                         ;(function(){
                             var $$obj = val.trackList;
@@ -60,7 +60,7 @@ function songList(locals) {
                 for (var $index in $$obj) {
                     $$l++;      var val = $$obj[$index];
 
-                    buf.push("<li" + (jade.attr("data-event_uri", val.event_uri, true, false)) + (jade.attr("data-event_id", val.event_id, true, false)) + " class=\"song-title\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "<!--a(href=val.event_uri, target='_blank')!=val.displayName--></li><ul class=\"trackList\">");
+                    buf.push("<li" + (jade.attr("data-event_uri", val.event_uri, true, false)) + (jade.attr("data-event_id", val.event_id, true, false)) + (jade.attr("data-artist_id", val.artist_id, true, false)) + " class=\"song-title\">" + (null == (jade_interp = val.displayName) ? "" : jade_interp) + "<!--a(href=val.event_uri, target='_blank')!=val.displayName--></li><ul class=\"trackList\">");
 // iterate val.trackList
                     ;(function(){
                         var $$obj = val.trackList;
