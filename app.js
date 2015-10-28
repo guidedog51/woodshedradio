@@ -55,11 +55,12 @@ app.use(cookieParser('c2da2f90-a7fe-441f-a3e9-982c250947d0'));
 app.use(session('e45a0035-1478-40d8-9e6e-dfa24164afd6'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/calendar', routes);
 app.use('/users', users);
 app.use('/comingsoon', comingsoon);
 app.use('/showeditor', showeditor);
 app.use('/radioplayer', radioplayer);
+app.use('/', radioplayer);
 app.use('/login', login);
 app.use('/api/playlist', playlistapi);
 app.use('/api/showlist', showlistapi);
