@@ -1,0 +1,36 @@
+div(id='modal-add-show', class='modal fade')
+    div(class='modal-dialog')
+        div(class='modal-content')
+            div(class='modal-header')
+                button(type='button', class='close', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                h4(id='lblTitle', class='modal-title')  Add a show
+            div(class='modal-body' style='display:block; overflow:auto;')
+                div(class='col-md-12 center-block')
+                    p Enter artist name, venue details, date, link, and select a track to upload.  Click upload to add track to playlist.
+                div(class="form col-md-12 center-block form-signin")
+                    div(class="form-group")
+                        input(id='artist-name', class="form-control input-xlarge", placeholder="Artist Name", type="text", style='margin-bottom: 10px !important;', required, autofocus)
+                    div(class="form-group")
+                        input(id='show-venue', class="form-control input-xlarge", placeholder="Venue", type="text", required)
+                    div(class="form-group")
+                        input(id='show-url', class="form-control input-xlarge", placeholder="Venue Link", type="text", required)
+                    div(class='form-group')
+                        div(class='input-group')
+                            label(id='add-show-date-button', for="add-show-performance-date" class="input-group-addon btn btn-default ladda-button", data-style='expand-left', data-spinner-color="#46a546")
+                                span(class="ladda-label")
+                                span(class="glyphicon glyphicon-calendar")
+                            input(id='add-show-performance-date', type='text', class='date-picker form-control input-xlarge', placeholder='Show Date')
+
+                    div(class="form-group")
+                        span(class='btn btn-success fileinput-button')
+                            input(id='add-show-upload-track', type='file', name='files[]')
+                    div(class="form-group")
+                        button(class="btn btn-primary" id='submit-login')  Add Show
+                        span(id='add-show-message', class="help-inline", style='padding-left:10px;')  Invalid entry
+
+            div(class='modal-footer')
+                div(class='col-md-12')
+                    button(class="btn", data-dismiss="modal", aria-hidden="true") Cancel
+
+

@@ -31,6 +31,10 @@ block content
                     li
                         div(style='border-bottom: 1px solid silver; margin: 10px 20px 0 20px;')
                     li
+                        a(id='btn-add-show', href='javascript:void(0)') Manually add a show
+                    li
+                        div(style='border-bottom: 1px solid silver; margin: 10px 20px 0 20px;')
+                    li
                         a(id='btn-new-playlist', href='javascript:void(0)') Start new Playlist
                     li
                         div(style='border-bottom: 1px solid silver; margin: 10px 20px 0 20px;')
@@ -88,6 +92,13 @@ block content
     #showContainer(class='show-container')
         ul(class='showList', id='saved-show')
             li Drag songs for the show into this container -- drag to trash container to remove
+
+    ul(id='contextMenu', class='dropdown-menu', role='menu', style='display:none')
+        li
+            a(id='gotoiTunes', tabindex='-1', href='#')  Find this artist on iTunes
+        li(class='divider')
+        li
+            a(id='gotoBandCamp', tabindex='-1', href='#')  Find this artist on Band Camp
 
     #footer(class='container span10 offset1')
         small Powered by 

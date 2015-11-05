@@ -205,7 +205,6 @@ function initUI() {
         playSong(curSong);
     }).hide();
 
-
     $("#performance-date").datepicker({
         format: "yyyy-mm-dd",
         todayHighlight: true,
@@ -215,6 +214,17 @@ function initUI() {
     $("#performance-date").on("changeDate", function (e) {
         $(this).datepicker('hide');
         getArtistsPerformances($(this).val());
+    });
+
+    $("#add-show-performance-date").datepicker({
+        format: "yyyy-mm-dd",
+        todayHighlight: true,
+        startDate: 'd'
+    });
+
+    $("#add-show-performance-date").on("changeDate", function (e) {
+        $(this).datepicker('hide');
+        //getArtistsPerformances($(this).val());
     });
 
     $("#get-playlists").on("click", function(e) {
@@ -245,6 +255,11 @@ function initUI() {
     })
 
     $('#upload-track').fileinput({
+        uploadUrl: '/api/upload/woodshedlibrary',
+        uploadExtraData: uploadedSongData
+    });
+
+    $('#add-show-upload-track').fileinput({
         uploadUrl: '/api/upload/woodshedlibrary',
         uploadExtraData: uploadedSongData
     });
@@ -301,6 +316,13 @@ function initUI() {
         $('#modal-upload').modal('show');
     })
 
+    $('#btn-add-show').on('click', function() {
+        if (showLogin()) {
+            return;
+        }
+        $('#modal-add-show').modal('show');
+    })
+
     $('#btn-logoff').on('click', function(){
         logOnOrOff();
     })
@@ -345,7 +367,6 @@ function initUI() {
         }).get();
         mergePlaylist(mergedList)
     })
-
 }
 
 
@@ -621,6 +642,16 @@ function createSongTable() {
         //TODO: add artist_id data attribute to list templates
         var performance = getPerformance(eventId, artistId);
         var songToPlay = {};
+
+        $("this").contextMenu({
+            menuSelector: "#contextMenu",
+            menuSelected: function (invokedOn, selectedMenu) {
+                var msg = "You selected the menu item '" + selectedMenu.text() +
+                    "' on the value '" + invokedOn.text() + "'";
+                alert(msg);
+            }
+        });
+
         if (id != 'none' && $(this).hasClass('track-playable')) {
             $(this).on('click', function() {
                 songsToPlay = currentSongs;
