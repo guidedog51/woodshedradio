@@ -254,6 +254,31 @@ function initUI() {
         loginCurator();
     })
 
+    $('#add-show-form').valid();
+
+    $('#submit-show').on('click', function(e) {
+        if ($('#add-show-form').valid()) {
+            e.preventDefault();
+            alert('valid');
+            //process the added show
+        }
+        //e.preventDefault();
+        //return false;
+        //alert('submit show!')
+        //$('#add-show-form').bootstrapValidator();
+    })
+
+    //$('#add-show-form').bootstrapValidator().on('submit', function (e) {
+    //    if (e.isDefaultPrevented()) {
+    //        // handle the invalid form...
+    //        alert('invalid')
+    //        e.preventDefault();
+    //    } else {
+    //        // everything looks good!
+    //        alert('valid')
+    //    }
+    //});
+
     $('#upload-track').fileinput({
         uploadUrl: '/api/upload/woodshedlibrary',
         uploadExtraData: uploadedSongData
@@ -264,13 +289,13 @@ function initUI() {
         uploadExtraData: uploadedSongData
     });
 
-    $('#upload-track').on('filepreajax', function(event, previewId, index) {
+    $('#add-show-upload-track').on('filepreajax', function(event, previewId, index) {
         //console.log('File pre ajax triggered');
         //update the track name in uploadedSongData
         uploadedSongData.track_name = $('#track-name-upload').val();
     });
 
-    $('#upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
+    $('#add-show-upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
         //console.log(file.name);
         var cleanedName = file.name.split('.')[0];
         $('#track-name-upload').val(cleanedName);

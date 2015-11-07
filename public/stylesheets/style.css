@@ -191,7 +191,7 @@ input[type='text'] {
     width: 200px;
 }
 
-#login-message {
+#login-message, #add-show-message {
     display: none;
 }
 
