@@ -278,7 +278,9 @@ function initUI() {
 
             //alert(values.artist_name);
             $('#modal-add-show').modal('hide');
-            $('#modal-upload').modal('show');
+
+            //ajax the show and artist details
+            addShow(values);
 
         }
     })
@@ -304,18 +306,18 @@ function initUI() {
     //    uploadExtraData: uploadedSongData
     //});
     //
-    $('#add-show-upload-track').on('filepreajax', function(event, previewId, index) {
-        //console.log('File pre ajax triggered');
-        //update the track name in uploadedSongData
-        uploadedSongData.track_name = $('#track-name-upload').val();
-    });
-
-    $('#add-show-upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
-        //console.log(file.name);
-        var cleanedName = file.name.split('.')[0];
-        $('#track-name-upload').val(cleanedName);
-        uploadedSongData.track_name = cleanedName;
-    });
+    //$('#add-show-upload-track').on('filepreajax', function(event, previewId, index) {
+    //    //console.log('File pre ajax triggered');
+    //    //update the track name in uploadedSongData
+    //    uploadedSongData.track_name = $('#track-name-upload').val();
+    //});
+    //
+    //$('#add-show-upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
+    //    //console.log(file.name);
+    //    var cleanedName = file.name.split('.')[0];
+    //    $('#track-name-upload').val(cleanedName);
+    //    uploadedSongData.track_name = cleanedName;
+    //});
 
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
 
@@ -994,6 +996,32 @@ function publishCurrentPlaylist() {
         l.stop();
     }
     
+    function error(xhr, result, error) {
+        console.log(error);
+        l.stop();
+    }
+}
+
+
+function addShow(showDetails) {
+    var l = Ladda.create($('#submit-show').get()[0]);
+    l.start();
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/addshow/wsArtist/wsVenue',
+        data: JSON.stringify(showDetails),
+        success: success,
+        error: error,
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8"
+    });
+
+    function success(data) {
+        l.stop();
+        //proceed to the track upload
+    }
+
     function error(xhr, result, error) {
         console.log(error);
         l.stop();

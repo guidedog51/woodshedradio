@@ -20,6 +20,7 @@ var login = require('./routes/login');
 var playlistapi = require('./routes/api/playlist');
 var showlistapi = require('./routes/api/showlist');
 var uploadapi = require('./routes/api/upload');
+var addshowapi = require('./routes/api/addshow');
 //var jade_browser = require('jade-browser');
 var jade = require('jade');
 var fs = require('fs');
@@ -65,6 +66,7 @@ app.use('/login', login);
 app.use('/api/playlist', playlistapi);
 app.use('/api/showlist', showlistapi);
 app.use('/api/upload', uploadapi);
+app.use('/api/addshow', addshowapi);
 
 //auth stuff
 app.use(function(req, res, next) {
