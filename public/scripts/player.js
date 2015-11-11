@@ -296,28 +296,29 @@ function initUI() {
     //    }
     //});
 
-    $('#upload-track').fileinput({
-        uploadUrl: '/api/upload/woodshedlibrary',
-        uploadExtraData: uploadedSongData
-    });
-
     //$('#add-show-upload-track').fileinput({
     //    uploadUrl: '/api/upload/woodshedlibrary',
     //    uploadExtraData: uploadedSongData
     //});
     //
-    //$('#add-show-upload-track').on('filepreajax', function(event, previewId, index) {
-    //    //console.log('File pre ajax triggered');
-    //    //update the track name in uploadedSongData
-    //    uploadedSongData.track_name = $('#track-name-upload').val();
-    //});
-    //
-    //$('#add-show-upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
-    //    //console.log(file.name);
-    //    var cleanedName = file.name.split('.')[0];
-    //    $('#track-name-upload').val(cleanedName);
-    //    uploadedSongData.track_name = cleanedName;
-    //});
+
+    $('#upload-track').fileinput({
+        uploadUrl: '/api/upload/woodshedlibrary',
+        uploadExtraData: uploadedSongData
+    });
+
+    $('#upload-track').on('filepreajax', function(event, previewId, index) {
+        //console.log('File pre ajax triggered');
+        //update the track name in uploadedSongData
+        uploadedSongData.track_name = $('#track-name-upload').val();
+    });
+
+    $('#upload-track').on('fileloaded', function(event, file, previewId, index, reader) {
+        //console.log(file.name);
+        var cleanedName = file.name.split('.')[0];
+        $('#track-name-upload').val(cleanedName);
+        uploadedSongData.track_name = cleanedName;
+    });
 
     $('#upload-track').on('fileuploaded', function(event, data, previewId, index) {
 
