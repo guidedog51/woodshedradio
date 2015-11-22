@@ -65,7 +65,7 @@ input[type='text'] {
     margin: 0 auto;
 }
 
-#nowPlaying img {
+#nowPlaying img, #nowPlaying-upload img {
     width: 250px;
     height: 250px;
 }
@@ -84,7 +84,7 @@ input[type='text'] {
     background-size: 200px auto;
 }
 
-#nowPlaying .woodshedw{
+#nowPlaying .woodshedw, #nowPlaying-upload .woodshedw{
     background-image: url('../images/woodshedW.png');
     background-repeat: no-repeat;
     background-size: 200px;
@@ -97,7 +97,7 @@ input[type='text'] {
     height: 180px;*/
 }
 
-#nowPlaying .artist-thumbnail {
+#nowPlaying .artist-thumbnail, #nowPlaying-upload .artist-thumbnail {
     height: 200px;
     width: 200px;
 }

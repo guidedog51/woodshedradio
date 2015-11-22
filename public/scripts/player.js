@@ -36,7 +36,6 @@ $(document).ready(function() {
     });
 
     adminAuthenticated = isAuthenticated(initUI);
-    //initUI();
 
     R.ready(
         function() {
@@ -263,18 +262,19 @@ function initUI() {
             //alert('valid');
             //process the added show
 
-            timestamp = Date.now();
-            eventId = 'wseid' + timestamp;
-            artistId = 'wsaid' + timestamp  //TODO: replace with existing artistId if any
-
+            var timestamp = Date.now();
+            var eventId = 'wseid' + timestamp;
+            var artistId = 'wsaid' + timestamp;  //TODO: replace with existing artistId if any
+            var venueId = 'wsvid' + timestamp;  //this is provisional -- we'll search by venue name before upserting
 
             var values = {};
-            var inputs = $('#add-show-form input');
+            var inputs = $('#add-show-form input, #add-show-form textarea');
             $.each(inputs, function(index, obj){
                 values[obj.name] = $(obj).val();
             })
             values.event_id = eventId;
             values.artist_id = artistId;
+            values.venue_id = venueId;
 
             //alert(values.artist_name);
             $('#modal-add-show').modal('hide');
@@ -285,26 +285,11 @@ function initUI() {
         }
     })
 
-    //$('#add-show-form').bootstrapValidator().on('submit', function (e) {
-    //    if (e.isDefaultPrevented()) {
-    //        // handle the invalid form...
-    //        alert('invalid')
-    //        e.preventDefault();
-    //    } else {
-    //        // everything looks good!
-    //        alert('valid')
-    //    }
-    //});
-
-    //$('#add-show-upload-track').fileinput({
-    //    uploadUrl: '/api/upload/woodshedlibrary',
-    //    uploadExtraData: uploadedSongData
-    //});
-    //
-
     $('#upload-track').fileinput({
         uploadUrl: '/api/upload/woodshedlibrary',
-        uploadExtraData: uploadedSongData
+        uploadExtraData: uploadedSongData,
+        allowedFileTypes: ['audio', 'object'],
+        allowedPreviewTypes: false
     });
 
     $('#upload-track').on('filepreajax', function(event, previewId, index) {
@@ -874,6 +859,19 @@ function updateUploadFromEvent(event) {
     uploadedSongData.event_id = event.event_id;
 }
 
+function updateUploadFromAddedShow(payload) {
+    $('#artist-thumbnail-upload').attr('src', payload.artist_url);
+    $('#artist-name-upload').text(payload.artist_name);
+    //$('#track-name-upload').text(song.track.title);
+    $('#performance-link-upload').attr('href', payload.venue_url);
+    $('#performance-link-upload').text(payload.event_details);
+
+    uploadedSongData.artist_id = payload.artist_id;
+    uploadedSongData.artist_name = payload.artist_name;
+    uploadedSongData.event_id = payload.event_id;
+
+}
+
 function saveNewPlaylist() {
     savePlaylist(true);
 }
@@ -1010,7 +1008,7 @@ function addShow(showDetails) {
 
     $.ajax({
         type: 'POST',
-        url: '/api/addshow/wsArtist/wsVenue',
+        url: '/api/addshow/wsArtist/wsVenue/wsPerformance',
         data: JSON.stringify(showDetails),
         success: success,
         error: error,
@@ -1021,6 +1019,10 @@ function addShow(showDetails) {
     function success(data) {
         l.stop();
         //proceed to the track upload
+        if (data.success) {
+            updateUploadFromAddedShow(showDetails);
+            $('#modal-upload').modal('show');
+        }
     }
 
     function error(xhr, result, error) {
