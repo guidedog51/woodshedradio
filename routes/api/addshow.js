@@ -40,7 +40,12 @@ addshow.post('/:collectionNameArtist/:collectionNameVenue/:collectionNamePerform
             displayName: payload.event_details,   //assemble this
             event_date:  moment(payload.event_date).unix(),
             artist: artist,
-            venue: venue
+            venue: venue,
+            artist_id: artist._id,
+            event_id: payload.event_id,
+            artist_name: artist.displayName,
+            event_uri: venue.venue_uri,
+            thumbnail_uri: artist.thumbnail_uri
         }
 
     //write our homemade objects to mongo
@@ -71,7 +76,7 @@ addshow.post('/:collectionNameArtist/:collectionNameVenue/:collectionNamePerform
                 console.log(error);
                 return next(error);
             }
-            res.send({'success': true})
+            res.send({'success': true, 'data': event})
             mdb.close();
 
         });

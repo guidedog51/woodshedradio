@@ -617,6 +617,11 @@ function getPerformance(performanceId, artistId) {
         }
     });
 
+    //for manually added show construct an event out of entered values
+
+
+
+
 
     //if (unsavedSongs) {
     //    if (obj.event.event_id == performanceId) {
@@ -1021,6 +1026,12 @@ function addShow(showDetails) {
         //proceed to the track upload
         if (data.success) {
             updateUploadFromAddedShow(showDetails);
+            //push added event to artistData
+            if (artistData === undefined) {
+                artistData = [];
+            }
+            artistData.push(data.data);
+
             $('#modal-upload').modal('show');
         }
     }
