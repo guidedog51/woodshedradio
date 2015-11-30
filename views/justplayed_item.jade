@@ -4,6 +4,6 @@ li(class="list-group-item")
     div(class="image-container")
         img(src=imgSrc, width="100px", height="100px", alt="", class='woodshedw img-circle')
     div(class="track-info-container")
-        h4(class="list-group-item-heading")=event.artist_name
+        h4(class="list-group-item-heading")=track.artist_name
         p(class="list-group-item-text")=track.title
         a(href=event_uri, class="list-group-item-text")=event.displayName
