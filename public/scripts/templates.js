@@ -181,3 +181,11 @@ function showListItem(locals) {
         baseClass = baseClass + uploaded
         buf.push("<li" + (jade.attr("data-track_id", _id, true, false)) + (jade.attr("data-track_url", track_url, true, false)) + (jade.attr("data-event_id", event_id, true, false)) + (jade.attr("data-artist_id", artist_id, true, false)) + (jade.cls([baseClass], [true])) + ">" + (jade.escape(null == (jade_interp = title) ? "" : jade_interp)) + "</li>");}.call(this,"track_url" in locals_for_with?locals_for_with.track_url:typeof track_url!=="undefined"?track_url:undefined,"_id" in locals_for_with?locals_for_with._id:typeof _id!=="undefined"?_id:undefined,"event_id" in locals_for_with?locals_for_with.event_id:typeof event_id!=="undefined"?event_id:undefined,"artist_id" in locals_for_with?locals_for_with.artist_id:typeof artist_id!=="undefined"?artist_id:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
 }
+function justPlayedItem(locals) {
+    var buf = [];
+    var jade_mixins = {};
+    var jade_interp;
+    ;var locals_for_with = (locals || {});(function (event, track, event_uri) {
+        var imgSrc = event.thumbnail_uri ? event.thumbnail_uri : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+        buf.push("<li class=\"list-group-item\"><div class=\"image-container\"><img" + (jade.attr("src", imgSrc, true, false)) + " width=\"100px\" height=\"100px\" alt=\"\" class=\"woodshedw img-circle\"/></div><div class=\"track-info-container\"><h4 class=\"list-group-item-heading\">" + (jade.escape(null == (jade_interp = event.artist_name) ? "" : jade_interp)) + "</h4><p class=\"list-group-item-text\">" + (jade.escape(null == (jade_interp = track.title) ? "" : jade_interp)) + "</p><a" + (jade.attr("href", event_uri, true, false)) + " class=\"list-group-item-text\">" + (jade.escape(null == (jade_interp = event.displayName) ? "" : jade_interp)) + "</a></div></li>");}.call(this,"event" in locals_for_with?locals_for_with.event:typeof event!=="undefined"?event:undefined,"track" in locals_for_with?locals_for_with.track:typeof track!=="undefined"?track:undefined,"event_uri" in locals_for_with?locals_for_with.event_uri:typeof event_uri!=="undefined"?event_uri:undefined));;return buf.join("");
+}

@@ -1,0 +1,9 @@
+-var imgSrc = event.thumbnail_uri ? event.thumbnail_uri : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+
+li(class="list-group-item")
+    div(class="image-container")
+        img(src=imgSrc, width="100px", height="100px", alt="", class='woodshedw img-circle')
+    div(class="track-info-container")
+        h4(class="list-group-item-heading")=event.artist_name
+        p(class="list-group-item-text")=track.title
+        a(href=event_uri, class="list-group-item-text")=event.displayName

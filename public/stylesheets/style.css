@@ -102,6 +102,44 @@ input[type='text'] {
     width: 200px;
 }
 
+#just-played .woodshedw {
+    background-image: url('../images/woodshedW.png');
+    background-repeat: no-repeat;
+    background-size: 75px;
+    background-position: 10px 20px;
+}
+
+
+
+#just-played .artist-thumbnail{
+    height: 75px;
+    width: 75px;
+}
+
+#just-played .image-container {
+    width: 120px;
+}
+
+#just-played .track-info-container {
+    flex-grow: 1;
+    padding-top: 20px;
+    pading-left: 20px;
+
+}
+
+#just-played li {
+    display: flex;
+
+}
+
+/*list for just played songs*/
+#just-played {
+    list-style: none;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .tracklist {
     font-size: 14px;
     font-style: italic;

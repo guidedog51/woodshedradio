@@ -105,6 +105,7 @@ function updateNowPlaying(id) {
     $('#track-name').text(song.track.title);
     $('#performance-link').attr('href', event.event_uri);
     $('#performance-link').text(event.displayName);
+    updateJustPlayed(song);
 
 }
 
@@ -117,4 +118,11 @@ function getSong(id) {
         }
     });
     return song;
+}
+
+function updateJustPlayed(song) {
+
+    var markup = window.justPlayedItem(song);
+    $('#just-played').prepend(markup);
+
 }

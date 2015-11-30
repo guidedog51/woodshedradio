@@ -120,6 +120,8 @@ var jsFunctionString3 = jade.compileFileClient('./views/showlist.jade', {'name':
 fs.writeFileSync("./public/scripts/templates3.js", jsFunctionString3);
 var jsFunctionString4 = jade.compileFileClient('./views/showlist_item.jade', {'name': "showListItem"});
 fs.writeFileSync("./public/scripts/templates4.js", jsFunctionString4);
+var jsFunctionString5 = jade.compileFileClient('./views/justplayed_item.jade', {'name': "justPlayedItem"});
+fs.writeFileSync("./public/scripts/templates5.js", jsFunctionString5);
 
 //http.createServer(app).listen(app.get('port'), function(){
 //  console.log("Express server listening on port " + app.get('port'));
