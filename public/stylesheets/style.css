@@ -60,7 +60,7 @@ input[type='text'] {
 }
 #nowPlaying {
     width: 610px;
-    /*padding-bottom: 30px;*/
+    padding-bottom: 30px;
     padding-top: 30px;
     margin: 0 auto;
 }
