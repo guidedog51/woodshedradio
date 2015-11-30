@@ -124,5 +124,5 @@ function updateJustPlayed(song) {
 
     var markup = window.justPlayedItem(song);
     $('#just-played').prepend(markup);
-
+    $('.just-played-container').scrollTop();
 }

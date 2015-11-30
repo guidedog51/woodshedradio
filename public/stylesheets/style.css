@@ -109,7 +109,10 @@ input[type='text'] {
     background-position: 10px 20px;
 }
 
-
+.just-played-container {
+    height: 300px;
+    overflow: auto;
+}
 
 #just-played .artist-thumbnail{
     height: 75px;
