@@ -157,7 +157,9 @@ router.get('/:startdate', function(req, res) {
                 console.log('render at callbackCount: ' +  callbackCount);
                 res.send({ artistTracks: artistTracks });
             }
-	    }
+	    }  else {
+            res.send({ artistTracks: artistTracks });
+        }
     }
 });
 
