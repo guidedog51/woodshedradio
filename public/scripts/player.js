@@ -37,33 +37,33 @@ $(document).ready(function() {
 
     adminAuthenticated = isAuthenticated(initUI);
 
-    R.ready(
-        function() {
-            R.player.on("change:playingTrack", function(track) {
-                if (track === null) {
-                    playNextSong();
-                }
-            });
-            
-            R.player.on("change:playState", function(state) {
-                if (state == R.player.PLAYSTATE_PAUSED) {
-                    $("#playPlay").show();
-                    $("#playPause").hide();
-                }
-                if (state == R.player.PLAYSTATE_PLAYING) {
-                    $("#playPlay").hide();
-                    $("#playPause").show();
-                }
-                if (state == R.player.PLAYSTATE_STOPPED) {
-                    // playNextSong();
-                }
-                songChanged(curSong);
-            });
-            R.player.on("change:playingSource", function(track) {
-                songChanged(curSong);
-            });
-        }
-    );
+    //R.ready(
+    //    function() {
+    //        R.player.on("change:playingTrack", function(track) {
+    //            if (track === null) {
+    //                playNextSong();
+    //            }
+    //        });
+    //
+    //        R.player.on("change:playState", function(state) {
+    //            if (state == R.player.PLAYSTATE_PAUSED) {
+    //                $("#playPlay").show();
+    //                $("#playPause").hide();
+    //            }
+    //            if (state == R.player.PLAYSTATE_PLAYING) {
+    //                $("#playPlay").hide();
+    //                $("#playPause").show();
+    //            }
+    //            if (state == R.player.PLAYSTATE_STOPPED) {
+    //                // playNextSong();
+    //            }
+    //            songChanged(curSong);
+    //        });
+    //        R.player.on("change:playingSource", function(track) {
+    //            songChanged(curSong);
+    //        });
+    //    }
+    //);
 });
 
 function initSortable() {
