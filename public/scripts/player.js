@@ -440,14 +440,14 @@ function playSong(song) {
             }
         } else {
 
-            if (R.player.playState() === 0){
-                R.player.play({source: song.id});
-                updateNowPlaying(song);
-                $("#playPlay").hide();
-                $("#playPause").show();
-            } else {
-                R.player.togglePause();
-            }
+            //if (R.player.playState() === 0){
+            //    R.player.play({source: song.id});
+            //    updateNowPlaying(song);
+            //    $("#playPlay").hide();
+            //    $("#playPause").show();
+            //} else {
+            //    R.player.togglePause();
+            //}
         }
 
     } else {
@@ -459,9 +459,9 @@ function playSong(song) {
             playNextSong();
         } else {
 
-            if (R.player.playState() === R.player.PLAYSTATE_PLAYING) {
-                R.player.togglePause();
-            }
+            //if (R.player.playState() === R.player.PLAYSTATE_PLAYING) {
+            //    R.player.togglePause();
+            //}
 
             if (oldSong){
                 if (oldSong.playing){
@@ -501,7 +501,7 @@ function playSong(song) {
                     }
                 }
 
-                R.player.play({source: id});
+                //R.player.play({source: id});
                 updateNowPlaying(song);
             }
         }
@@ -532,11 +532,11 @@ function songChanged(song) {
         //    s.destruct();
         //    delete song.playing;
         //}
-        if (song === curSong && R.player.playState() === R.player.PLAYSTATE_PLAYING) {
-            //song.row.addClass('success');
-        } else {
-            //song.row.removeClass('success');
-        }
+        //if (song === curSong && R.player.playState() === R.player.PLAYSTATE_PLAYING) {
+        //    //song.row.addClass('success');
+        //} else {
+        //    //song.row.removeClass('success');
+        //}
     }
 }    
 
